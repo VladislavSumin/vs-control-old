@@ -2,6 +2,12 @@ rootProject.name = "vs-control"
 
 pluginManagement {
     includeBuild("build-logic")
+
+    repositories {
+        gradlePluginPortal()
+        google()
+        mavenCentral()
+    }
 }
 
 dependencyResolutionManagement {
