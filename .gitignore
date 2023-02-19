@@ -1,8 +1,12 @@
 /.gradle/
 /.idea/
 
+/target/
 /**/build/
 
 /build-logic/.gradle/
 
 /local.properties
+
+# Now ignoring Cargo.lock
+/Cargo.lock
