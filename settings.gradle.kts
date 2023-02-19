@@ -20,4 +20,5 @@ dependencyResolutionManagement {
 
 includeBuild("../vs-core-kt")
 
+include(":client:android")
 include(":client:jvm")
