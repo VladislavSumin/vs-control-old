@@ -37,3 +37,24 @@ jobs:
           :ci
           --no-daemon
           --stacktrace
+
+      - name: Upload android client debug
+        uses: actions/upload-artifact@v3
+        with:
+          name: android-client-debug
+          path: "vs-control/client/android/build/outputs/apk/debug/**.apk"
+          if-no-files-found: error
+
+      - name: Upload android client release
+        uses: actions/upload-artifact@v3
+        with:
+          name: android-client-release
+          path: "vs-control/client/android/build/outputs/apk/release/**.apk"
+          if-no-files-found: error
+
+      - name: Upload jvm client
+        uses: actions/upload-artifact@v3
+        with:
+          name: android-client-jvm
+          path: "vs-control/client/jvm/build/libs/**.jar"
+          if-no-files-found: error
