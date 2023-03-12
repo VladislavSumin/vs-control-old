@@ -7,6 +7,3 @@
 /build-logic/.gradle/
 
 /local.properties
-
-# Now ignoring Cargo.lock
-/Cargo.lock
