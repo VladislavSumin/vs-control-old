@@ -37,5 +37,6 @@ if (isUseCoreSources) {
     includeBuild("../vs-core-kt")
 }
 
+include(":client:common")
 include(":client:android")
 include(":client:jvm")
