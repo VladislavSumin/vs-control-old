@@ -8,3 +8,7 @@ android {
         applicationId = "ru.vs.control"
     }
 }
+
+dependencies {
+    implementation(project(":client:common"))
+}
