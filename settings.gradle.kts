@@ -1,3 +1,5 @@
+import java.nio.file.Files
+
 rootProject.name = "vs-control"
 
 pluginManagement {
@@ -8,6 +10,16 @@ pluginManagement {
         gradlePluginPortal()
         google()
         mavenCentral()
+    }
+
+    val coreVersion = extra["ru.vs.control.core_version"].toString()
+    resolutionStrategy {
+        eachPlugin {
+            if (target.id.id.startsWith("ru.vs.convention")) {
+                check(target.version == null) { "Wrong convention version: ${target.version}, id: ${target.id.id}" }
+                useVersion(coreVersion)
+            }
+        }
     }
 }
 
@@ -20,7 +32,10 @@ dependencyResolutionManagement {
     }
 }
 
-includeBuild("../vs-core-kt")
+val isUseCoreSources = extra["ru.vs.control.use_core_sources"].toString().toBoolean()
+if (isUseCoreSources) {
+    includeBuild("../vs-core-kt")
+}
 
 include(":client:android")
 include(":client:jvm")
