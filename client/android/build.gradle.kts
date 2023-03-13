@@ -10,5 +10,5 @@ android {
 }
 
 dependencies {
-    implementation(project(":client:common"))
+    implementation(projects.client.common)
 }

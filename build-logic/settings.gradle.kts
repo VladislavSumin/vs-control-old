@@ -10,6 +10,8 @@ dependencyResolutionManagement {
 
 }
 
+rootProject.name = "build-logic"
+
 val isUseCoreSources = extra["ru.vs.control.use_core_sources"].toString().toBoolean()
 if (isUseCoreSources) {
     includeBuild("../../vs-core-kt/core-build-logic")

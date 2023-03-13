@@ -31,7 +31,7 @@ kotlin {
     sourceSets {
         named("commonMain") {
             dependencies {
-                implementation(project(":client:common"))
+                implementation(projects.client.common)
             }
         }
     }

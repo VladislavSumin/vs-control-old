@@ -1,4 +1,4 @@
-import java.nio.file.Files
+enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 
 rootProject.name = "vs-control"
 
