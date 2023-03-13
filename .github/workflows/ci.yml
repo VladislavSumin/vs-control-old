@@ -8,7 +8,7 @@ on:
 jobs:
   ci:
     name: ci
-    runs-on: ubuntu-22.04
+    runs-on: macos-12
     timeout-minutes: 10
     steps:
       - name: Clone vs-control repository
