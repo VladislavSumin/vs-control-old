@@ -6,5 +6,6 @@ target 'control' do
   use_frameworks!
 
   # Pods for control
+  pod 'control-common', :path => '../common'
 
 end
