@@ -55,6 +55,13 @@ jobs:
       - name: Upload jvm client
         uses: actions/upload-artifact@v3
         with:
-          name: android-client-jvm
+          name: jvm-client
           path: "vs-control/client/jvm/build/libs/**.jar"
+          if-no-files-found: error
+
+      - name: Upload jvm server
+        uses: actions/upload-artifact@v3
+        with:
+          name: jvm-server
+          path: "vs-control/server/jvm/build/libs/**.jar"
           if-no-files-found: error

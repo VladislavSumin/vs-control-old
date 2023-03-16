@@ -41,3 +41,5 @@ if (isUseCoreSources) {
 include(":client:common")
 include(":client:android")
 include(":client:jvm")
+
+include(":server:jvm")
