@@ -1,31 +1,14 @@
+import ru.vs.build_logic.utils.fatJar
+
 plugins {
     id("ru.vs.convention.kmp.jvm")
 }
 
-val clientMainClass: String = "ru.vs.control.MainKt"
+val mainClass: String = "ru.vs.control.MainKt"
 
 kotlin {
     jvm {
-        compilations {
-            val main = getByName("main")
-            tasks {
-                // See https://stackoverflow.com/questions/57168853/create-fat-jar-from-kotlin-multiplatform-project
-                register<Jar>("buildFatJar") {
-                    group = "application"
-                    manifest {
-                        attributes["Main-Class"] = clientMainClass
-                    }
-                    archiveBaseName.set("control")
-
-                    val dependencies = main.compileDependencyFiles.map { zipTree(it) }
-                    from(main.output.classesDirs, dependencies)
-
-                    exclude("META-INF/versions/**")
-                    exclude("META-INF/*.kotlin_module")
-                }
-            }
-        }
-
+        fatJar(mainClass, jarName = "control")
     }
 
     sourceSets {
