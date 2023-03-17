@@ -31,6 +31,13 @@ dependencyResolutionManagement {
         google()
         mavenCentral()
     }
+
+    versionCatalogs {
+        // TODO add support for isUseCoreSources flag
+        create("coreLibs") {
+            from(files("../vs-core-kt/core-libs.versions.toml"))
+        }
+    }
 }
 
 val isUseCoreSources = extra["ru.vs.control.use_core_sources"].toString().toBoolean()
