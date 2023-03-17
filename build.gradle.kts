@@ -1,3 +1,7 @@
+plugins {
+    id("ru.vs.convention.check-updates")
+}
+
 tasks.register("ci") {
     // Client
     dependsOn(":client:android:assembleDebug")
