@@ -49,4 +49,5 @@ include(":client:common")
 include(":client:android")
 include(":client:jvm")
 
+include(":server:common")
 include(":server:jvm")
