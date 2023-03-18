@@ -1,0 +1,10 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="RunServer" type="JetRunConfigurationType">
+    <option name="MAIN_CLASS_NAME" value="ru.vs.control.MainKt" />
+    <module name="vs-control.server.jvm.jvmMain" />
+    <shortenClasspath name="NONE" />
+    <method v="2">
+      <option name="Gradle.BeforeRunTask" enabled="true" tasks="jvmMainClasses" externalProjectPath="$PROJECT_DIR$/server/jvm" vmOptions="" scriptParameters="" />
+    </method>
+  </configuration>
+</component>

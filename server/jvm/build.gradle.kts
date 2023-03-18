@@ -14,7 +14,7 @@ kotlin {
     sourceSets {
         named("commonMain") {
             dependencies {
-                // implementation(projects.server.common)
+                implementation(projects.server.common)
             }
         }
     }
