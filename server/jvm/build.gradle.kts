@@ -15,6 +15,13 @@ kotlin {
         named("commonMain") {
             dependencies {
                 implementation(projects.server.common)
+
+                // TODO Студия не корректно определяет classpath при запуске через стандартную конфигурацию
+                // как workaround пока нужно тут прописывать явно все зависимости
+                implementation(coreLibs.vs.core.coroutines)
+                implementation(coreLibs.vs.core.di)
+                implementation(coreLibs.vs.core.ktor.server)
+                implementation(coreLibs.vs.core.logging)
             }
         }
     }
