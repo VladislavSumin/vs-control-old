@@ -9,7 +9,7 @@ jobs:
   ci:
     name: ci
     runs-on: macos-12
-    timeout-minutes: 10
+    timeout-minutes: 20
     steps:
       - name: Clone vs-control repository
         uses: actions/checkout@v3
