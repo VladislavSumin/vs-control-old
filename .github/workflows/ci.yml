@@ -34,6 +34,8 @@ jobs:
 
         run: >-
           ./gradlew
+          -Pru.vs.core.ci=true
+          -Pru.vs.core.ci.github=true
           :ci
           --no-daemon
           --stacktrace
