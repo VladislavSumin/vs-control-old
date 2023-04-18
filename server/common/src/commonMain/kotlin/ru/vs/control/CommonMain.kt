@@ -4,7 +4,6 @@ import io.github.oshai.KotlinLogging
 import kotlinx.coroutines.launch
 import org.kodein.di.instance
 import ru.vs.control.domain.AboutServerInteractor
-import ru.vs.control.domain.AboutServerInteractorImpl
 
 fun commonMain() {
     val logger = KotlinLogging.logger("main")

@@ -2,7 +2,6 @@ package ru.vs.control.domain
 
 import ru.vs.control.BuildConfig
 
-
 /**
  * Provides common information about server
  */
