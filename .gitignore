@@ -6,4 +6,5 @@
 
 /build-logic/.gradle/
 
+/logs/**
 /local.properties
