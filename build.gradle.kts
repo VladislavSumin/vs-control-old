@@ -15,4 +15,8 @@ tasks.register("ci") {
 
     // Server
     dependsOn(":server:jvm:buildFatJarMain")
+
+    // Check dependencies
+    dependsOn(":dependencyUpdates")
+    dependsOn(gradle.includedBuild("vs-core-kt").task(":dependencyUpdates"))
 }
