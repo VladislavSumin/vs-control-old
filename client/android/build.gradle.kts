@@ -22,6 +22,7 @@ android {
 dependencies {
     implementation(projects.client.common)
 
+    implementation(coreLibs.vs.core.compose)
     implementation(coreLibs.vs.core.coroutines)
     implementation(coreLibs.vs.core.di)
     implementation(coreLibs.vs.core.logging)
