@@ -6,5 +6,7 @@
 
 /build-logic/.gradle/
 
+/kotlin-js-store/
+
 /logs/**
 /local.properties
