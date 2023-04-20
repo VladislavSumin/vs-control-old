@@ -10,3 +10,14 @@ buildConfig {
     packageName("ru.vs.control")
     buildConfigField("String", "version", "\"${project.configuration.version}\"")
 }
+
+kotlin {
+    sourceSets {
+        named("commonMain") {
+            dependencies {
+                // Add client js compiled code as a static resource
+                implementation(project(mapOf("path" to ":client:js", "configuration" to "browserProdDist")))
+            }
+        }
+    }
+}
