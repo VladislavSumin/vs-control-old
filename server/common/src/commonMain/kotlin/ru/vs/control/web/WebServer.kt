@@ -2,9 +2,11 @@ package ru.vs.control.web
 
 import io.ktor.server.cio.*
 import io.ktor.server.engine.*
+import io.ktor.server.routing.*
 import kotlinx.coroutines.CoroutineName
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.withContext
+import ru.vs.control.platform.platformStaticResources
 
 private const val SERVER_DEFAULT_PORT = 8080
 
@@ -39,8 +41,9 @@ class WebServerImpl : WebServer {
 
             module {
                 // contentNegotiationConfiguration.apply { configure() }
-                // routing {
-                // }
+                routing {
+                    this.platformStaticResources("/", "resources/web")
+                }
             }
         }
     }
