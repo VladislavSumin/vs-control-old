@@ -51,6 +51,7 @@ if (isUseCoreSources) {
 
 include(":client:common")
 include(":client:android")
+include(":client:ios")
 include(":client:js")
 include(":client:jvm")
 include(":client:macos")
