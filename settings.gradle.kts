@@ -53,6 +53,7 @@ include(":client:common")
 include(":client:android")
 include(":client:js")
 include(":client:jvm")
+include(":client:macos")
 
 include(":server:common")
 include(":server:jvm")
