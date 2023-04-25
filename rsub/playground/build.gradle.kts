@@ -12,10 +12,23 @@ sourceSets {
 }
 
 dependencies {
-    implementation(project(":rsub:connector:ktor-websocket:client"))
-    implementation(project(":rsub:connector:ktor-websocket:server"))
-    implementation(vsLibs.vs.core.ktor.server)
-    implementation(libs.ktor.client.okhttp)
-    ksp(project(":rsub:ksp:client"))
-    ksp(project(":rsub:ksp:server"))
+    implementation(projects.rsub.connector.ktorWebsocket.client)
+    implementation(projects.rsub.connector.ktorWebsocket.server)
+
+    implementation(projects.rsub.client)
+    implementation(projects.rsub.server)
+
+    implementation(coreLibs.vs.core.ktor.server)
+
+    implementation(coreLibs.ktor.server.websocket)
+    implementation(coreLibs.ktor.client.websocket)
+
+    implementation(coreLibs.ktor.client.cio)
+
+    implementation(coreLibs.kotlin.serialization.core)
+    implementation(coreLibs.kotlin.serialization.json)
+    implementation(coreLibs.vs.core.logging)
+
+    ksp(projects.rsub.ksp.client)
+    ksp(projects.rsub.ksp.server)
 }

@@ -1,11 +1,12 @@
 @file:Suppress("MagicNumber")
 
-import io.ktor.application.install
 import io.ktor.client.HttpClient
-import io.ktor.routing.routing
+import io.ktor.server.application.install
+import io.ktor.server.cio.CIO
+import io.ktor.server.engine.ApplicationEngine
 import io.ktor.server.engine.embeddedServer
-import io.ktor.server.netty.Netty
-import io.ktor.server.netty.NettyApplicationEngine
+import io.ktor.server.routing.routing
+import io.ktor.server.websocket.WebSockets
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
@@ -42,11 +43,11 @@ private fun runClientSever() {
     server.stop(100L, 100L)
 }
 
-private fun startServer(): NettyApplicationEngine {
+private fun startServer(): ApplicationEngine {
     val impls = TestServerSubscriptionsImpl(TestInterfaceImpl())
     val rSubServer = RSubServer(impls)
-    return embeddedServer(Netty, port = 8080) {
-        install(io.ktor.websocket.WebSockets)
+    return embeddedServer(CIO, port = 8080) {
+        install(WebSockets)
         routing {
             rSubWebSocket(rSubServer)
         }
@@ -55,7 +56,7 @@ private fun startServer(): NettyApplicationEngine {
 
 private fun createHttpClient(): HttpClient {
     return HttpClient {
-        install(io.ktor.client.features.websocket.WebSockets)
+        install(io.ktor.client.plugins.websocket.WebSockets)
     }
 }
 

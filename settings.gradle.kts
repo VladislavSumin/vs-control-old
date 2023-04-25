@@ -58,6 +58,7 @@ include(":rsub:connector:ktor-websocket:core")
 include(":rsub:connector:ktor-websocket:client")
 include(":rsub:connector:ktor-websocket:server")
 include(":rsub:test")
+include(":rsub:playground")
 
 include(":client:common")
 include(":client:android")
