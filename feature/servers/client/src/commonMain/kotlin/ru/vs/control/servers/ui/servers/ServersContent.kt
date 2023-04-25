@@ -1,16 +1,71 @@
 package ru.vs.control.servers.ui.servers
 
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.desktop.ui.tooling.preview.Preview
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.material.Card
+import androidx.compose.material.FloatingActionButton
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.dp
 
 @Composable
 fun ServersContent(component: ServersComponent) {
-    Box(Modifier.fillMaxSize()) {
-        Text("Servers Content", Modifier.align(Alignment.Center), color = Color.Red)
+    Servers()
+}
+
+@Composable
+private fun Servers() {
+    Scaffold(
+        floatingActionButton = { AddServer() }
+    ) {
+        LazyColumn(Modifier.padding(it)) {
+            item { Server() }
+            item { Server() }
+            item { Server() }
+            item { Server() }
+            item { Server() }
+            item { Server() }
+            item { Server() }
+            item { Server() }
+            item { Server() }
+            item { Server() }
+            item { Server() }
+            item { Server() }
+            item { Server() }
+            item { Server() }
+            item { Server() }
+            item { Server() }
+        }
+    }
+}
+
+@Composable
+private fun AddServer() {
+    FloatingActionButton(onClick = {}) {
+        Text("+")
+    }
+}
+
+@Composable
+private fun Server(modifier: Modifier = Modifier) {
+    Card(modifier) {
+        Column(
+            modifier = Modifier.padding(horizontal = 24.dp, vertical = 16.dp)
+        ) {
+            Text("Server")
+        }
+    }
+}
+
+@Composable
+@Preview
+private fun ServerPreview() {
+    MaterialTheme {
+        Server()
     }
 }
