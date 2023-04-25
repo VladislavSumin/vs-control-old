@@ -1,13 +1,12 @@
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.height
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.window.Application
+import androidx.compose.ui.window.ComposeUIViewController
+import com.arkivanov.decompose.DefaultComponentContext
+import com.arkivanov.essenty.lifecycle.LifecycleRegistry
+import com.arkivanov.essenty.lifecycle.create
 import kotlinx.cinterop.*
 import platform.Foundation.NSStringFromClass
 import platform.UIKit.*
-import ru.vs.control.HelloView
+import ru.vs.control.ui.root.DefaultRootComponent
+import ru.vs.control.ui.root.RootContent
 
 fun main() {
     val args = emptyArray<String>()
@@ -33,13 +32,16 @@ class SkikoAppDelegate : UIResponder, UIApplicationDelegateProtocol {
     }
 
     override fun application(application: UIApplication, didFinishLaunchingWithOptions: Map<Any?, *>?): Boolean {
+        //TODO пока на шару делаю, но тут точно нужен нормальный lifecycle
+        val lifecycle = LifecycleRegistry()
+        val defaultContext = DefaultComponentContext(lifecycle)
+        val rootComponent = DefaultRootComponent(defaultContext)
+
+        lifecycle.create()
+
         window = UIWindow(frame = UIScreen.mainScreen.bounds)
-        window!!.rootViewController = Application("Control") {
-            Column {
-                // To skip upper part of screen.
-                Box(modifier = Modifier.height(30.dp))
-                HelloView()
-            }
+        window!!.rootViewController = ComposeUIViewController {
+            RootContent(rootComponent)
         }
         window!!.makeKeyAndVisible()
         return true
