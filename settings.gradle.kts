@@ -49,6 +49,13 @@ if (isUseCoreSources) {
     includeBuild("../vs-core-kt")
 }
 
+include(":rsub:core")
+include(":rsub:client")
+include(":rsub:server")
+include(":rsub:ksp:client")
+include(":rsub:ksp:server")
+include(":rsub:test")
+
 include(":client:common")
 include(":client:android")
 include(":client:ios")

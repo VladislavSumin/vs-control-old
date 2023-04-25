@@ -3,6 +3,7 @@ import ru.vs.build_logic.configuration
 plugins {
     id("ru.vs.convention.preset.server-feature")
     id("com.github.gmazzo.buildconfig")
+    id("com.google.devtools.ksp")
 }
 
 buildConfig {
@@ -20,4 +21,10 @@ kotlin {
             }
         }
     }
+}
+
+dependencies {
+    // TODO завести конвеншен под это дело
+//    add("kspCommonMainMetadata", projects.rsub.ksp.server)
+//    add("kspJvm", projects.rsub.ksp.server)
 }
