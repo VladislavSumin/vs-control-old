@@ -1,10 +1,10 @@
 package ru.vs.rsub.connector.ktor_websocket
 
-import io.ktor.http.cio.websocket.DefaultWebSocketSession
-import io.ktor.http.cio.websocket.Frame
-import io.ktor.http.cio.websocket.close
-import io.ktor.http.cio.websocket.readText
 import io.ktor.utils.io.core.EOFException
+import io.ktor.websocket.DefaultWebSocketSession
+import io.ktor.websocket.Frame
+import io.ktor.websocket.close
+import io.ktor.websocket.readText
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.map
@@ -26,6 +26,7 @@ class RSubConnectionKtorWebSocket(
                         exception.message ?: "Expected exception while receiving messages",
                         exception
                     )
+
                     else -> RSubException("Unknown exception while receiving message", exception)
                 }
             }

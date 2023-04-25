@@ -3,6 +3,6 @@ plugins {
 }
 
 dependencies {
-    api(project(":rsub:core"))
-    api(libs.ktor.cio)
+    api(projects.rsub.core)
+    implementation(coreLibs.ktor.websockets)
 }

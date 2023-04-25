@@ -3,7 +3,9 @@ plugins {
 }
 
 dependencies {
-    api(project(":rsub:server"))
-    api(project(":rsub:connector:ktor-websocket:core"))
-    api(libs.ktor.server.websocket)
+    api(projects.rsub.connector.ktorWebsocket.core)
+
+    implementation(projects.rsub.server)
+    implementation(coreLibs.ktor.server.core)
+    implementation(coreLibs.ktor.server.websocket)
 }

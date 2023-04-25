@@ -1,7 +1,7 @@
 package ru.vs.rsub.connector.ktor_websocket
 
 import io.ktor.client.HttpClient
-import io.ktor.client.features.websocket.webSocketSession
+import io.ktor.client.plugins.websocket.webSocketSession
 import io.ktor.client.request.header
 import io.ktor.http.HttpHeaders
 import io.ktor.http.HttpMethod
