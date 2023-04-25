@@ -32,7 +32,7 @@ class SkikoAppDelegate : UIResponder, UIApplicationDelegateProtocol {
     }
 
     override fun application(application: UIApplication, didFinishLaunchingWithOptions: Map<Any?, *>?): Boolean {
-        //TODO пока на шару делаю, но тут точно нужен нормальный lifecycle
+        // TODO пока на шару делаю, но тут точно нужен нормальный lifecycle
         val lifecycle = LifecycleRegistry()
         val defaultContext = DefaultComponentContext(lifecycle)
         val rootComponent = DefaultRootComponent(defaultContext)

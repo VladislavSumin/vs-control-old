@@ -7,4 +7,3 @@ plugins {
 android {
     namespace = "ru.vs.control.feature.servers.client"
 }
-

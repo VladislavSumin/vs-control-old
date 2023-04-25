@@ -10,7 +10,7 @@ import ru.vs.control.ui.root.RootContent
 fun main() {
     NSApplication.sharedApplication()
 
-    //TODO пока на шару делаю, но тут точно нужен нормальный lifecycle
+    // TODO пока на шару делаю, но тут точно нужен нормальный lifecycle
     val lifecycle = LifecycleRegistry()
     val defaultContext = DefaultComponentContext(lifecycle)
     val rootComponent = DefaultRootComponent(defaultContext)

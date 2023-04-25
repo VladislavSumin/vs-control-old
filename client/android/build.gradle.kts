@@ -31,5 +31,4 @@ dependencies {
 
     implementation(coreLibs.android.core)
     implementation(coreLibs.android.activity)
-
 }

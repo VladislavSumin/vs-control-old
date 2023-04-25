@@ -24,7 +24,6 @@ kotlin {
     }
 }
 
-
 // Configure configurations for delivery compiled js client to server as static resources
 configureJsDistribution(
     configurationName = "browserProdDist",

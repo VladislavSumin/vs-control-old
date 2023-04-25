@@ -3,7 +3,6 @@ plugins {
     id("org.jetbrains.compose")
 }
 
-
 kotlin {
     macosX64 {
         binaries {

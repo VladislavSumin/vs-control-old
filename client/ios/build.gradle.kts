@@ -12,17 +12,16 @@ compose.experimental {
         deployConfigurations {
             simulator("IPhone13") {
 
-                //Usage: ./gradlew iosDeployIPhone13Debug
+                // Usage: ./gradlew iosDeployIPhone13Debug
                 device = IOSDevices.IPHONE_13_PRO
             }
             simulator("IPadUI") {
-                //Usage: ./gradlew iosDeployIPadUIDebug
+                // Usage: ./gradlew iosDeployIPadUIDebug
                 device = IOSDevices.IPAD_MINI_6th_Gen
             }
         }
     }
 }
-
 
 kotlin {
 

@@ -30,7 +30,7 @@ dependencies {
     implementation(coreLibs.vs.core.logging)
     implementation(coreLibs.kotlin.serialization.core)
     implementation(coreLibs.kotlin.serialization.json)
-    
+
     testImplementation(coreLibs.kotlin.coroutines.test)
     testImplementation(coreLibs.testing.turbine)
 

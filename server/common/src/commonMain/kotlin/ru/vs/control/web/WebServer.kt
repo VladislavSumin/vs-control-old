@@ -10,7 +10,6 @@ import ru.vs.control.platform.platformStaticResources
 
 private const val SERVER_DEFAULT_PORT = 8080
 
-
 interface WebServer {
     /**
      * Running web server, don't return control while server was running
