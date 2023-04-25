@@ -19,10 +19,11 @@ kotlin {
     sourceSets {
         named("commonMain") {
             dependencies {
-                 implementation(coreLibs.vs.core.coroutines)
-                 implementation(coreLibs.vs.core.di)
-                 implementation(coreLibs.vs.core.ktor.server)
-                 implementation(coreLibs.vs.core.logging)
+                implementation(coreLibs.vs.core.coroutines)
+                implementation(coreLibs.vs.core.di)
+                implementation(coreLibs.vs.core.ktor.server)
+                implementation(coreLibs.vs.core.logging)
+                implementation(coreLibs.vs.core.utils)
             }
         }
     }
