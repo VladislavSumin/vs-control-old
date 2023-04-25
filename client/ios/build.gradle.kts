@@ -46,7 +46,7 @@ kotlin {
                     "-linker-option", "-framework", "-linker-option", "CoreText",
                     "-linker-option", "-framework", "-linker-option", "CoreGraphics"
                 )
-                // TODO: the current compose binary surprises LLVM, so disable checks for now.
+                // TODO the current compose binary surprises LLVM, so disable checks for now.
                 freeCompilerArgs += "-Xdisable-phases=VerifyBitcode"
             }
         }

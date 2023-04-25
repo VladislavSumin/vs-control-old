@@ -1,7 +1,7 @@
 package ru.vs.control.platform
 
-import io.ktor.server.http.content.*
-import io.ktor.server.routing.*
+import io.ktor.server.http.content.staticResources
+import io.ktor.server.routing.Route
 
 /**
  * Sets up [Routing] to serve resources as static content.

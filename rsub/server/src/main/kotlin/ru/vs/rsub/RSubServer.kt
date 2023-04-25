@@ -51,7 +51,7 @@ class RSubServer(
         // TODO check possible data corrupt on id error from client (add sync?)
         // TODO add error handling
         // TODO make cancelable
-        @Suppress("TooGenericExceptionCaught")
+        @Suppress("TooGenericExceptionCaught", "InstanceOfCheckForException")
         private suspend fun processSubscribe(request: RSubMessage.Subscribe, scope: CoroutineScope) {
             val job = scope.launch(start = CoroutineStart.LAZY) {
                 logger.trace("Subscribe id=${request.id} to ${request.interfaceName}::${request.functionName}")

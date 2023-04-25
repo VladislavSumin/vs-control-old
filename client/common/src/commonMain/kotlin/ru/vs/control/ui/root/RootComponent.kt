@@ -24,14 +24,14 @@ class DefaultRootComponent(
 ) : RootComponent, ComponentContext by componentContext {
     private val navigation = StackNavigation<Config>()
 
-    private val stack_: Value<ChildStack<Config, Child>> = childStack(
+    private val internalStack: Value<ChildStack<Config, Child>> = childStack(
         source = navigation,
         initialConfiguration = Config.Servers,
         handleBackButton = true,
         childFactory = ::child
     )
 
-    override val stack: Value<ChildStack<*, Child>> = stack_
+    override val stack: Value<ChildStack<*, Child>> = internalStack
 
     private fun child(config: Config, componentContext: ComponentContext): Child =
         when (config) {

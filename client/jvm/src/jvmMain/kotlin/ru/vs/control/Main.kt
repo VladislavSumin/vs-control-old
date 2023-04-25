@@ -37,6 +37,7 @@ fun main(args: Array<String>) {
  * See https://arkivanov.github.io/Decompose/getting-started/quick-start/
  * See https://github.com/arkivanov/Decompose/blob/master/sample/app-desktop/src/jvmMain/kotlin/com/arkivanov/sample/app/Utils.kt
  */
+@Suppress("TooGenericExceptionCaught")
 internal fun <T> runOnUiThread(block: () -> T): T {
     if (SwingUtilities.isEventDispatchThread()) {
         return block()
