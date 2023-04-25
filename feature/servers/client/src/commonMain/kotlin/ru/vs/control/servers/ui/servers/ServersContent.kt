@@ -1,4 +1,4 @@
-package ru.vs.control
+package ru.vs.control.servers.ui.servers
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -8,16 +8,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 
-object HelloProvider {
-    private const val HELLO_STRING = "Hello from common module"
-    fun getHello(): String {
-        return HELLO_STRING
-    }
-}
-
 @Composable
-fun HelloView() {
+fun ServersContent(component: ServersComponent) {
     Box(Modifier.fillMaxSize()) {
-        Text("Hello compose", Modifier.align(Alignment.Center), color = Color.Red)
+        Text("Servers Content", Modifier.align(Alignment.Center), color = Color.Red)
     }
 }

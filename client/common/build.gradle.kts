@@ -16,4 +16,12 @@ kotlin {
         name = "control-common"
         homepage = "https://github.com/VladislavSumin/vs-control"
     }
+
+    sourceSets {
+        named("commonMain") {
+            dependencies {
+                implementation(projects.feature.servers.client)
+            }
+        }
+    }
 }
