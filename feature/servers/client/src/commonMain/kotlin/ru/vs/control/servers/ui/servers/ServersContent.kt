@@ -4,6 +4,7 @@ import androidx.compose.desktop.ui.tooling.preview.Preview
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.Card
 import androidx.compose.material.FloatingActionButton
 import androidx.compose.material.MaterialTheme
@@ -18,38 +19,28 @@ import androidx.compose.ui.unit.dp
 @Composable
 internal fun ServersContent(component: ServersComponent) {
     val state by component.state.collectAsState()
-    Servers()
+    when (val state = state) {
+        is ServersStore.State.Loaded -> Servers(state, component::onClickAddServer)
+        ServersStore.State.Loading -> {}
+    }
 }
 
 @Composable
-private fun Servers() {
+private fun Servers(state: ServersStore.State.Loaded, onClick: () -> Unit) {
     Scaffold(
-        floatingActionButton = { AddServer() }
+        floatingActionButton = { AddServer(onClick) }
     ) {
         LazyColumn(Modifier.padding(it)) {
-            item { Server() }
-            item { Server() }
-            item { Server() }
-            item { Server() }
-            item { Server() }
-            item { Server() }
-            item { Server() }
-            item { Server() }
-            item { Server() }
-            item { Server() }
-            item { Server() }
-            item { Server() }
-            item { Server() }
-            item { Server() }
-            item { Server() }
-            item { Server() }
+            items(state.servers) {
+                Server()
+            }
         }
     }
 }
 
 @Composable
-private fun AddServer() {
-    FloatingActionButton(onClick = {}) {
+private fun AddServer(onClick: () -> Unit) {
+    FloatingActionButton(onClick = onClick) {
         Text("+")
     }
 }

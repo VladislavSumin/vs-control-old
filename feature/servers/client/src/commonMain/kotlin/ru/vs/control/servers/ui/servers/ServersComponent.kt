@@ -16,6 +16,8 @@ class ServersComponent(
 
     internal val state = store.stateFlow
 
+    internal fun onClickAddServer() = store.accept(ServersStore.Intent.AddServer)
+
     @Composable
     override fun Render() = ServersContent(this)
 }
