@@ -16,7 +16,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun ServersContent(component: ServersComponent) {
+internal fun ServersContent(component: ServersComponent) {
     val state by component.state.collectAsState()
     Servers()
 }

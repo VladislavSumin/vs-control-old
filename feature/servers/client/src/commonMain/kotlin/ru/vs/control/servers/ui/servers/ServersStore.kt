@@ -6,13 +6,13 @@ import com.arkivanov.mvikotlin.core.store.StoreFactory
 import com.arkivanov.mvikotlin.core.store.create
 import ru.vs.control.servers.ui.servers.ServersStore.State
 
-interface ServersStore : Store<Nothing, State, Nothing> {
+internal interface ServersStore : Store<Nothing, State, Nothing> {
     sealed class State {
         object Loading : State()
     }
 }
 
-class ServerStoreFactory(private val storeFactory: StoreFactory) {
+internal class ServerStoreFactory(private val storeFactory: StoreFactory) {
     fun create(): ServersStore =
         object :
             ServersStore,
