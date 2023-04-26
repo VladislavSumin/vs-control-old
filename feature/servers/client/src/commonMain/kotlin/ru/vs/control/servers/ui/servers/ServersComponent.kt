@@ -1,17 +1,18 @@
 package ru.vs.control.servers.ui.servers
 
 import androidx.compose.runtime.Composable
-import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.mvikotlin.core.instancekeeper.getStore
 import com.arkivanov.mvikotlin.extensions.coroutines.stateFlow
-import com.arkivanov.mvikotlin.main.store.DefaultStoreFactory
+import org.kodein.di.direct
+import org.kodein.di.instance
 import ru.vs.core.decompose.ComposeComponent
+import ru.vs.core.decompose.DiComponentContext
 
 class ServersComponent(
-    componentContext: ComponentContext
-) : ComposeComponent, ComponentContext by componentContext {
+    componentContext: DiComponentContext
+) : ComposeComponent, DiComponentContext by componentContext {
     private val store: ServersStore = instanceKeeper.getStore {
-        ServerStoreFactory(DefaultStoreFactory()).create()
+        ServerStoreFactory(direct.instance()).create()
     }
 
     internal val state = store.stateFlow

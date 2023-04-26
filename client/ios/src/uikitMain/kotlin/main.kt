@@ -7,6 +7,7 @@ import kotlinx.cinterop.autoreleasepool
 import kotlinx.cinterop.cstr
 import kotlinx.cinterop.memScoped
 import kotlinx.cinterop.toCValues
+import org.kodein.di.DI
 import platform.Foundation.NSStringFromClass
 import platform.UIKit.UIApplication
 import platform.UIKit.UIApplicationDelegateProtocol
@@ -16,8 +17,11 @@ import platform.UIKit.UIResponder
 import platform.UIKit.UIResponderMeta
 import platform.UIKit.UIScreen
 import platform.UIKit.UIWindow
+import ru.vs.control.clientCommon
 import ru.vs.control.ui.root.DefaultRootComponent
 import ru.vs.control.ui.root.RootContent
+import ru.vs.core.decompose.DiComponentContext
+import ru.vs.core.di.Modules
 
 fun main() {
     val args = emptyArray<String>()
@@ -43,10 +47,14 @@ class SkikoAppDelegate : UIResponder, UIApplicationDelegateProtocol {
     }
 
     override fun application(application: UIApplication, didFinishLaunchingWithOptions: Map<Any?, *>?): Boolean {
+        val di = DI.lazy {
+            importOnce(Modules.clientCommon())
+        }
         // TODO пока на шару делаю, но тут точно нужен нормальный lifecycle
         val lifecycle = LifecycleRegistry()
         val defaultContext = DefaultComponentContext(lifecycle)
-        val rootComponent = DefaultRootComponent(defaultContext)
+        val defaultDiContext = DiComponentContext(defaultContext, di)
+        val rootComponent = DefaultRootComponent(defaultDiContext)
 
         lifecycle.create()
 

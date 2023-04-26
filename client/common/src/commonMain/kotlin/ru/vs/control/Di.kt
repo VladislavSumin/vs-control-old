@@ -1,0 +1,9 @@
+package ru.vs.control
+
+import org.kodein.di.DI
+import ru.vs.core.di.Modules
+import ru.vs.core.mvi.coreMvi
+
+fun Modules.clientCommon() = DI.Module("client-common") {
+    importOnce(Modules.coreMvi())
+}

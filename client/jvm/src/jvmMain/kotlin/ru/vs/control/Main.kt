@@ -6,16 +6,24 @@ import androidx.compose.ui.window.rememberWindowState
 import com.arkivanov.decompose.DefaultComponentContext
 import com.arkivanov.decompose.extensions.compose.jetbrains.lifecycle.LifecycleController
 import com.arkivanov.essenty.lifecycle.LifecycleRegistry
+import org.kodein.di.DI
 import ru.vs.control.ui.root.DefaultRootComponent
 import ru.vs.control.ui.root.RootContent
+import ru.vs.core.decompose.DiComponentContext
+import ru.vs.core.di.Modules
 import javax.swing.SwingUtilities
 
 fun main(args: Array<String>) {
+    val di = DI.lazy {
+        importOnce(Modules.clientCommon())
+    }
+
     val lifecycle = LifecycleRegistry()
 
     val rootComponent = runOnUiThread {
         val defaultContext = DefaultComponentContext(lifecycle)
-        DefaultRootComponent(defaultContext)
+        val defaultDiContext = DiComponentContext(defaultContext, di)
+        DefaultRootComponent(defaultDiContext)
     }
 
     application {

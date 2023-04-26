@@ -9,14 +9,15 @@ import com.arkivanov.essenty.parcelable.Parcelable
 import com.arkivanov.essenty.parcelable.Parcelize
 import ru.vs.control.servers.ui.servers.ServersComponent
 import ru.vs.core.decompose.ComposeComponent
+import ru.vs.core.decompose.DiComponentContext
 
 interface RootComponent {
     val stack: Value<ChildStack<*, ComposeComponent>>
 }
 
 class DefaultRootComponent(
-    componentContext: ComponentContext,
-) : RootComponent, ComponentContext by componentContext {
+    diComponentContext: DiComponentContext
+) : RootComponent, DiComponentContext by diComponentContext {
     private val navigation = StackNavigation<Config>()
 
     private val internalStack: Value<ChildStack<Config, ComposeComponent>> = childStack(
@@ -28,12 +29,14 @@ class DefaultRootComponent(
 
     override val stack: Value<ChildStack<*, ComposeComponent>> = internalStack
 
-    private fun child(config: Config, componentContext: ComponentContext): ComposeComponent =
-        when (config) {
-            is Config.Servers -> serversComponent(componentContext)
+    private fun child(config: Config, componentContext: ComponentContext): ComposeComponent {
+        val diComponentContext = DiComponentContext(componentContext, di)
+        return when (config) {
+            is Config.Servers -> serversComponent(diComponentContext)
         }
+    }
 
-    private fun serversComponent(componentContext: ComponentContext): ServersComponent {
+    private fun serversComponent(componentContext: DiComponentContext): ServersComponent {
         return ServersComponent(componentContext)
     }
 
