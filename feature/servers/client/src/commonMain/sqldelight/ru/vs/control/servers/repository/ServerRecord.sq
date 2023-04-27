@@ -1,14 +1,14 @@
-CREATE TABLE server(
+CREATE TABLE serverRecord(
     id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
     name TEXT NOT NULL UNIQUE,
     url TEXT NOT NULL UNIQUE
 );
 
 selectAll:
-SELECT * FROM server;
+SELECT * FROM serverRecord;
 
 insert:
-INSERT INTO server(name, url) VALUES ?;
+INSERT INTO serverRecord(name, url) VALUES ?;
 
 delete:
-DELETE FROM server WHERE id = ?;
+DELETE FROM serverRecord WHERE id = ?;
