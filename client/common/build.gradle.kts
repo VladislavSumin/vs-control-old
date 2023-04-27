@@ -3,6 +3,17 @@ import ru.vs.build_logic.utils.android
 plugins {
     id("ru.vs.convention.preset.client-feature")
     id("ru.vs.convention.kmp.cocoapods")
+    id("app.cash.sqldelight")
+}
+
+evaluationDependsOn(":feature:servers:client")
+sqldelight {
+    databases {
+        register("Database") {
+            packageName.set("ru.vs.control.repository")
+            dependency(projects.feature.servers.client)
+        }
+    }
 }
 
 android {
@@ -21,6 +32,16 @@ kotlin {
         named("commonMain") {
             dependencies {
                 implementation(projects.feature.servers.client)
+            }
+        }
+        named("androidMain") {
+            dependencies {
+                implementation(coreLibs.sqldelight.android)
+            }
+        }
+        named("jvmMain") {
+            dependencies {
+                implementation(coreLibs.sqldelight.sqlite)
             }
         }
     }

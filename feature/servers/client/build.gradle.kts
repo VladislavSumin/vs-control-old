@@ -2,6 +2,15 @@ import ru.vs.build_logic.utils.android
 
 plugins {
     id("ru.vs.convention.preset.client-feature")
+    id("app.cash.sqldelight")
+}
+
+sqldelight {
+    databases {
+        register("Database") {
+            packageName.set("ru.vs.control.servers.repository")
+        }
+    }
 }
 
 android {

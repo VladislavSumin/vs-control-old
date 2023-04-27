@@ -1,0 +1,14 @@
+CREATE TABLE server(
+    id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    name TEXT NOT NULL UNIQUE,
+    url TEXT NOT NULL UNIQUE
+);
+
+selectAll:
+SELECT * FROM server;
+
+insert:
+INSERT INTO server(name, url) VALUES ?;
+
+delete:
+DELETE FROM server WHERE id = ?;
