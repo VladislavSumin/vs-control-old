@@ -53,7 +53,7 @@ internal class ServerStoreFactory(
 
         override fun executeIntent(intent: Intent, getState: () -> State) {
             scope.launch {
-                serversInteractor.addServer(Server("Test"))
+                serversInteractor.addServer(Server(0, "Test", ""))
             }
         }
     }

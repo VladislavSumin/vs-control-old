@@ -1,0 +1,107 @@
+package ru.vs.control.servers.ui.edit_server
+
+import com.arkivanov.mvikotlin.core.store.Reducer
+import com.arkivanov.mvikotlin.core.store.Store
+import com.arkivanov.mvikotlin.core.store.StoreFactory
+import com.arkivanov.mvikotlin.extensions.coroutines.CoroutineBootstrapper
+import com.arkivanov.mvikotlin.extensions.coroutines.CoroutineExecutor
+import kotlinx.coroutines.launch
+import ru.vs.control.servers.domain.Server
+import ru.vs.control.servers.domain.ServersInteractor
+import ru.vs.control.servers.ui.edit_server.EditServerStore.Intent
+import ru.vs.control.servers.ui.edit_server.EditServerStore.Label
+import ru.vs.control.servers.ui.edit_server.EditServerStore.State
+
+internal interface EditServerStore : Store<Intent, State, Label> {
+
+    sealed interface Intent {
+        data class UpdateName(val name: String) : Intent
+        data class UpdateUrl(val url: String) : Intent
+        object Save : Intent
+    }
+
+    data class State(
+        val name: String,
+        val url: String,
+    )
+
+    sealed interface Label {
+        object CloseScreen : Label
+    }
+}
+
+internal class EditServerStoreFactory(
+    private val storeFactory: StoreFactory,
+    private val serversInteractor: ServersInteractor,
+) {
+
+    fun create(serverId: Long?): EditServerStore =
+        object :
+            EditServerStore,
+            Store<Intent, State, Label> by storeFactory.create(
+                name = "AddServerStore",
+                initialState = State("", ""),
+                bootstrapper = BootstrapperImpl(serverId),
+                executorFactory = ::ExecutorImpl,
+                reducer = ReducerImpl
+            ) {}
+
+    private sealed interface Action {
+        data class LoadServer(val serverId: Long) : Action
+        object CreateNewServer : Action
+    }
+
+    private sealed interface Msg {
+        data class UpdateName(val name: String) : Msg
+        data class UpdateUrl(val url: String) : Msg
+    }
+
+    private class BootstrapperImpl(val serverId: Long?) : CoroutineBootstrapper<Action>() {
+        override fun invoke() {
+            val action = if (serverId != null) {
+                Action.LoadServer(serverId)
+            } else {
+                Action.CreateNewServer
+            }
+            dispatch(action)
+        }
+    }
+
+    private inner class ExecutorImpl : CoroutineExecutor<Intent, Action, State, Msg, Label>() {
+        override fun executeIntent(intent: Intent, getState: () -> State) {
+            when (intent) {
+                Intent.Save -> {
+                    scope.launch {
+                        val state = getState()
+                        val server = Server(0, state.name, state.url)
+                        serversInteractor.addServer(server)
+                        publish(Label.CloseScreen)
+                    }
+                }
+
+                is Intent.UpdateName -> dispatch(Msg.UpdateName(intent.name))
+                is Intent.UpdateUrl -> dispatch(Msg.UpdateUrl(intent.url))
+            }
+        }
+
+        override fun executeAction(action: Action, getState: () -> State) {
+            scope.launch {
+                when (action) {
+                    Action.CreateNewServer -> Unit
+                    is Action.LoadServer -> {
+                        TODO()
+                    }
+                }
+            }
+        }
+    }
+
+    private object ReducerImpl : Reducer<State, Msg> {
+        override fun State.reduce(message: Msg): State {
+            return when (message) {
+                is Msg.UpdateName -> copy(name = message.name)
+                is Msg.UpdateUrl -> copy(url = message.url)
+            }
+        }
+    }
+}

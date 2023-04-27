@@ -9,7 +9,25 @@ internal interface ServersInteractor {
     suspend fun addServer(server: Server)
 }
 
-data class Server(val name: String)
+/**
+ * Remote Control server info
+ */
+data class Server(
+    /**
+     * Unique server id for store it in local database
+     */
+    val id: Long,
+
+    /**
+     * Human-readable server name visible by user
+     */
+    val name: String,
+
+    /**
+     * Connection url
+     */
+    val url: String,
+)
 
 internal class ServersInteractorImpl : ServersInteractor {
     private val servers: MutableStateFlow<List<Server>> = MutableStateFlow(emptyList())

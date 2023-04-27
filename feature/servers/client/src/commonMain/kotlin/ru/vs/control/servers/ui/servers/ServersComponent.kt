@@ -9,7 +9,8 @@ import ru.vs.core.decompose.ComposeComponent
 import ru.vs.core.decompose.DiComponentContext
 
 class ServersComponent(
-    componentContext: DiComponentContext
+    componentContext: DiComponentContext,
+    private val openAddServerScreen: () -> Unit,
 ) : ComposeComponent, DiComponentContext by componentContext {
     private val store: ServersStore = instanceKeeper.getStore {
         // TODO придумать короткую функцию
@@ -18,7 +19,8 @@ class ServersComponent(
 
     internal val state = store.stateFlow
 
-    internal fun onClickAddServer() = store.accept(ServersStore.Intent.AddServer)
+    //    internal fun onClickAddServer() = store.accept(ServersStore.Intent.AddServer)
+    internal fun onClickAddServer() = openAddServerScreen()
 
     @Composable
     override fun Render() = ServersContent(this)
