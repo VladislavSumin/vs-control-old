@@ -1,9 +1,14 @@
 package ru.vs.control.servers.ui.servers
 
 import com.arkivanov.mvikotlin.core.store.Reducer
+import com.arkivanov.mvikotlin.core.store.SimpleBootstrapper
 import com.arkivanov.mvikotlin.core.store.Store
 import com.arkivanov.mvikotlin.core.store.StoreFactory
 import com.arkivanov.mvikotlin.extensions.coroutines.CoroutineExecutor
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.launch
+import ru.vs.control.servers.domain.Server
+import ru.vs.control.servers.domain.ServersInteractor
 import ru.vs.control.servers.ui.servers.ServersStore.Intent
 import ru.vs.control.servers.ui.servers.ServersStore.State
 
@@ -15,30 +20,41 @@ internal interface ServersStore : Store<Intent, State, Nothing> {
     sealed class State {
         object Loading : State()
         data class Loaded(val servers: List<Server>) : State()
-
-        data class Server(val name: String)
     }
 }
 
-internal class ServerStoreFactory(private val storeFactory: StoreFactory) {
+internal class ServerStoreFactory(
+    private val storeFactory: StoreFactory,
+    private val serversInteractor: ServersInteractor,
+) {
     fun create(): ServersStore =
         object :
             ServersStore,
             Store<Intent, State, Nothing> by storeFactory.create(
                 name = ServersStore::class.simpleName,
                 initialState = State.Loaded(emptyList()),
+                bootstrapper = SimpleBootstrapper(Unit),
                 executorFactory = ::ExecutorImpl,
                 reducer = ReducerImpl
             ) {}
 
     private sealed class Msg {
-        data class ServersListUpdated(val servers: List<State.Server>) : Msg()
+        data class ServersListUpdated(val servers: List<Server>) : Msg()
     }
 
-    private class ExecutorImpl : CoroutineExecutor<Intent, Nothing, State, Msg, Nothing>() {
+    private inner class ExecutorImpl : CoroutineExecutor<Intent, Unit, State, Msg, Nothing>() {
+        override fun executeAction(action: Unit, getState: () -> State) {
+            scope.launch {
+                serversInteractor.observeServers()
+                    .map { Msg.ServersListUpdated(it) }
+                    .collect(::dispatch)
+            }
+        }
+
         override fun executeIntent(intent: Intent, getState: () -> State) {
-            val servers = ((getState() as? State.Loaded)?.servers ?: emptyList()) + State.Server("Server name")
-            dispatch(Msg.ServersListUpdated(servers))
+            scope.launch {
+                serversInteractor.addServer(Server("Test"))
+            }
         }
     }
 

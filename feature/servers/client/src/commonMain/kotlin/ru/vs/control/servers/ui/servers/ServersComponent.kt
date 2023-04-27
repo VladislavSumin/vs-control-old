@@ -12,7 +12,8 @@ class ServersComponent(
     componentContext: DiComponentContext
 ) : ComposeComponent, DiComponentContext by componentContext {
     private val store: ServersStore = instanceKeeper.getStore {
-        ServerStoreFactory(direct.instance()).create()
+        // TODO придумать короткую функцию
+        direct.instance<ServerStoreFactory>().create()
     }
 
     internal val state = store.stateFlow
