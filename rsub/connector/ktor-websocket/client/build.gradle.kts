@@ -1,10 +1,16 @@
 plugins {
-    kotlin("jvm")
+    id("ru.vs.convention.kmp.all")
 }
 
-dependencies {
-    api(projects.rsub.connector.ktorWebsocket.core)
+kotlin {
+    sourceSets {
+        named("commonMain") {
+            dependencies {
+                api(projects.rsub.connector.ktorWebsocket.core)
 
-    implementation(projects.rsub.client)
-    implementation(coreLibs.ktor.client.websocket)
+                implementation(projects.rsub.client)
+                implementation(coreLibs.ktor.client.websocket)
+            }
+        }
+    }
 }
