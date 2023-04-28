@@ -30,7 +30,7 @@ class RSubServer(
 
         suspend fun handle() {
             coroutineScope {
-                logger.debug("Handle new connection")
+                logger.debug { "Handle new connection" }
                 connection.receive.collect {
                     when (val request = Json.decodeFromString<RSubMessage>(it)) {
                         is RSubMessage.Subscribe -> processSubscribe(request, this)
@@ -41,7 +41,7 @@ class RSubServer(
             }
             activeSubscriptions.forEach { (_, v) -> v.cancel() }
             connection.close()
-            logger.debug("Connection closed")
+            logger.debug { "Connection closed" }
         }
 
         private suspend fun send(message: RSubMessage) {
@@ -54,7 +54,7 @@ class RSubServer(
         @Suppress("TooGenericExceptionCaught", "InstanceOfCheckForException")
         private suspend fun processSubscribe(request: RSubMessage.Subscribe, scope: CoroutineScope) {
             val job = scope.launch(start = CoroutineStart.LAZY) {
-                logger.trace("Subscribe id=${request.id} to ${request.interfaceName}::${request.functionName}")
+                logger.trace { "Subscribe id=${request.id} to ${request.interfaceName}::${request.functionName}" }
 
                 val impl = rSubServerSubscriptions.getImpl(request.interfaceName, request.functionName)
 
@@ -76,14 +76,13 @@ class RSubServer(
                     activeSubscriptions.remove(request.id)
 
                     if (e is CancellationException) throw e
-                    logger.trace(
-                        "Error on subscription id=${request.id} to ${request.interfaceName}::${request.functionName}",
-                        e
-                    )
+                    logger.trace(e) {
+                        "Error on subscription id=${request.id} to ${request.interfaceName}::${request.functionName}"
+                    }
                     return@launch
                 }
 
-                logger.trace("Complete subscription id=${request.id} to ${request.interfaceName}::${request.functionName}")
+                logger.trace { "Complete subscription id=${request.id} to ${request.interfaceName}::${request.functionName}" }
                 activeSubscriptions.remove(request.id)
             }
             activeSubscriptions[request.id] = job
@@ -91,7 +90,7 @@ class RSubServer(
         }
 
         private fun processUnsubscribe(request: RSubMessage) {
-            logger.trace("Cancel subscription id=${request.id}")
+            logger.trace { "Cancel subscription id=${request.id}" }
             activeSubscriptions.remove(request.id)?.cancel()
         }
 
