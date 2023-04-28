@@ -1,12 +1,18 @@
 plugins {
-    kotlin("jvm")
+    id("ru.vs.convention.kmp.all")
 }
 
-dependencies {
-    api(projects.rsub.core)
+kotlin {
+    sourceSets {
+        named("commonMain") {
+            dependencies {
+                api(projects.rsub.core)
 
-    implementation(coreLibs.vs.core.coroutines)
-    implementation(coreLibs.vs.core.logging)
-    implementation(coreLibs.kotlin.serialization.core)
-    implementation(coreLibs.kotlin.serialization.json)
+                implementation(coreLibs.vs.core.coroutines)
+                implementation(coreLibs.vs.core.logging)
+                implementation(coreLibs.kotlin.serialization.core)
+                implementation(coreLibs.kotlin.serialization.json)
+            }
+        }
+    }
 }
