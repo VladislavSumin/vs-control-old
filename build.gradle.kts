@@ -12,7 +12,10 @@ tasks.register("ci") {
     dependsOn(":client:android:assembleRelease")
     dependsOn(":client:jvm:buildFatJarMain")
     dependsOn(":client:js:jsBrowserDistribution")
-    dependsOn(":client:common:uikitArm64MainBinaries")
+    dependsOn(":client:macos:macosArm64Binaries")
+    dependsOn(":client:macos:macosX64Binaries")
+    dependsOn(":client:ios:uikitArm64Binaries")
+    dependsOn(":client:ios:uikitX64Binaries")
 
     // Server
     dependsOn(":server:jvm:buildFatJarMain")

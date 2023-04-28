@@ -1,6 +1,7 @@
 plugins {
     id("ru.vs.convention.kmp.macos")
     id("org.jetbrains.compose")
+    id("app.cash.sqldelight")
 }
 
 kotlin {
@@ -9,11 +10,7 @@ kotlin {
             executable {
                 entryPoint = "main"
                 freeCompilerArgs += listOf(
-                    "-linker-option", "-framework",
-                    "-linker-option", "Metal",
-
-                    // for sqldelight
-                    "-linker-options", "-lsqlite3"
+                    "-linker-option", "-framework", "-linker-option", "Metal",
                 )
             }
         }
@@ -24,11 +21,7 @@ kotlin {
             executable {
                 entryPoint = "main"
                 freeCompilerArgs += listOf(
-                    "-linker-option", "-framework",
-                    "-linker-option", "Metal",
-
-                    // for sqldelight
-                    "-linker-options", "-lsqlite3"
+                    "-linker-option", "-framework", "-linker-option", "Metal",
                 )
             }
         }
