@@ -9,7 +9,11 @@ kotlin {
             executable {
                 entryPoint = "main"
                 freeCompilerArgs += listOf(
-                    "-linker-option", "-framework", "-linker-option", "Metal"
+                    "-linker-option", "-framework",
+                    "-linker-option", "Metal",
+
+                    // for sqldelight
+                    "-linker-options", "-lsqlite3"
                 )
             }
         }
@@ -20,7 +24,11 @@ kotlin {
             executable {
                 entryPoint = "main"
                 freeCompilerArgs += listOf(
-                    "-linker-option", "-framework", "-linker-option", "Metal"
+                    "-linker-option", "-framework",
+                    "-linker-option", "Metal",
+
+                    // for sqldelight
+                    "-linker-options", "-lsqlite3"
                 )
             }
         }

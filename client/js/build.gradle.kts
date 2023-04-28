@@ -19,6 +19,8 @@ kotlin {
         named("jsMain") {
             dependencies {
                 implementation(projects.client.common)
+                implementation(npm("sql.js", "1.6.2"))
+                implementation(devNpm("copy-webpack-plugin", "9.1.0"))
             }
         }
     }

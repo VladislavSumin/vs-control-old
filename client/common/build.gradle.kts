@@ -32,16 +32,7 @@ kotlin {
         named("commonMain") {
             dependencies {
                 implementation(projects.feature.servers.client)
-            }
-        }
-        named("androidMain") {
-            dependencies {
-                implementation(coreLibs.sqldelight.android)
-            }
-        }
-        named("jvmMain") {
-            dependencies {
-                implementation(coreLibs.sqldelight.sqlite)
+                implementation(coreLibs.vs.core.database)
             }
         }
     }

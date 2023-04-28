@@ -4,9 +4,12 @@ import app.cash.sqldelight.coroutines.asFlow
 import app.cash.sqldelight.coroutines.mapToList
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
 import ru.vs.control.servers.domain.Server
+import ru.vs.control.servers.service.ServerQueriesProvider
 
 internal interface ServersRepository {
     fun observeServers(): Flow<List<Server>>
@@ -14,21 +17,25 @@ internal interface ServersRepository {
     suspend fun delete(server: Server)
 }
 
-internal class ServersRepositoryImpl(private val serverQueries: ServerRecordQueries) : ServersRepository {
+internal class ServersRepositoryImpl(private val serverQueriesProvider: ServerQueriesProvider) : ServersRepository {
     override fun observeServers(): Flow<List<Server>> {
-        return serverQueries.selectAll()
-            .asFlow()
-            .mapToList(Dispatchers.Default)
-            .map { it.toServers() }
+        return flow { emit(serverQueriesProvider.getServerQueries()) }
+            .flatMapLatest { serverRecordQuery ->
+                serverRecordQuery.selectAll()
+                    .asFlow()
+                    .mapToList(Dispatchers.Default)
+                    .map { it.toServers() }
+
+            }
     }
 
     override suspend fun insert(server: Server) = withContext(Dispatchers.Default) {
         check(server.id == 0L)
-        serverQueries.insert(server.toRecord())
+        serverQueriesProvider.getServerQueries().insert(server.toRecord())
     }
 
     override suspend fun delete(server: Server) = withContext(Dispatchers.Default) {
-        serverQueries.delete(server.id)
+        serverQueriesProvider.getServerQueries().delete(server.id)
     }
 }
 

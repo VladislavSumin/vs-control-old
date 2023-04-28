@@ -13,7 +13,6 @@ import ru.vs.core.di.Modules
 import ru.vs.core.di.i
 
 fun Modules.featureServers() = DI.Module("feature-servers") {
-    bindSingleton { i<Database>().serverRecordQueries }
     bindSingleton<ServersRepository> { ServersRepositoryImpl(i()) }
     bindSingleton<ServersInteractor> { ServersInteractorImpl(i()) }
 
