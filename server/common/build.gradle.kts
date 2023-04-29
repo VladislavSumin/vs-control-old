@@ -2,8 +2,9 @@ import ru.vs.build_logic.configuration
 
 plugins {
     id("ru.vs.convention.preset.server-feature")
+    id("ru.vs.convention.serialization.json")
+    id("ru.vs.convention.ksp-kmp-hack")
     id("com.github.gmazzo.buildconfig")
-    id("com.google.devtools.ksp")
 }
 
 buildConfig {
@@ -18,13 +19,17 @@ kotlin {
             dependencies {
                 // Add client js compiled code as a static resource
                 implementation(project(mapOf("path" to ":client:js", "configuration" to "browserProdDist")))
+
+                implementation(coreLibs.vs.core.ktor.server)
+                implementation(coreLibs.ktor.server.websocket)
+
+                implementation(projects.rsub.server)
+                implementation(projects.rsub.connector.ktorWebsocket.server)
             }
         }
     }
 }
 
 dependencies {
-    // TODO завести конвеншен под это дело
-//    add("kspCommonMainMetadata", projects.rsub.ksp.server)
-//    add("kspJvm", projects.rsub.ksp.server)
+    add("kspCommonMainMetadata", projects.rsub.ksp.server)
 }

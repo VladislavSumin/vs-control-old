@@ -1,5 +1,6 @@
 plugins {
     id("ru.vs.convention.kmp.all")
+    id("ru.vs.convention.serialization.json")
 }
 
 kotlin {
@@ -10,8 +11,6 @@ kotlin {
 
                 implementation(coreLibs.vs.core.coroutines)
                 implementation(coreLibs.vs.core.logging)
-                implementation(coreLibs.kotlin.serialization.core)
-                implementation(coreLibs.kotlin.serialization.json)
             }
         }
     }
