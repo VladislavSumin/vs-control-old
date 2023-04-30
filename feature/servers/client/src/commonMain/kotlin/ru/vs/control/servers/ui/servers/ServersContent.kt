@@ -1,20 +1,25 @@
 package ru.vs.control.servers.ui.servers
 
 import androidx.compose.desktop.ui.tooling.preview.Preview
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.defaultMinSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
+import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -41,9 +46,12 @@ private fun Servers(state: ServersStore.State.Loaded, onClick: () -> Unit) {
     Scaffold(
         floatingActionButton = { AddServer(onClick) }
     ) { padding ->
-        LazyColumn(Modifier.padding(padding)) {
+        LazyColumn(
+            Modifier.padding(padding),
+            verticalArrangement = Arrangement.spacedBy(4.dp)
+        ) {
             items(state.servers, key = { it.id }) { server ->
-                Server(server)
+                Server(server, Modifier.fillMaxWidth())
             }
         }
     }
@@ -71,16 +79,32 @@ private fun Server(server: Server, modifier: Modifier = Modifier) {
                 Spacer(Modifier.size(width = 12.dp, height = 0.dp))
                 Column(
                     modifier = Modifier
+                        .weight(1f)
                         .align(Alignment.CenterVertically)
                 ) {
                     Text(
                         server.name,
-                        style = MaterialTheme.typography.titleMedium
+                        style = MaterialTheme.typography.titleMedium,
+                        maxLines = 1,
                     )
                     Text(
                         server.url,
-                        style = MaterialTheme.typography.bodyMedium
+                        style = MaterialTheme.typography.bodyMedium,
+                        maxLines = 1,
                     )
+                }
+                Spacer(
+                    Modifier
+                        .defaultMinSize(minWidth = 12.dp)
+                )
+                Box {
+                    IconButton(
+                        onClick = {}
+                    ) {
+                        Icon(Icons.Default.MoreVert, contentDescription = null)
+                    }
+
+                    //TODO add dropdown menu
                 }
             }
         }
