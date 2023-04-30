@@ -6,8 +6,12 @@ import ru.vs.control.domain.AboutServerInteractor
 import ru.vs.control.domain.AboutServerInteractorImpl
 import ru.vs.control.web.WebServer
 import ru.vs.control.web.WebServerImpl
+import ru.vs.core.di.Modules
+import ru.vs.core.serialization.json.coreSerializationJson
 
-val Di = DI {
+val Di = DI.lazy {
+    importOnce(Modules.coreSerializationJson())
+
     bindSingleton<AboutServerInteractor> { AboutServerInteractorImpl() }
     bindSingleton<WebServer> { WebServerImpl() }
 }
