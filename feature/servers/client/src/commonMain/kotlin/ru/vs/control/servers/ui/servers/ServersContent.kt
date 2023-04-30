@@ -1,19 +1,27 @@
 package ru.vs.control.servers.ui.servers
 
 import androidx.compose.desktop.ui.tooling.preview.Preview
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import ru.vs.control.servers.domain.Server
@@ -51,11 +59,30 @@ private fun AddServer(onClick: () -> Unit) {
 @Composable
 private fun Server(server: Server, modifier: Modifier = Modifier) {
     Card(modifier) {
-        Column(
-            modifier = Modifier.padding(horizontal = 24.dp, vertical = 16.dp)
-        ) {
-            Text(server.name)
-            Text(server.url)
+        Box(modifier = Modifier.padding(horizontal = 16.dp, vertical = 12.dp)) {
+            Row {
+                Icon(
+                    Icons.Default.AccountCircle,
+                    contentDescription = null,
+                    modifier = Modifier
+                        .size(40.dp)
+                        .align(Alignment.CenterVertically)
+                )
+                Spacer(Modifier.size(width = 12.dp, height = 0.dp))
+                Column(
+                    modifier = Modifier
+                        .align(Alignment.CenterVertically)
+                ) {
+                    Text(
+                        server.name,
+                        style = MaterialTheme.typography.titleMedium
+                    )
+                    Text(
+                        server.url,
+                        style = MaterialTheme.typography.bodyMedium
+                    )
+                }
+            }
         }
     }
 }
@@ -65,7 +92,8 @@ private fun Server(server: Server, modifier: Modifier = Modifier) {
 private fun ServerPreview() {
     MaterialTheme {
         Server(
-            Server(0, "Server name", "https://control.vs.com")
+            Server(0, "Server name", "https://control.vs.com/"),
+            Modifier.padding(16.dp)
         )
     }
 }
