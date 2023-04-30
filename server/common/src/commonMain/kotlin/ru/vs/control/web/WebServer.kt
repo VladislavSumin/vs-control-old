@@ -1,5 +1,6 @@
 package ru.vs.control.web
 
+import io.ktor.server.application.install
 import io.ktor.server.cio.CIO
 import io.ktor.server.engine.ApplicationEngine
 import io.ktor.server.engine.ApplicationEngineEnvironment
@@ -7,21 +8,29 @@ import io.ktor.server.engine.applicationEngineEnvironment
 import io.ktor.server.engine.connector
 import io.ktor.server.engine.embeddedServer
 import io.ktor.server.routing.routing
+import io.ktor.server.websocket.WebSockets
 import kotlinx.coroutines.CoroutineName
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.withContext
 import ru.vs.control.platform.platformStaticResources
+import ru.vs.control.web.rsub.AboutServerRSubImpl
+import ru.vs.control.web.rsub.RSubServerFactory
+import ru.vs.control.web.rsub.RSubSubscriptionsImpl
+import ru.vs.rsub.RSubServer
+import ru.vs.rsub.connector.ktor_websocket.rSubWebSocket
 
 private const val SERVER_DEFAULT_PORT = 8080
 
-interface WebServer {
+internal interface WebServer {
     /**
      * Running web server, don't return control while server was running
      */
     suspend fun run()
 }
 
-class WebServerImpl : WebServer {
+internal class WebServerImpl(
+    private val rSubServerFactory: RSubServerFactory,
+) : WebServer {
     override suspend fun run() {
         withContext(CoroutineName("web-server")) {
             val environment = createEnvironment()
@@ -43,9 +52,14 @@ class WebServerImpl : WebServer {
             }
 
             module {
-                // contentNegotiationConfiguration.apply { configure() }
+                install(WebSockets)
+
                 routing {
+                    // Share static resources bundled inside server app
                     this.platformStaticResources("/", "resources/web")
+
+                    // Setup rSub protocol
+                    rSubWebSocket(rSubServerFactory.create())
                 }
             }
         }
