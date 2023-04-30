@@ -36,6 +36,7 @@ kotlin {
                 implementation(coreLibs.vs.core.di)
                 implementation(coreLibs.vs.core.logging)
                 implementation(coreLibs.vs.core.mvi)
+                implementation(coreLibs.vs.core.uikit.dropdownMenu)
                 implementation(coreLibs.vs.core.utils)
             }
         }
