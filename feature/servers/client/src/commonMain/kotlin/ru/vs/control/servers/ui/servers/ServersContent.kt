@@ -26,10 +26,14 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.setValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import ru.vs.control.servers.domain.Server
+import ru.vs.core.uikit.dropdown_menu.DropdownMenu
 
 @Composable
 internal fun ServersContent(component: ServersComponent) {
@@ -97,16 +101,28 @@ private fun Server(server: Server, modifier: Modifier = Modifier) {
                     Modifier
                         .defaultMinSize(minWidth = 12.dp)
                 )
-                Box {
-                    IconButton(
-                        onClick = {}
-                    ) {
-                        Icon(Icons.Default.MoreVert, contentDescription = null)
-                    }
-
-                    //TODO add dropdown menu
-                }
+                ServerDropDownMenu()
             }
+        }
+    }
+}
+
+@Composable
+private fun ServerDropDownMenu() {
+    var isExpanded by remember { mutableStateOf(false) }
+
+    Box {
+        IconButton(
+            onClick = { isExpanded = true }
+        ) {
+            Icon(Icons.Default.MoreVert, contentDescription = null)
+        }
+
+        DropdownMenu(
+            expanded = isExpanded,
+            onDismissRequest = { isExpanded = false },
+        ) {
+            Text("Hello dropdown menu")
         }
     }
 }
