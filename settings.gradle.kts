@@ -60,6 +60,9 @@ include(":rsub:connector:ktor-websocket:server")
 include(":rsub:test")
 include(":rsub:playground")
 
+include(":feature:about-server:client")
+include(":feature:about-server:server")
+include(":feature:about-server:shared")
 include(":feature:servers:client")
 
 include(":client:common")

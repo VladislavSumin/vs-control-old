@@ -14,7 +14,7 @@ sqldelight {
 }
 
 android {
-    namespace = "ru.vs.control.feature.servers.client"
+    namespace = "ru.vs.control.servers.client"
 }
 
 kotlin {

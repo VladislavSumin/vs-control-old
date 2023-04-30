@@ -20,6 +20,8 @@ kotlin {
                 // Add client js compiled code as a static resource
                 implementation(project(mapOf("path" to ":client:js", "configuration" to "browserProdDist")))
 
+                implementation(projects.feature.aboutServer.server)
+
                 implementation(coreLibs.vs.core.ktor.server)
                 implementation(coreLibs.ktor.server.websocket)
 

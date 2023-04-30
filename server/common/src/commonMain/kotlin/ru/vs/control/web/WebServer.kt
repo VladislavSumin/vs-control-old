@@ -13,7 +13,7 @@ import kotlinx.coroutines.CoroutineName
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.withContext
 import ru.vs.control.platform.platformStaticResources
-import ru.vs.control.web.rsub.RSubServerFactory
+import ru.vs.control.rsub.RSubServerFactory
 import ru.vs.rsub.connector.ktor_websocket.rSubWebSocket
 
 private const val SERVER_DEFAULT_PORT = 8080
