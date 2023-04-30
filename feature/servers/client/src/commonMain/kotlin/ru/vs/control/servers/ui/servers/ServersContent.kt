@@ -34,6 +34,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import ru.vs.control.servers.domain.Server
 import ru.vs.core.uikit.dropdown_menu.DropdownMenu
+import ru.vs.core.uikit.dropdown_menu.DropdownMenuItem
 
 @Composable
 internal fun ServersContent(component: ServersComponent) {
@@ -122,7 +123,8 @@ private fun ServerDropDownMenu() {
             expanded = isExpanded,
             onDismissRequest = { isExpanded = false },
         ) {
-            Text("Hello dropdown menu")
+            DropdownMenuItem({ Text("Edit") }, {})
+            DropdownMenuItem({ Text("Delete") }, {})
         }
     }
 }
