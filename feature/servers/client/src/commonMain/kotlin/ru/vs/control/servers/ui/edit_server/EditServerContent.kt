@@ -1,14 +1,16 @@
 package ru.vs.control.servers.ui.edit_server
 
 import androidx.compose.foundation.layout.Column
-import androidx.compose.material.Button
-import androidx.compose.material.OutlinedTextField
-import androidx.compose.material.Text
+import androidx.compose.material3.Button
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import ru.vs.control.servers.ui.edit_server.EditServerStore.Intent
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun EditServerContent(component: EditServerComponent) {
     val state by component.state.collectAsState()
