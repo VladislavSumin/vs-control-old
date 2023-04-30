@@ -25,7 +25,6 @@ internal class ServersRepositoryImpl(private val serverQueriesProvider: ServerQu
                     .asFlow()
                     .mapToList(Dispatchers.Default)
                     .map { it.toServers() }
-
             }
     }
 

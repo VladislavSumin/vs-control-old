@@ -4,7 +4,6 @@ import org.kodein.di.DI
 import org.kodein.di.bindSingleton
 import ru.vs.control.servers.domain.ServersInteractor
 import ru.vs.control.servers.domain.ServersInteractorImpl
-import ru.vs.control.servers.repository.Database
 import ru.vs.control.servers.repository.ServersRepository
 import ru.vs.control.servers.repository.ServersRepositoryImpl
 import ru.vs.control.servers.ui.edit_server.EditServerStoreFactory
