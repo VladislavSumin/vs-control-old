@@ -1,7 +1,7 @@
 import ru.vs.build_logic.configuration
 
 plugins {
-    id("ru.vs.convention.preset.server-feature")
+    id("ru.vs.convention.preset.feature-server-impl")
     id("ru.vs.convention.serialization.json")
     id("ru.vs.convention.ksp-kmp-hack")
     id("com.github.gmazzo.buildconfig")

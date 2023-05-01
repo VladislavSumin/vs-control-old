@@ -1,7 +1,7 @@
 import ru.vs.build_logic.utils.android
 
 plugins {
-    id("ru.vs.convention.preset.client-feature")
+    id("ru.vs.convention.preset.feature-client-impl")
     id("app.cash.sqldelight")
 }
 

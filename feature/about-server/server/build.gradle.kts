@@ -1,5 +1,5 @@
 plugins {
-    id("ru.vs.convention.preset.server-feature")
+    id("ru.vs.convention.preset.feature-server-impl")
 }
 
 kotlin {
