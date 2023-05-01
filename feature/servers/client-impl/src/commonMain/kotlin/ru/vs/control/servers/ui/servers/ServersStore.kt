@@ -5,6 +5,11 @@ import com.arkivanov.mvikotlin.core.store.SimpleBootstrapper
 import com.arkivanov.mvikotlin.core.store.Store
 import com.arkivanov.mvikotlin.core.store.StoreFactory
 import com.arkivanov.mvikotlin.extensions.coroutines.CoroutineExecutor
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.channels.consumeEach
+import kotlinx.coroutines.flow.channelFlow
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import ru.vs.control.servers.domain.Server
@@ -13,6 +18,7 @@ import ru.vs.control.servers.domain.ServersInteractor
 import ru.vs.control.servers.ui.servers.ServersStore.Intent
 import ru.vs.control.servers.ui.servers.ServersStore.ServerUiItem
 import ru.vs.control.servers.ui.servers.ServersStore.State
+import ru.vs.control.servers_connection.domain.ServersConnectionInteractor
 
 internal interface ServersStore : Store<Intent, State, Nothing> {
     sealed class Intent {
@@ -35,6 +41,7 @@ internal interface ServersStore : Store<Intent, State, Nothing> {
 internal class ServerStoreFactory(
     private val storeFactory: StoreFactory,
     private val serversInteractor: ServersInteractor,
+    private val serversConnectionInteractor: ServersConnectionInteractor,
 ) {
     fun create(): ServersStore =
         object :
@@ -55,7 +62,35 @@ internal class ServerStoreFactory(
         override fun executeAction(action: Unit, getState: () -> State) {
             scope.launch {
                 serversInteractor.observeServers()
-                    .map { it.map { ServerUiItem(it, ServerUiItem.ConnectionInfo.Disconnected) } }
+                    .flatMapLatest { servers ->
+                        channelFlow {
+                            val connectionStateUpdateChannel = Channel<Pair<ServerId, ServerUiItem.ConnectionInfo>>()
+                            val uiServers: MutableMap<ServerId, ServerUiItem> = servers
+                                .map { ServerUiItem(it, ServerUiItem.ConnectionInfo.Disconnected) }
+                                .associateBy { it.server.id }
+                                .toMutableMap()
+                            send(uiServers.values.toList())
+
+                            servers.forEach { server: Server ->
+                                launch {
+                                    val connection = serversConnectionInteractor.getConnection(server)
+                                    connection.observeConnectionStatus()
+                                        .map {
+                                            if (it) ServerUiItem.ConnectionInfo.Connected
+                                            else ServerUiItem.ConnectionInfo.Disconnected
+                                        }
+                                        .collect {
+                                            connectionStateUpdateChannel.send(server.id to it)
+                                        }
+                                }
+                            }
+
+                            connectionStateUpdateChannel.consumeEach { (serverId, connectionInfo) ->
+                                uiServers[serverId] = uiServers[serverId]!!.copy(connectionInfo = connectionInfo)
+                                send(uiServers.values.toList())
+                            }
+                        }
+                    }
                     .map { Msg.ServersListUpdated(it) }
                     .collect(::dispatch)
             }

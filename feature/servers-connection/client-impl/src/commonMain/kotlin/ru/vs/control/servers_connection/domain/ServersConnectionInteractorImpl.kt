@@ -4,11 +4,6 @@ import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import ru.vs.control.servers.domain.Server
 
-interface ServersConnectionInteractor {
-    // TODO добавить сюда интеграцию с модулем servers
-    suspend fun getConnection(server: Server): ServerConnectionInteractor
-}
-
 internal class ServersConnectionInteractorImpl(
     private val serverConnectionInteractorFactory: ServerConnectionInteractorFactory,
 ) : ServersConnectionInteractor {

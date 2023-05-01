@@ -13,7 +13,7 @@ kotlin {
     sourceSets {
         named("commonMain") {
             dependencies {
-                implementation(projects.feature.servers.clientApi)
+                api(projects.feature.serversConnection.clientApi)
 
                 implementation(projects.rsub.client)
                 implementation(projects.rsub.connector.ktorWebsocket.client)
