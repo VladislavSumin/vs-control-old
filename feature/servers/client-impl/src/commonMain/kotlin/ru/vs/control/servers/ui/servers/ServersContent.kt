@@ -15,6 +15,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material3.Card
+import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
@@ -32,6 +33,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import ru.vs.control.servers.domain.Server
+import ru.vs.control.servers.ui.servers.ServersStore.ServerUiItem
 import ru.vs.core.uikit.dropdown_menu.DropdownMenu
 import ru.vs.core.uikit.dropdown_menu.DropdownMenuItem
 
@@ -53,7 +55,7 @@ private fun Servers(state: ServersStore.State.Loaded, component: ServersComponen
             Modifier.padding(padding),
             verticalArrangement = Arrangement.spacedBy(4.dp)
         ) {
-            items(state.servers, key = { it.id }) { server ->
+            items(state.servers, key = { it.server.id }) { server ->
                 Server(server, component, Modifier.fillMaxWidth())
             }
         }
@@ -68,47 +70,62 @@ private fun AddServer(component: ServersComponent) {
 }
 
 @Composable
-private fun Server(server: Server, component: ServersComponent, modifier: Modifier = Modifier) {
+private fun Server(server: ServerUiItem, component: ServersComponent, modifier: Modifier = Modifier) {
     Card(modifier) {
         Box(modifier = Modifier.padding(horizontal = 16.dp, vertical = 12.dp)) {
-            Row {
-                Icon(
-                    Icons.Default.AccountCircle,
-                    contentDescription = null,
-                    modifier = Modifier
-                        .size(40.dp)
-                        .align(Alignment.CenterVertically)
-                )
-                Spacer(Modifier.size(width = 12.dp, height = 0.dp))
-                Column(
-                    modifier = Modifier
-                        .weight(1f)
-                        .align(Alignment.CenterVertically)
-                ) {
-                    Text(
-                        server.name,
-                        style = MaterialTheme.typography.titleMedium,
-                        maxLines = 1,
-                    )
-                    Text(
-                        "${server.host}:${server.port}",
-                        style = MaterialTheme.typography.bodyMedium,
-                        maxLines = 1,
-                    )
+            Column {
+                ServerHeader(server, component)
+                Divider(Modifier.fillMaxWidth())
+                Row {
+                    Text("Connection status:")
+                    Text(server.connectionInfo.toString())
                 }
-                Spacer(
-                    Modifier
-                        .defaultMinSize(minWidth = 12.dp)
-                )
-                ServerDropDownMenu(server, component)
             }
         }
     }
 }
 
 @Composable
+private fun ServerHeader(
+    server: ServerUiItem,
+    component: ServersComponent
+) {
+    Row {
+        Icon(
+            Icons.Default.AccountCircle,
+            contentDescription = null,
+            modifier = Modifier
+                .size(40.dp)
+                .align(Alignment.CenterVertically)
+        )
+        Spacer(Modifier.size(width = 12.dp, height = 0.dp))
+        Column(
+            modifier = Modifier
+                .weight(1f)
+                .align(Alignment.CenterVertically)
+        ) {
+            Text(
+                server.server.name,
+                style = MaterialTheme.typography.titleMedium,
+                maxLines = 1,
+            )
+            Text(
+                "${server.server.host}:${server.server.port}",
+                style = MaterialTheme.typography.bodyMedium,
+                maxLines = 1,
+            )
+        }
+        Spacer(
+            Modifier
+                .defaultMinSize(minWidth = 12.dp)
+        )
+        ServerDropDownMenu(server, component)
+    }
+}
+
+@Composable
 private fun ServerDropDownMenu(
-    server: Server,
+    server: ServerUiItem,
     component: ServersComponent,
 ) {
     var isExpanded by remember { mutableStateOf(false) }
@@ -126,11 +143,11 @@ private fun ServerDropDownMenu(
         ) {
             DropdownMenuItem(
                 { Text("Edit") },
-                { component.onClickEditServer(server.id); isExpanded = false }
+                { component.onClickEditServer(server.server.id); isExpanded = false }
             )
             DropdownMenuItem(
                 { Text("Delete") },
-                { component.onClickDeleteServer(server.id); isExpanded = false }
+                { component.onClickDeleteServer(server.server.id); isExpanded = false }
             )
         }
     }

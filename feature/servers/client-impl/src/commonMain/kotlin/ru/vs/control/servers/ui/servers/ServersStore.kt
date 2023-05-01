@@ -11,6 +11,7 @@ import ru.vs.control.servers.domain.Server
 import ru.vs.control.servers.domain.ServerId
 import ru.vs.control.servers.domain.ServersInteractor
 import ru.vs.control.servers.ui.servers.ServersStore.Intent
+import ru.vs.control.servers.ui.servers.ServersStore.ServerUiItem
 import ru.vs.control.servers.ui.servers.ServersStore.State
 
 internal interface ServersStore : Store<Intent, State, Nothing> {
@@ -20,7 +21,14 @@ internal interface ServersStore : Store<Intent, State, Nothing> {
 
     sealed class State {
         object Loading : State()
-        data class Loaded(val servers: List<Server>) : State()
+        data class Loaded(val servers: List<ServerUiItem>) : State()
+    }
+
+    data class ServerUiItem(val server: Server, val connectionInfo: ConnectionInfo) {
+        sealed interface ConnectionInfo {
+            object Disconnected : ConnectionInfo
+            object Connected : ConnectionInfo
+        }
     }
 }
 
@@ -40,13 +48,14 @@ internal class ServerStoreFactory(
             ) {}
 
     private sealed class Msg {
-        data class ServersListUpdated(val servers: List<Server>) : Msg()
+        data class ServersListUpdated(val servers: List<ServerUiItem>) : Msg()
     }
 
     private inner class ExecutorImpl : CoroutineExecutor<Intent, Unit, State, Msg, Nothing>() {
         override fun executeAction(action: Unit, getState: () -> State) {
             scope.launch {
                 serversInteractor.observeServers()
+                    .map { it.map { ServerUiItem(it, ServerUiItem.ConnectionInfo.Disconnected) } }
                     .map { Msg.ServersListUpdated(it) }
                     .collect(::dispatch)
             }
@@ -61,7 +70,9 @@ internal class ServerStoreFactory(
 
     private object ReducerImpl : Reducer<State, Msg> {
         override fun State.reduce(msg: Msg): State {
-            return State.Loaded(servers = (msg as Msg.ServersListUpdated).servers)
+            return when (msg) {
+                is Msg.ServersListUpdated -> State.Loaded(msg.servers)
+            }
         }
     }
 }
