@@ -4,6 +4,10 @@ plugins {
     id("kotlinx-atomicfu")
 }
 
+android {
+    namespace = "ru.vs.rsub.client"
+}
+
 kotlin {
     sourceSets {
         named("commonMain") {

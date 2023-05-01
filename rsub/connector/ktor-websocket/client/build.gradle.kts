@@ -2,6 +2,10 @@ plugins {
     id("ru.vs.convention.kmp.all")
 }
 
+android {
+    namespace = "ru.vs.rsub.connector.ktor_websocket.client"
+}
+
 kotlin {
     sourceSets {
         named("commonMain") {

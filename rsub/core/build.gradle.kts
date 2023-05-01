@@ -3,6 +3,10 @@ plugins {
     id("ru.vs.convention.serialization.json")
 }
 
+android {
+    namespace = "ru.vs.rsub.core"
+}
+
 kotlin {
     sourceSets {
         named("commonMain") {
