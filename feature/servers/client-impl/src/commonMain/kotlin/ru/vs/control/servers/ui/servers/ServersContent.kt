@@ -32,7 +32,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import ru.vs.control.servers.domain.Server
 import ru.vs.control.servers.ui.servers.ServersStore.ServerUiItem
 import ru.vs.core.uikit.dropdown_menu.DropdownMenu
 import ru.vs.core.uikit.dropdown_menu.DropdownMenuItem
@@ -78,7 +77,7 @@ private fun Server(server: ServerUiItem, component: ServersComponent, modifier: 
                 Divider(Modifier.fillMaxWidth())
                 Row {
                     Text("Connection status:")
-                    Text(server.connectionInfo.toString())
+                    Text(server.connectionStatus.toString())
                 }
             }
         }

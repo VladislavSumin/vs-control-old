@@ -33,6 +33,17 @@ import kotlinx.serialization.serializer
 import kotlin.reflect.KType
 import kotlin.reflect.typeOf
 
+/**
+ * Basic implementation for any RSub client.
+ * Implementation of this class generate automatically by ksp for classes annotated with [RSubClient]
+ *
+ * @param connector - connector impl
+ * @param reconnectInterval - timeout between connection attempts
+ * @param connectionKeepAliveTime - time to keep connection alive before disconnect if no active subscribers
+ * @param json - [Json] instance used at internal json parsing
+ * @param scope - [CoroutineScope] for launch internal asynchronous operation
+ * @param logger - logger for internal logs
+ */
 open class RSubClientAbstract(
     private val connector: RSubConnector,
 
@@ -56,30 +67,44 @@ open class RSubClientAbstract(
     private val connection: Flow<ConnectionState> = channelFlow {
         logger.debug { "Start observe connection" }
 
+        // Holder for [RSubConnection]
+        // In any exception, or scope cancellation we must call [RSubConnection.close] to close connection correctly
         var connectionGlobal: RSubConnection? = null
+
+        // Global try catch block, handle uncatched exception and properly closing [connectionGlobal]
         try {
+
+            // Send initial connection status
+            send(ConnectionState.Connecting)
+
             while (true) {
                 try {
                     // this cope prevents reconnect before old connection receive flow not closed
-                    // see crateConnectedState
+                    // see [crateConnectedState] function
                     coroutineScope {
-                        send(ConnectionState.Connecting)
+                        // Establish connection
                         val connection = connector.connect()
                         connectionGlobal = connection
+
+                        // Create connected state wrapper around connection
                         val state = crateConnectedState(connection, this)
                         send(state)
                     }
                 } catch (e: Exception) {
                     when (e) {
+                        // Handle known RSubExpectedExceptionOnConnectionException
+                        // These exceptions not dramatically failed all scope, but triggers reconnect
                         is RSubExpectedExceptionOnConnectionException -> {
                             logger.debug { "Connection or listening failed with checked exception: ${e.message}" }
-                            send(ConnectionState.Disconnected)
+                            send(ConnectionState.ConnectionFailed(e))
                             connectionGlobal?.close()
                             delay(reconnectInterval)
                             logger.debug { "Reconnecting..." }
                         }
 
                         is CancellationException -> throw e
+
+                        // For other unknown exceptions wrap it and throw outside connection scope
                         else -> {
                             val message = "Unknown exception on connection or listening"
                             val exception = RSubException(message, e)
@@ -208,8 +233,8 @@ open class RSubClientAbstract(
      */
     private fun crateConnectedState(connection: RSubConnection, scope: CoroutineScope): ConnectionState.Connected {
         return ConnectionState.Connected(
-            { connection.send(json.encodeToString(it)) },
-            connection.receive
+            send = { connection.send(json.encodeToString(it)) },
+            incoming = connection.receive
                 .map { json.decodeFromString<RSubMessage>(it) }
                 .onEach { logger.trace { "Received message: $it" } }
                 // Hot observable, subscribe immediately, shared, no buffer, connection scoped
@@ -229,19 +254,22 @@ open class RSubClientAbstract(
         throwOnDisconnect: Boolean = true,
         block: suspend (connection: ConnectionState.Connected) -> T
     ): T {
-        return connection.filter {
-            when (it) {
-                is ConnectionState.Connecting -> false
-                is ConnectionState.Connected -> true
-                is ConnectionState.Disconnected ->
-                    // TODO добавить кастомные ошибки
-                    if (throwOnDisconnect) throw RuntimeException("Connection in state DISCONNECTED")
-                    else false
+        return connection
+            // Filtering initial connecting state and check connection failed state
+            .filter { connectionState ->
+                when (connectionState) {
+                    is ConnectionState.Connecting -> false
+                    is ConnectionState.Connected -> true
+                    is ConnectionState.ConnectionFailed ->
+                        // Check if we need throw exception on connection error
+                        if (throwOnDisconnect) throw RSubException("Connection in state DISCONNECTED")
+                        else false
+                }
             }
-        }
+            // Filter can be passing only connection state, we don't need using filterInstance
             .map { it as ConnectionState.Connected }
-            // Hack, use map to prevent closing connection.
-            // Connection subscription active all time while block executing.
+            // Hack, use mapLatest to prevent closing connection.
+            // Connection subscription active all time while block executing
             .mapLatest(block)
             .retry {
                 when {
@@ -282,13 +310,13 @@ open class RSubClientAbstract(
     private suspend fun ConnectionState.Connected.unsubscribe(id: Int) = send(RSubMessage.Unsubscribe(id))
 
     private sealed class ConnectionState(val status: RSubConnectionStatus) {
-        object Connecting : ConnectionState(RSubConnectionStatus.CONNECTING)
+        object Connecting : ConnectionState(RSubConnectionStatus.Connecting)
         class Connected(
             val send: suspend (message: RSubMessage) -> Unit,
             val incoming: Flow<RSubMessage>
-        ) : ConnectionState(RSubConnectionStatus.CONNECTED)
+        ) : ConnectionState(RSubConnectionStatus.Connected)
 
-        object Disconnected : ConnectionState(RSubConnectionStatus.DISCONNECTED)
+        class ConnectionFailed(error: Exception) : ConnectionState(RSubConnectionStatus.Reconnecting(error))
     }
 
     private class FlowCompleted : Exception()

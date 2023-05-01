@@ -10,6 +10,6 @@ import ru.vs.core.di.Modules
 import ru.vs.core.di.i
 
 fun Modules.featureServersConnection() = DI.Module("feature-servers-connection") {
-    bindSingleton<ServerConnectionInteractorFactory> { ServerConnectionInteractorFactoryImpl(i()) }
+    bindSingleton<ServerConnectionInteractorFactory> { ServerConnectionInteractorFactoryImpl(i(), i()) }
     bindSingleton<ServersConnectionInteractor> { ServersConnectionInteractorImpl(i()) }
 }

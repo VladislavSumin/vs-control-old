@@ -1,11 +1,11 @@
 package ru.vs.rsub.connector.ktor_websocket
 
 import io.ktor.client.HttpClient
-import io.ktor.client.network.sockets.SocketTimeoutException
 import io.ktor.client.plugins.websocket.webSocketSession
 import io.ktor.client.request.header
 import io.ktor.http.HttpHeaders
 import io.ktor.http.HttpMethod
+import io.ktor.utils.io.errors.IOException
 import ru.vs.rsub.RSubConnection
 import ru.vs.rsub.RSubConnector
 import ru.vs.rsub.RSubException
@@ -33,11 +33,7 @@ class RSubConnectorKtorWebSocket(
             return RSubConnectionKtorWebSocket(session)
         } catch (e: Exception) {
             throw when (e) {
-                // TODO подебажить этот момент, посмотреть что тут может стрелять
-                // is SocketException,
-                is SocketTimeoutException ->
-                    RSubExpectedExceptionOnConnectionException("Catch checked exception while connect", e)
-
+                is IOException -> RSubExpectedExceptionOnConnectionException("Catch checked exception while connect", e)
                 else -> RSubException("Unknown exception while connect", e)
             }
         }

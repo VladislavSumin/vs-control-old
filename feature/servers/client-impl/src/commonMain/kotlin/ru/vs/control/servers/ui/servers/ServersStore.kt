@@ -18,6 +18,7 @@ import ru.vs.control.servers.domain.ServersInteractor
 import ru.vs.control.servers.ui.servers.ServersStore.Intent
 import ru.vs.control.servers.ui.servers.ServersStore.ServerUiItem
 import ru.vs.control.servers.ui.servers.ServersStore.State
+import ru.vs.control.servers_connection.domain.ServerConnectionInteractor.ConnectionStatus
 import ru.vs.control.servers_connection.domain.ServersConnectionInteractor
 
 internal interface ServersStore : Store<Intent, State, Nothing> {
@@ -30,12 +31,7 @@ internal interface ServersStore : Store<Intent, State, Nothing> {
         data class Loaded(val servers: List<ServerUiItem>) : State()
     }
 
-    data class ServerUiItem(val server: Server, val connectionInfo: ConnectionInfo) {
-        sealed interface ConnectionInfo {
-            object Disconnected : ConnectionInfo
-            object Connected : ConnectionInfo
-        }
-    }
+    data class ServerUiItem(val server: Server, val connectionStatus: ConnectionStatus)
 }
 
 internal class ServerStoreFactory(
@@ -64,9 +60,9 @@ internal class ServerStoreFactory(
                 serversInteractor.observeServers()
                     .flatMapLatest { servers ->
                         channelFlow {
-                            val connectionStateUpdateChannel = Channel<Pair<ServerId, ServerUiItem.ConnectionInfo>>()
+                            val connectionStateUpdateChannel = Channel<Pair<ServerId, ConnectionStatus>>()
                             val uiServers: MutableMap<ServerId, ServerUiItem> = servers
-                                .map { ServerUiItem(it, ServerUiItem.ConnectionInfo.Disconnected) }
+                                .map { ServerUiItem(it, ConnectionStatus.Connecting) }
                                 .associateBy { it.server.id }
                                 .toMutableMap()
                             send(uiServers.values.toList())
@@ -75,10 +71,6 @@ internal class ServerStoreFactory(
                                 launch {
                                     val connection = serversConnectionInteractor.getConnection(server)
                                     connection.observeConnectionStatus()
-                                        .map {
-                                            if (it) ServerUiItem.ConnectionInfo.Connected
-                                            else ServerUiItem.ConnectionInfo.Disconnected
-                                        }
                                         .collect {
                                             connectionStateUpdateChannel.send(server.id to it)
                                         }
@@ -86,7 +78,7 @@ internal class ServerStoreFactory(
                             }
 
                             connectionStateUpdateChannel.consumeEach { (serverId, connectionInfo) ->
-                                uiServers[serverId] = uiServers[serverId]!!.copy(connectionInfo = connectionInfo)
+                                uiServers[serverId] = uiServers[serverId]!!.copy(connectionStatus = connectionInfo)
                                 send(uiServers.values.toList())
                             }
                         }
