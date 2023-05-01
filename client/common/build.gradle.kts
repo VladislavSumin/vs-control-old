@@ -36,6 +36,7 @@ kotlin {
     sourceSets {
         named("commonMain") {
             dependencies {
+                implementation(projects.feature.aboutServer.clientImpl)
                 implementation(projects.feature.servers.clientImpl)
                 implementation(projects.feature.serversConnection.clientImpl)
 

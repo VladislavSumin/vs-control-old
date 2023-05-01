@@ -80,37 +80,8 @@ private fun Server(server: ServerUiItem, component: ServersComponent, modifier: 
                 ServerHeader(server, component)
                 Divider(Modifier.fillMaxWidth())
                 Spacer(Modifier.defaultMinSize(minHeight = 8.dp))
-                Row {
-                    Text(
-                        stringResource(MR.strings.servers_content_connection_status),
-                        style = MaterialTheme.typography.bodyMedium,
-                    )
-                    Spacer(Modifier.defaultMinSize(minWidth = 4.dp))
-
-                    // TODO add colors to theme
-                    val statusColor = when (server.connectionStatus) {
-                        ServerConnectionInteractor.ConnectionStatus.Connected -> Color.Green
-                        ServerConnectionInteractor.ConnectionStatus.Connecting -> Color.Yellow
-                        is ServerConnectionInteractor.ConnectionStatus.Reconnecting -> Color.Red
-                    }
-
-                    val statusText = when (server.connectionStatus) {
-                        ServerConnectionInteractor.ConnectionStatus.Connected ->
-                            stringResource(MR.strings.servers_content_connection_status_connected)
-
-                        ServerConnectionInteractor.ConnectionStatus.Connecting ->
-                            stringResource(MR.strings.servers_content_connection_status_connecting)
-
-                        is ServerConnectionInteractor.ConnectionStatus.Reconnecting ->
-                            stringResource(MR.strings.servers_content_connection_status_connection_error)
-                    }
-
-                    Text(
-                        statusText,
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = statusColor,
-                    )
-                }
+                ServerConnectionStatus(server)
+                ServerServerInfo(server)
             }
         }
     }
@@ -182,6 +153,49 @@ private fun ServerDropDownMenu(
             )
         }
     }
+}
+
+@Composable
+private fun ServerConnectionStatus(server: ServerUiItem) {
+    Row {
+        Text(
+            stringResource(MR.strings.servers_content_connection_status),
+            style = MaterialTheme.typography.bodyMedium,
+        )
+        Spacer(Modifier.defaultMinSize(minWidth = 4.dp))
+
+        // TODO add colors to theme
+        val statusColor = when (server.connectionStatus) {
+            ServerConnectionInteractor.ConnectionStatus.Connected -> Color.Green
+            ServerConnectionInteractor.ConnectionStatus.Connecting -> Color.Yellow
+            is ServerConnectionInteractor.ConnectionStatus.Reconnecting -> Color.Red
+        }
+
+        val statusText = when (server.connectionStatus) {
+            ServerConnectionInteractor.ConnectionStatus.Connected ->
+                stringResource(MR.strings.servers_content_connection_status_connected)
+
+            ServerConnectionInteractor.ConnectionStatus.Connecting ->
+                stringResource(MR.strings.servers_content_connection_status_connecting)
+
+            is ServerConnectionInteractor.ConnectionStatus.Reconnecting ->
+                stringResource(MR.strings.servers_content_connection_status_connection_error)
+        }
+
+        Text(
+            statusText,
+            style = MaterialTheme.typography.bodyMedium,
+            color = statusColor,
+        )
+    }
+}
+
+@Composable
+private fun ServerServerInfo(server: ServerUiItem) {
+    Text(
+        "Server version: ${server.serverInfo?.version}",
+        style = MaterialTheme.typography.bodyMedium,
+    )
 }
 
 // @Composable

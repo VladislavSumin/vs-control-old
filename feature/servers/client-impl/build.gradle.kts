@@ -25,6 +25,7 @@ kotlin {
         named("commonMain") {
             dependencies {
                 api(projects.feature.servers.clientApi)
+                implementation(projects.feature.aboutServer.clientApi)
                 implementation(projects.feature.serversConnection.clientApi)
                 implementation(coreLibs.sqldelight.coroutines)
             }

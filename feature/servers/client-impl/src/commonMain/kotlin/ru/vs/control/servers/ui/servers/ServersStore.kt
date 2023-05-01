@@ -12,6 +12,8 @@ import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
+import ru.vs.control.about_server.domain.AboutServerInteractor
+import ru.vs.control.about_server.domain.ServerInfo
 import ru.vs.control.servers.domain.Server
 import ru.vs.control.servers.domain.ServerId
 import ru.vs.control.servers.domain.ServersInteractor
@@ -31,13 +33,14 @@ internal interface ServersStore : Store<Intent, State, Nothing> {
         data class Loaded(val servers: List<ServerUiItem>) : State()
     }
 
-    data class ServerUiItem(val server: Server, val connectionStatus: ConnectionStatus)
+    data class ServerUiItem(val server: Server, val connectionStatus: ConnectionStatus, val serverInfo: ServerInfo?)
 }
 
 internal class ServerStoreFactory(
     private val storeFactory: StoreFactory,
     private val serversInteractor: ServersInteractor,
     private val serversConnectionInteractor: ServersConnectionInteractor,
+    private val aboutServerInteractor: AboutServerInteractor,
 ) {
     fun create(): ServersStore =
         object :
@@ -60,9 +63,10 @@ internal class ServerStoreFactory(
                 serversInteractor.observeServers()
                     .flatMapLatest { servers ->
                         channelFlow {
-                            val connectionStateUpdateChannel = Channel<Pair<ServerId, ConnectionStatus>>()
+                            val connectionStateUpdateChannel =
+                                Channel<Pair<ServerId, Pair<ConnectionStatus, ServerInfo?>>>()
                             val uiServers: MutableMap<ServerId, ServerUiItem> = servers
-                                .map { ServerUiItem(it, ConnectionStatus.Connecting) }
+                                .map { ServerUiItem(it, ConnectionStatus.Connecting, null) }
                                 .associateBy { it.server.id }
                                 .toMutableMap()
                             send(uiServers.values.toList())
@@ -71,14 +75,23 @@ internal class ServerStoreFactory(
                                 launch {
                                     val connection = serversConnectionInteractor.getConnection(server)
                                     connection.observeConnectionStatus()
-                                        .collect {
-                                            connectionStateUpdateChannel.send(server.id to it)
+                                        .collect { connectionStatus ->
+                                            val serverInfo = if (connectionStatus is ConnectionStatus.Connected) {
+                                                aboutServerInteractor.getServerInfo(server)
+                                            } else null
+                                            val data = connectionStatus to serverInfo
+                                            connectionStateUpdateChannel.send(server.id to data)
                                         }
                                 }
                             }
 
-                            connectionStateUpdateChannel.consumeEach { (serverId, connectionInfo) ->
-                                uiServers[serverId] = uiServers[serverId]!!.copy(connectionStatus = connectionInfo)
+                            connectionStateUpdateChannel.consumeEach { (serverId, data) ->
+                                val (connectionStatus, serverInfo) = data
+                                uiServers[serverId] = uiServers[serverId]!!
+                                    .copy(
+                                        connectionStatus = connectionStatus,
+                                        serverInfo = serverInfo
+                                    )
                                 send(uiServers.values.toList())
                             }
                         }

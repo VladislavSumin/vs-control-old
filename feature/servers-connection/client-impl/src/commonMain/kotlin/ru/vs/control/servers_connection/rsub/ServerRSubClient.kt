@@ -1,6 +1,9 @@
 package ru.vs.control.servers_connection.rsub
 
+import ru.vs.control.about_server.rsub.AboutServerRSub
 import ru.vs.rsub.RSubClient
 
 @RSubClient
-internal interface ServerRSubClient
+internal interface ServerRSubClient {
+    val aboutServer: AboutServerRSub
+}

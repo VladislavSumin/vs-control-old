@@ -2,6 +2,7 @@ import ru.vs.build_logic.utils.android
 
 plugins {
     id("ru.vs.convention.kmp.all")
+    id("ru.vs.convention.serialization.json")
 }
 
 android {

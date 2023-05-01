@@ -4,6 +4,7 @@ import io.ktor.client.HttpClient
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import kotlinx.serialization.json.Json
+import ru.vs.control.about_server.rsub.AboutServerRSub
 import ru.vs.control.servers.domain.Server
 import ru.vs.control.servers_connection.rsub.ServerRSubClientImpl
 import ru.vs.rsub.RSubConnectionStatus
@@ -22,6 +23,8 @@ internal class ServerConnectionInteractorImpl(
         ),
         json = json,
     )
+
+    override val aboutServer: AboutServerRSub get() = client.aboutServer
 
     override fun observeConnectionStatus(): Flow<ServerConnectionInteractor.ConnectionStatus> =
         client.observeConnectionStatus().map { it.toConnectionStatus() }

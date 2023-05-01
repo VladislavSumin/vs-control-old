@@ -5,17 +5,15 @@ plugins {
 }
 
 android {
-    namespace = "ru.vs.control.servers_connection.client_api"
+    namespace = "ru.vs.control.about_server.client_api"
 }
 
 kotlin {
     sourceSets {
         named("commonMain") {
             dependencies {
+                api(projects.feature.aboutServer.shared)
                 api(projects.feature.servers.clientApi)
-
-                // TODO проверка гипотизы, подключаем только как имплементацию
-                implementation(projects.feature.aboutServer.shared)
             }
         }
     }

@@ -15,6 +15,8 @@ kotlin {
             dependencies {
                 api(projects.feature.serversConnection.clientApi)
 
+                implementation(projects.feature.aboutServer.shared)
+
                 implementation(projects.rsub.client)
                 implementation(projects.rsub.connector.ktorWebsocket.client)
             }

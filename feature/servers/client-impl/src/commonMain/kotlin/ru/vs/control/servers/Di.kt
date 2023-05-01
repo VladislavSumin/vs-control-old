@@ -15,6 +15,6 @@ fun Modules.featureServers() = DI.Module("feature-servers") {
     bindSingleton<ServersRepository> { ServersRepositoryImpl(i()) }
     bindSingleton<ServersInteractor> { ServersInteractorImpl(i()) }
 
-    bindSingleton { ServerStoreFactory(i(), i(), i()) }
+    bindSingleton { ServerStoreFactory(i(), i(), i(), i()) }
     bindSingleton { EditServerStoreFactory(i(), i()) }
 }
