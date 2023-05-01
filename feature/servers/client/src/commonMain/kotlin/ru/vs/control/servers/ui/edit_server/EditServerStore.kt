@@ -7,6 +7,7 @@ import com.arkivanov.mvikotlin.extensions.coroutines.CoroutineBootstrapper
 import com.arkivanov.mvikotlin.extensions.coroutines.CoroutineExecutor
 import kotlinx.coroutines.launch
 import ru.vs.control.servers.domain.Server
+import ru.vs.control.servers.domain.ServerId
 import ru.vs.control.servers.domain.ServersInteractor
 import ru.vs.control.servers.ui.edit_server.EditServerStore.Intent
 import ru.vs.control.servers.ui.edit_server.EditServerStore.Label
@@ -21,6 +22,7 @@ internal interface EditServerStore : Store<Intent, State, Label> {
     }
 
     data class State(
+        val id: ServerId = 0,
         val name: String,
         val url: String,
     )
@@ -40,7 +42,7 @@ internal class EditServerStoreFactory(
             EditServerStore,
             Store<Intent, State, Label> by storeFactory.create(
                 name = "AddServerStore",
-                initialState = State("", ""),
+                initialState = State(name = "", url = ""),
                 bootstrapper = BootstrapperImpl(serverId),
                 executorFactory = ::ExecutorImpl,
                 reducer = ReducerImpl
@@ -52,6 +54,7 @@ internal class EditServerStoreFactory(
     }
 
     private sealed interface Msg {
+        data class UpdateId(val id: ServerId) : Msg
         data class UpdateName(val name: String) : Msg
         data class UpdateUrl(val url: String) : Msg
     }
@@ -73,8 +76,9 @@ internal class EditServerStoreFactory(
                 Intent.Save -> {
                     scope.launch {
                         val state = getState()
-                        val server = Server(0, state.name, state.url)
-                        serversInteractor.addServer(server)
+                        val server = Server(state.id, state.name, state.url)
+                        if (server.id == 0L) serversInteractor.addServer(server)
+                        else serversInteractor.updateServer(server)
                         publish(Label.CloseScreen)
                     }
                 }
@@ -88,8 +92,11 @@ internal class EditServerStoreFactory(
             scope.launch {
                 when (action) {
                     Action.CreateNewServer -> Unit
-                    is Action.LoadServer -> {
-                        TODO()
+                    is Action.LoadServer -> scope.launch {
+                        val server = serversInteractor.getServer(action.serverId)
+                        dispatch(Msg.UpdateId(server.id))
+                        dispatch(Msg.UpdateName(server.name))
+                        dispatch(Msg.UpdateUrl(server.url))
                     }
                 }
             }
@@ -99,6 +106,7 @@ internal class EditServerStoreFactory(
     private object ReducerImpl : Reducer<State, Msg> {
         override fun State.reduce(message: Msg): State {
             return when (message) {
+                is Msg.UpdateId -> copy(id = message.id)
                 is Msg.UpdateName -> copy(name = message.name)
                 is Msg.UpdateUrl -> copy(url = message.url)
             }

@@ -14,7 +14,9 @@ import ru.vs.control.servers.service.ServerQueriesProvider
 
 internal interface ServersRepository {
     fun observeServers(): Flow<List<Server>>
+    suspend fun get(id: ServerId): Server
     suspend fun insert(server: Server)
+    suspend fun update(server: Server)
     suspend fun delete(serverId: ServerId)
 }
 
@@ -29,9 +31,19 @@ internal class ServersRepositoryImpl(private val serverQueriesProvider: ServerQu
             }
     }
 
+    override suspend fun get(id: ServerId): Server {
+        check(id != 0L)
+        return serverQueriesProvider.getServerQueries().get(id).executeAsOne().toServer()
+    }
+
     override suspend fun insert(server: Server) = withContext(Dispatchers.Default) {
         check(server.id == 0L)
         serverQueriesProvider.getServerQueries().insert(server.toRecord())
+    }
+
+    override suspend fun update(server: Server) {
+        check(server.id != 0L)
+        serverQueriesProvider.getServerQueries().update(server.name, server.url, server.id)
     }
 
     override suspend fun delete(serverId: ServerId) = withContext(Dispatchers.Default) {

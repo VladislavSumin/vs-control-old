@@ -7,8 +7,14 @@ CREATE TABLE serverRecord(
 selectAll:
 SELECT * FROM serverRecord;
 
+get:
+SELECT * FROM serverRecord WHERE id = ?;
+
 insert:
 INSERT INTO serverRecord(name, url) VALUES ?;
+
+update:
+UPDATE serverRecord SET name = ?, url = ? WHERE id = ?;
 
 delete:
 DELETE FROM serverRecord WHERE id = ?;
