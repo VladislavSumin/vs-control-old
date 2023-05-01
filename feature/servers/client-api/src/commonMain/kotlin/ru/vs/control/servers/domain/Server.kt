@@ -17,7 +17,12 @@ data class Server(
     val name: String,
 
     /**
-     * Connection url
+     * Server Hostname
      */
-    val url: String,
+    val host: String,
+
+    /**
+     * Server port
+     */
+    val port: Int,
 )

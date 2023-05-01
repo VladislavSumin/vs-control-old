@@ -1,7 +1,8 @@
 CREATE TABLE serverRecord(
     id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
     name TEXT NOT NULL UNIQUE,
-    url TEXT NOT NULL UNIQUE
+    host TEXT NOT NULL,
+    port INTEGER NOT NULL
 );
 
 selectAll:
@@ -11,10 +12,10 @@ get:
 SELECT * FROM serverRecord WHERE id = ?;
 
 insert:
-INSERT INTO serverRecord(name, url) VALUES ?;
+INSERT INTO serverRecord(name, host, port) VALUES ?;
 
 update:
-UPDATE serverRecord SET name = ?, url = ? WHERE id = ?;
+UPDATE serverRecord SET name = ?, host = ?, port = ? WHERE id = ?;
 
 delete:
 DELETE FROM serverRecord WHERE id = ?;

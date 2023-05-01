@@ -2,6 +2,7 @@ package ru.vs.rsub
 
 import io.github.oshai.KLogger
 import io.github.oshai.KotlinLogging
+import kotlinx.atomicfu.atomic
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineName
 import kotlinx.coroutines.CoroutineScope
@@ -31,7 +32,6 @@ import kotlinx.serialization.json.Json
 import kotlinx.serialization.serializer
 import kotlin.reflect.KType
 import kotlin.reflect.typeOf
-import kotlinx.atomicfu.atomic
 
 open class RSubClientAbstract(
     private val connector: RSubConnector,

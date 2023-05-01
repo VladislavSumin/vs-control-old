@@ -24,10 +24,10 @@ fun EditServerContent(component: EditServerComponent) {
         )
 
         OutlinedTextField(
-            value = state.url,
+            value = state.host,
             singleLine = true,
-            onValueChange = { component.accept(Intent.UpdateUrl(it)) },
-            label = { Text("Server Url") },
+            onValueChange = { component.accept(Intent.UpdateHost(it)) },
+            label = { Text("Server Host") },
         )
 
         Button(onClick = { component.accept(Intent.Save) }) { Text("Save") }

@@ -43,7 +43,7 @@ internal class ServersRepositoryImpl(private val serverQueriesProvider: ServerQu
 
     override suspend fun update(server: Server) {
         check(server.id != 0L)
-        serverQueriesProvider.getServerQueries().update(server.name, server.url, server.id)
+        serverQueriesProvider.getServerQueries().update(server.name, server.host, server.port.toLong(), server.id)
     }
 
     override suspend fun delete(serverId: ServerId) = withContext(Dispatchers.Default) {
@@ -52,5 +52,5 @@ internal class ServersRepositoryImpl(private val serverQueriesProvider: ServerQu
 }
 
 private fun List<ServerRecord>.toServers(): List<Server> = map { it.toServer() }
-private fun ServerRecord.toServer(): Server = Server(id, name, url)
-private fun Server.toRecord(): ServerRecord = ServerRecord(id, name, url)
+private fun ServerRecord.toServer(): Server = Server(id, name, host, port.toInt())
+private fun Server.toRecord(): ServerRecord = ServerRecord(id, name, host, port.toLong())

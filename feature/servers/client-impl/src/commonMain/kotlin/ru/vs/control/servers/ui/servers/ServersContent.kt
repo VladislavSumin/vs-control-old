@@ -91,7 +91,7 @@ private fun Server(server: Server, component: ServersComponent, modifier: Modifi
                         maxLines = 1,
                     )
                     Text(
-                        server.url,
+                        "${server.host}:${server.port}",
                         style = MaterialTheme.typography.bodyMedium,
                         maxLines = 1,
                     )

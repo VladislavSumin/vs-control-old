@@ -17,14 +17,15 @@ internal interface EditServerStore : Store<Intent, State, Label> {
 
     sealed interface Intent {
         data class UpdateName(val name: String) : Intent
-        data class UpdateUrl(val url: String) : Intent
+        data class UpdateHost(val host: String) : Intent
         object Save : Intent
     }
 
     data class State(
         val id: ServerId = 0,
         val name: String,
-        val url: String,
+        val host: String,
+        val port: Int,
     )
 
     sealed interface Label {
@@ -42,7 +43,7 @@ internal class EditServerStoreFactory(
             EditServerStore,
             Store<Intent, State, Label> by storeFactory.create(
                 name = "AddServerStore",
-                initialState = State(name = "", url = ""),
+                initialState = State(name = "", host = "", port = 8080),
                 bootstrapper = BootstrapperImpl(serverId),
                 executorFactory = ::ExecutorImpl,
                 reducer = ReducerImpl
@@ -56,7 +57,8 @@ internal class EditServerStoreFactory(
     private sealed interface Msg {
         data class UpdateId(val id: ServerId) : Msg
         data class UpdateName(val name: String) : Msg
-        data class UpdateUrl(val url: String) : Msg
+        data class UpdateHost(val host: String) : Msg
+        // TODO add port setup
     }
 
     private class BootstrapperImpl(val serverId: Long?) : CoroutineBootstrapper<Action>() {
@@ -76,7 +78,7 @@ internal class EditServerStoreFactory(
                 Intent.Save -> {
                     scope.launch {
                         val state = getState()
-                        val server = Server(state.id, state.name, state.url)
+                        val server = Server(state.id, state.name, state.host, state.port)
                         if (server.id == 0L) serversInteractor.addServer(server)
                         else serversInteractor.updateServer(server)
                         publish(Label.CloseScreen)
@@ -84,7 +86,7 @@ internal class EditServerStoreFactory(
                 }
 
                 is Intent.UpdateName -> dispatch(Msg.UpdateName(intent.name))
-                is Intent.UpdateUrl -> dispatch(Msg.UpdateUrl(intent.url))
+                is Intent.UpdateHost -> dispatch(Msg.UpdateHost(intent.host))
             }
         }
 
@@ -96,7 +98,7 @@ internal class EditServerStoreFactory(
                         val server = serversInteractor.getServer(action.serverId)
                         dispatch(Msg.UpdateId(server.id))
                         dispatch(Msg.UpdateName(server.name))
-                        dispatch(Msg.UpdateUrl(server.url))
+                        dispatch(Msg.UpdateHost(server.host))
                     }
                 }
             }
@@ -108,7 +110,7 @@ internal class EditServerStoreFactory(
             return when (message) {
                 is Msg.UpdateId -> copy(id = message.id)
                 is Msg.UpdateName -> copy(name = message.name)
-                is Msg.UpdateUrl -> copy(url = message.url)
+                is Msg.UpdateHost -> copy(host = message.host)
             }
         }
     }
