@@ -6,12 +6,12 @@ plugins {
     id("app.cash.sqldelight")
 }
 
-evaluationDependsOn(":feature:servers:client")
+evaluationDependsOn(":feature:servers:client-impl")
 sqldelight {
     databases {
         register("Database") {
             packageName.set("ru.vs.control.repository")
-            dependency(projects.feature.servers.client)
+            dependency(projects.feature.servers.clientImpl)
         }
     }
 }
@@ -31,7 +31,7 @@ kotlin {
     sourceSets {
         named("commonMain") {
             dependencies {
-                implementation(projects.feature.servers.client)
+                implementation(projects.feature.servers.clientImpl)
                 implementation(coreLibs.vs.core.database)
             }
         }

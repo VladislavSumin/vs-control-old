@@ -11,28 +11,6 @@ internal interface ServersInteractor {
     suspend fun deleteServer(id: ServerId)
 }
 
-typealias ServerId = Long
-
-/**
- * Remote Control server info
- */
-data class Server(
-    /**
-     * Unique server id for store it in local database
-     */
-    val id: ServerId,
-
-    /**
-     * Human-readable server name visible by user
-     */
-    val name: String,
-
-    /**
-     * Connection url
-     */
-    val url: String,
-)
-
 internal class ServersInteractorImpl(
     private val serversRepository: ServersRepository,
 ) : ServersInteractor {

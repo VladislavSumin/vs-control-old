@@ -14,13 +14,14 @@ sqldelight {
 }
 
 android {
-    namespace = "ru.vs.control.servers.client"
+    namespace = "ru.vs.control.servers.client_impl"
 }
 
 kotlin {
     sourceSets {
         named("commonMain") {
             dependencies {
+                api(projects.feature.servers.clientApi)
                 implementation(coreLibs.sqldelight.coroutines)
             }
         }
