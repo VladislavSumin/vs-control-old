@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<resources>
+    <string name="servers_content_edit">Изменить</string>
+    <string name="servers_content_delete">Удалить</string>
+    <string name="servers_content_connection_status">Статус подключения:</string>
+    <string name="servers_content_connection_status_connecting">Подключение</string>
+    <string name="servers_content_connection_status_connected">Подключено</string>
+    <string name="servers_content_connection_status_connection_error">Ошибка подключения</string>
+</resources>

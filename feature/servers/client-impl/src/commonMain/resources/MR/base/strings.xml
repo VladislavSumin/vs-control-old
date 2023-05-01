@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<resources>
+    <string name="servers_content_edit">Edit</string>
+    <string name="servers_content_delete">Delete</string>
+    <string name="servers_content_connection_status">Connection status:</string>
+    <string name="servers_content_connection_status_connecting">Connecting</string>
+    <string name="servers_content_connection_status_connected">Connected</string>
+    <string name="servers_content_connection_status_connection_error">Connection error</string>
+</resources>

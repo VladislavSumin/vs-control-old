@@ -31,8 +31,12 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import dev.icerock.moko.resources.compose.stringResource
+import ru.vs.control.servers.client_impl.MR
 import ru.vs.control.servers.ui.servers.ServersStore.ServerUiItem
+import ru.vs.control.servers_connection.domain.ServerConnectionInteractor
 import ru.vs.core.uikit.dropdown_menu.DropdownMenu
 import ru.vs.core.uikit.dropdown_menu.DropdownMenuItem
 
@@ -75,9 +79,37 @@ private fun Server(server: ServerUiItem, component: ServersComponent, modifier: 
             Column {
                 ServerHeader(server, component)
                 Divider(Modifier.fillMaxWidth())
+                Spacer(Modifier.defaultMinSize(minHeight = 8.dp))
                 Row {
-                    Text("Connection status:")
-                    Text(server.connectionStatus.toString())
+                    Text(
+                        stringResource(MR.strings.servers_content_connection_status),
+                        style = MaterialTheme.typography.bodyMedium,
+                    )
+                    Spacer(Modifier.defaultMinSize(minWidth = 4.dp))
+
+                    // TODO add colors to theme
+                    val statusColor = when (server.connectionStatus) {
+                        ServerConnectionInteractor.ConnectionStatus.Connected -> Color.Green
+                        ServerConnectionInteractor.ConnectionStatus.Connecting -> Color.Yellow
+                        is ServerConnectionInteractor.ConnectionStatus.Reconnecting -> Color.Red
+                    }
+
+                    val statusText = when (server.connectionStatus) {
+                        ServerConnectionInteractor.ConnectionStatus.Connected ->
+                            stringResource(MR.strings.servers_content_connection_status_connected)
+
+                        ServerConnectionInteractor.ConnectionStatus.Connecting ->
+                            stringResource(MR.strings.servers_content_connection_status_connecting)
+
+                        is ServerConnectionInteractor.ConnectionStatus.Reconnecting ->
+                            stringResource(MR.strings.servers_content_connection_status_connection_error)
+                    }
+
+                    Text(
+                        statusText,
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = statusColor,
+                    )
                 }
             }
         }
@@ -141,11 +173,11 @@ private fun ServerDropDownMenu(
             onDismissRequest = { isExpanded = false },
         ) {
             DropdownMenuItem(
-                { Text("Edit") },
+                { Text(stringResource(MR.strings.servers_content_edit)) },
                 { component.onClickEditServer(server.server.id); isExpanded = false }
             )
             DropdownMenuItem(
-                { Text("Delete") },
+                { Text(stringResource(MR.strings.servers_content_delete)) },
                 { component.onClickDeleteServer(server.server.id); isExpanded = false }
             )
         }

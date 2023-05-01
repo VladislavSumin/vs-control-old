@@ -1,7 +1,6 @@
-import ru.vs.build_logic.utils.android
-
 plugins {
     id("ru.vs.convention.preset.feature-client-impl")
+    id("ru.vs.convention.resources")
     id("app.cash.sqldelight")
 }
 
@@ -15,6 +14,10 @@ sqldelight {
 
 android {
     namespace = "ru.vs.control.servers.client_impl"
+}
+
+multiplatformResources {
+    multiplatformResourcesPackage = "ru.vs.control.servers.client_impl"
 }
 
 kotlin {
