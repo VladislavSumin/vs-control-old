@@ -1,6 +1,5 @@
 package ru.vs.control.servers.ui.servers
 
-import androidx.compose.desktop.ui.tooling.preview.Preview
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -26,9 +25,9 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.setValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -38,39 +37,38 @@ import ru.vs.core.uikit.dropdown_menu.DropdownMenuItem
 
 @Composable
 internal fun ServersContent(component: ServersComponent) {
-    val state by component.state.collectAsState()
-    when (val state = state) {
-        is ServersStore.State.Loaded -> Servers(state, component::onClickAddServer)
+    when (val state = component.state.collectAsState().value) {
+        is ServersStore.State.Loaded -> Servers(state, component)
         ServersStore.State.Loading -> {}
     }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun Servers(state: ServersStore.State.Loaded, onClick: () -> Unit) {
+private fun Servers(state: ServersStore.State.Loaded, component: ServersComponent) {
     Scaffold(
-        floatingActionButton = { AddServer(onClick) }
+        floatingActionButton = { AddServer(component) }
     ) { padding ->
         LazyColumn(
             Modifier.padding(padding),
             verticalArrangement = Arrangement.spacedBy(4.dp)
         ) {
             items(state.servers, key = { it.id }) { server ->
-                Server(server, Modifier.fillMaxWidth())
+                Server(server, component, Modifier.fillMaxWidth())
             }
         }
     }
 }
 
 @Composable
-private fun AddServer(onClick: () -> Unit) {
-    FloatingActionButton(onClick = onClick) {
+private fun AddServer(component: ServersComponent) {
+    FloatingActionButton(onClick = { component.onClickAddServer() }) {
         Text("+")
     }
 }
 
 @Composable
-private fun Server(server: Server, modifier: Modifier = Modifier) {
+private fun Server(server: Server, component: ServersComponent, modifier: Modifier = Modifier) {
     Card(modifier) {
         Box(modifier = Modifier.padding(horizontal = 16.dp, vertical = 12.dp)) {
             Row {
@@ -102,14 +100,17 @@ private fun Server(server: Server, modifier: Modifier = Modifier) {
                     Modifier
                         .defaultMinSize(minWidth = 12.dp)
                 )
-                ServerDropDownMenu()
+                ServerDropDownMenu(server, component)
             }
         }
     }
 }
 
 @Composable
-private fun ServerDropDownMenu() {
+private fun ServerDropDownMenu(
+    server: Server,
+    component: ServersComponent,
+) {
     var isExpanded by remember { mutableStateOf(false) }
 
     Box {
@@ -123,19 +124,25 @@ private fun ServerDropDownMenu() {
             expanded = isExpanded,
             onDismissRequest = { isExpanded = false },
         ) {
-            DropdownMenuItem({ Text("Edit") }, {})
-            DropdownMenuItem({ Text("Delete") }, {})
+            DropdownMenuItem(
+                { Text("Edit") },
+                { component.onClickEditServer(server.id); isExpanded = false }
+            )
+            DropdownMenuItem(
+                { Text("Delete") },
+                { component.onClickDeleteServer(server.id); isExpanded = false }
+            )
         }
     }
 }
 
-@Composable
-@Preview
-private fun ServerPreview() {
-    MaterialTheme {
-        Server(
-            Server(0, "Server name", "https://control.vs.com/"),
-            Modifier.padding(16.dp)
-        )
-    }
-}
+// @Composable
+// @Preview
+// private fun ServerPreview() {
+//    MaterialTheme {
+//        Server(
+//            Server(0, "Server name", "https://control.vs.com/"),
+//            Modifier.padding(16.dp)
+//        )
+//    }
+// }

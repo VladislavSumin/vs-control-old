@@ -52,6 +52,7 @@ class DefaultRootComponent(
         return ServersComponent(
             componentContext,
             openAddServerScreen = { navigation.push(Config.EditServer(null)) },
+            openEditServerScreen = { serverId -> navigation.push(Config.EditServer(serverId)) },
         )
     }
 

@@ -9,12 +9,13 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
 import ru.vs.control.servers.domain.Server
+import ru.vs.control.servers.domain.ServerId
 import ru.vs.control.servers.service.ServerQueriesProvider
 
 internal interface ServersRepository {
     fun observeServers(): Flow<List<Server>>
     suspend fun insert(server: Server)
-    suspend fun delete(server: Server)
+    suspend fun delete(serverId: ServerId)
 }
 
 internal class ServersRepositoryImpl(private val serverQueriesProvider: ServerQueriesProvider) : ServersRepository {
@@ -33,8 +34,8 @@ internal class ServersRepositoryImpl(private val serverQueriesProvider: ServerQu
         serverQueriesProvider.getServerQueries().insert(server.toRecord())
     }
 
-    override suspend fun delete(server: Server) = withContext(Dispatchers.Default) {
-        serverQueriesProvider.getServerQueries().delete(server.id)
+    override suspend fun delete(serverId: ServerId) = withContext(Dispatchers.Default) {
+        serverQueriesProvider.getServerQueries().delete(serverId)
     }
 }
 

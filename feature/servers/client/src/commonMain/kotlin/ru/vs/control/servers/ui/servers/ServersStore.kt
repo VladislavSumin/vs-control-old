@@ -8,13 +8,14 @@ import com.arkivanov.mvikotlin.extensions.coroutines.CoroutineExecutor
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import ru.vs.control.servers.domain.Server
+import ru.vs.control.servers.domain.ServerId
 import ru.vs.control.servers.domain.ServersInteractor
 import ru.vs.control.servers.ui.servers.ServersStore.Intent
 import ru.vs.control.servers.ui.servers.ServersStore.State
 
 internal interface ServersStore : Store<Intent, State, Nothing> {
     sealed class Intent {
-        object AddServer : Intent()
+        data class DeleteServer(val serverId: ServerId) : Intent()
     }
 
     sealed class State {
@@ -52,8 +53,8 @@ internal class ServerStoreFactory(
         }
 
         override fun executeIntent(intent: Intent, getState: () -> State) {
-            scope.launch {
-                serversInteractor.addServer(Server(0, "Test", ""))
+            when (intent) {
+                is Intent.DeleteServer -> scope.launch { serversInteractor.deleteServer(intent.serverId) }
             }
         }
     }
