@@ -65,6 +65,7 @@ include(":feature:about-server:server")
 include(":feature:about-server:shared")
 include(":feature:servers:client-api")
 include(":feature:servers:client-impl")
+include(":feature:servers-connection:client-impl")
 
 include(":client:common")
 include(":client:android")

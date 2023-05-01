@@ -29,9 +29,9 @@ import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.serializer
-import java.util.concurrent.atomic.AtomicInteger
 import kotlin.reflect.KType
 import kotlin.reflect.typeOf
+import kotlinx.atomicfu.atomic
 
 open class RSubClientAbstract(
     private val connector: RSubConnector,
@@ -46,7 +46,7 @@ open class RSubClientAbstract(
     /**
      * Contains next id, using to create new subscription with uncial id
      */
-    private val nextId = AtomicInteger(0)
+    private val nextId = atomic(0)
 
     /**
      * This shared flow keeps the connection open and automatically reconnects in case of errors.
@@ -54,7 +54,7 @@ open class RSubClientAbstract(
      */
     @Suppress("TooGenericExceptionCaught")
     private val connection: Flow<ConnectionState> = channelFlow {
-        logger.debug("Start observe connection")
+        logger.debug { "Start observe connection" }
 
         var connectionGlobal: RSubConnection? = null
         try {
@@ -72,33 +72,33 @@ open class RSubClientAbstract(
                 } catch (e: Exception) {
                     when (e) {
                         is RSubExpectedExceptionOnConnectionException -> {
-                            logger.debug("Connection or listening failed with checked exception: ${e.message}")
+                            logger.debug { "Connection or listening failed with checked exception: ${e.message}" }
                             send(ConnectionState.Disconnected)
                             connectionGlobal?.close()
                             delay(reconnectInterval)
-                            logger.debug("Reconnecting...")
+                            logger.debug { "Reconnecting..." }
                         }
 
                         is CancellationException -> throw e
                         else -> {
                             val message = "Unknown exception on connection or listening"
                             val exception = RSubException(message, e)
-                            logger.error(message, exception)
+                            logger.error(exception) { message }
                             throw exception
                         }
                     }
                 }
             }
         } finally {
-            logger.debug("Stopping observe connection")
+            logger.debug { "Stopping observe connection" }
             withContext(NonCancellable) {
                 connectionGlobal?.close()
-                logger.debug("Stop observe connection")
+                logger.debug { "Stop observe connection" }
             }
         }
     }
         .distinctUntilChanged()
-        .onEach { logger.debug("New connection status: ${it.status}") }
+        .onEach { logger.debug { "New connection status: ${it.status}" } }
         .shareIn(
             scope + CoroutineName("RSubClient::connection"),
             SharingStarted.WhileSubscribed(
@@ -253,7 +253,7 @@ open class RSubClientAbstract(
                     throwOnDisconnect -> false
 //                    it is SocketException -> true
                     else -> {
-                        logger.error("Unexpected exception ", it)
+                        logger.error(it) { "Unexpected exception" }
                         false
                     }
                 }

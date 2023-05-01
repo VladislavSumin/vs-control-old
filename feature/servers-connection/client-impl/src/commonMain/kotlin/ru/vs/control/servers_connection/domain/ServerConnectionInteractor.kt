@@ -1,0 +1,5 @@
+package ru.vs.control.servers_connection.domain
+
+internal interface ServerConnectionInteractor
+
+internal class ServerConnectionInteractorImpl : ServerConnectionInteractor

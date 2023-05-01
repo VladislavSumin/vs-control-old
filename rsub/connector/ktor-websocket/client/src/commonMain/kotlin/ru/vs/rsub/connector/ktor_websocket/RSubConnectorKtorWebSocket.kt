@@ -1,6 +1,7 @@
 package ru.vs.rsub.connector.ktor_websocket
 
 import io.ktor.client.HttpClient
+import io.ktor.client.network.sockets.SocketTimeoutException
 import io.ktor.client.plugins.websocket.webSocketSession
 import io.ktor.client.request.header
 import io.ktor.http.HttpHeaders
@@ -9,8 +10,6 @@ import ru.vs.rsub.RSubConnection
 import ru.vs.rsub.RSubConnector
 import ru.vs.rsub.RSubException
 import ru.vs.rsub.RSubExpectedExceptionOnConnectionException
-import java.net.SocketException
-import java.net.SocketTimeoutException
 
 class RSubConnectorKtorWebSocket(
     private val client: HttpClient,
@@ -34,9 +33,11 @@ class RSubConnectorKtorWebSocket(
             return RSubConnectionKtorWebSocket(session)
         } catch (e: Exception) {
             throw when (e) {
-                is SocketException,
+                // TODO подебажить этот момент, посмотреть что тут может стрелять
+                // is SocketException,
                 is SocketTimeoutException ->
                     RSubExpectedExceptionOnConnectionException("Catch checked exception while connect", e)
+
                 else -> RSubException("Unknown exception while connect", e)
             }
         }
