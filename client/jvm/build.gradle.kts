@@ -9,7 +9,14 @@ val clientMainClass: String = "ru.vs.control.MainKt"
 
 kotlin {
     jvm {
-        fatJar(clientMainClass, jarName = "control")
+        fatJar(
+            mainClass = clientMainClass,
+            jarName = "control",
+
+            // TODO Moko-resources add duplicating resources
+            // preview-desktop, and some other libs (not is moko generated resources)
+            duplicatesStrategy = DuplicatesStrategy.WARN,
+        )
     }
 
     sourceSets {
