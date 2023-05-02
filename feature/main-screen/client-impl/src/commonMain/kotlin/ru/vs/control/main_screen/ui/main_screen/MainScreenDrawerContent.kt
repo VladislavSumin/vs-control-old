@@ -21,17 +21,15 @@ import androidx.compose.ui.unit.dp
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun MainScreenDrawerContent() {
-    ModalDrawerSheet {
-        Column(Modifier.padding(horizontal = 16.dp, vertical = 12.dp)) {
-            Header(Modifier.fillMaxWidth())
-            Divider()
+    Column(Modifier.padding(horizontal = 16.dp, vertical = 12.dp)) {
+        Header(Modifier.fillMaxWidth())
+        Divider()
 
-            NavigationDrawerItem(
-                label = { Text("Drawer content") },
-                selected = true,
-                onClick = {}
-            )
-        }
+        NavigationDrawerItem(
+            label = { Text("Drawer content") },
+            selected = true,
+            onClick = {}
+        )
     }
 }
 
