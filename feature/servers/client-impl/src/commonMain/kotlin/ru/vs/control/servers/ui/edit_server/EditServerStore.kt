@@ -18,6 +18,7 @@ internal interface EditServerStore : Store<Intent, State, Label> {
     sealed interface Intent {
         data class UpdateName(val name: String) : Intent
         data class UpdateHost(val host: String) : Intent
+        object Back : Intent
         object Save : Intent
     }
 
@@ -26,7 +27,9 @@ internal interface EditServerStore : Store<Intent, State, Label> {
         val name: String,
         val host: String,
         val port: Int,
-    )
+    ) {
+        val isEdit: Boolean get() = id != 0L
+    }
 
     sealed interface Label {
         object CloseScreen : Label
@@ -84,6 +87,8 @@ internal class EditServerStoreFactory(
                         publish(Label.CloseScreen)
                     }
                 }
+
+                Intent.Back -> publish(Label.CloseScreen)
 
                 is Intent.UpdateName -> dispatch(Msg.UpdateName(intent.name))
                 is Intent.UpdateHost -> dispatch(Msg.UpdateHost(intent.host))
