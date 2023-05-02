@@ -18,7 +18,7 @@ import platform.UIKit.UIResponderMeta
 import platform.UIKit.UIScreen
 import platform.UIKit.UIWindow
 import ru.vs.control.clientCommon
-import ru.vs.control.ui.root.DefaultRootComponent
+import ru.vs.control.ui.root.RootComponent
 import ru.vs.control.ui.root.RootContent
 import ru.vs.core.decompose.DiComponentContext
 import ru.vs.core.di.Modules
@@ -54,7 +54,7 @@ class SkikoAppDelegate : UIResponder, UIApplicationDelegateProtocol {
         val lifecycle = LifecycleRegistry()
         val defaultContext = DefaultComponentContext(lifecycle)
         val defaultDiContext = DiComponentContext(defaultContext, di)
-        val rootComponent = DefaultRootComponent(defaultDiContext)
+        val rootComponent = RootComponent(defaultDiContext)
 
         lifecycle.create()
 

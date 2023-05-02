@@ -30,6 +30,7 @@ kotlin {
         named("commonMain") {
             dependencies {
                 implementation(coreLibs.vs.core.coroutines)
+                implementation(coreLibs.essenty.parcelable)
             }
         }
     }
