@@ -17,7 +17,7 @@ class RSubConnectorKtorWebSocket(
     private val path: String = "/rSub",
     private val port: Int = 8080
 ) : RSubConnector {
-    @Suppress("TooGenericExceptionCaught")
+    @Suppress("TooGenericExceptionCaught", "InstanceOfCheckForException")
     override suspend fun connect(): RSubConnection {
         try {
             val session = client.webSocketSession(
@@ -32,8 +32,11 @@ class RSubConnectorKtorWebSocket(
             }
             return RSubConnectionKtorWebSocket(session)
         } catch (e: Exception) {
-            throw when (e) {
-                is IOException -> RSubExpectedExceptionOnConnectionException("Catch checked exception while connect", e)
+            throw when {
+                e is IOException || e.isPlatformExpectedException() -> {
+                    RSubExpectedExceptionOnConnectionException("Catch checked exception while connect", e)
+                }
+
                 else -> RSubException("Unknown exception while connect", e)
             }
         }
