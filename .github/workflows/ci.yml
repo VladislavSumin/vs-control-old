@@ -53,7 +53,7 @@ jobs:
         with:
           name: android-client-release
           path: "vs-control/client/android/build/outputs/apk/release/**.apk"
-          if-no-files-found: error
+          if-no-files-found: ignore
 
       - name: Upload jvm client
         uses: actions/upload-artifact@v3
