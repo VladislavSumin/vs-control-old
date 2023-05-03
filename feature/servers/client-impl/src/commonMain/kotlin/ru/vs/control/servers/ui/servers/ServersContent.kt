@@ -1,5 +1,6 @@
 package ru.vs.control.servers.ui.servers
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -74,7 +75,9 @@ private fun AddServer(component: ServersComponent) {
 
 @Composable
 private fun Server(server: ServerUiItem, component: ServersComponent, modifier: Modifier = Modifier) {
-    Card(modifier) {
+    Card(
+        modifier.clickable { component.onClickSelectServer(server.server.id) }
+    ) {
         Box(modifier = Modifier.padding(horizontal = 16.dp, vertical = 12.dp)) {
             Column {
                 ServerHeader(server, component)
@@ -106,11 +109,24 @@ private fun ServerHeader(
                 .weight(1f)
                 .align(Alignment.CenterVertically)
         ) {
-            Text(
-                server.server.name,
-                style = MaterialTheme.typography.titleMedium,
-                maxLines = 1,
-            )
+            Row {
+                Text(
+                    server.server.name,
+                    style = MaterialTheme.typography.titleMedium,
+                    maxLines = 1,
+                )
+                if (server.isSelected) {
+                    Spacer(Modifier.defaultMinSize(minWidth = 2.dp))
+
+                    Text(
+                        "Selected",
+                        Modifier.align(Alignment.CenterVertically),
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = Color.Green,
+                        maxLines = 1,
+                    )
+                }
+            }
             Text(
                 "${server.server.host}:${server.server.port}",
                 style = MaterialTheme.typography.bodyMedium,

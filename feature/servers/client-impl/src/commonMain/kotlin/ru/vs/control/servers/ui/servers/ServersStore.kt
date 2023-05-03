@@ -9,6 +9,7 @@ import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.channels.consumeEach
 import kotlinx.coroutines.flow.channelFlow
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
@@ -25,6 +26,7 @@ import ru.vs.control.servers_connection.domain.ServersConnectionInteractor
 
 internal interface ServersStore : Store<Intent, State, Nothing> {
     sealed class Intent {
+        data class SelectServer(val serverId: ServerId) : Intent()
         data class DeleteServer(val serverId: ServerId) : Intent()
     }
 
@@ -33,7 +35,12 @@ internal interface ServersStore : Store<Intent, State, Nothing> {
         data class Loaded(val servers: List<ServerUiItem>) : State()
     }
 
-    data class ServerUiItem(val server: Server, val connectionStatus: ConnectionStatus, val serverInfo: ServerInfo?)
+    data class ServerUiItem(
+        val server: Server,
+        val connectionStatus: ConnectionStatus,
+        val serverInfo: ServerInfo?,
+        val isSelected: Boolean,
+    )
 }
 
 internal class ServerStoreFactory(
@@ -60,13 +67,16 @@ internal class ServerStoreFactory(
     private inner class ExecutorImpl : CoroutineExecutor<Intent, Unit, State, Msg, Nothing>() {
         override fun executeAction(action: Unit, getState: () -> State) {
             scope.launch {
-                serversInteractor.observeServers()
-                    .flatMapLatest { servers ->
+                combine(
+                    serversInteractor.observeServers(),
+                    serversInteractor.observeSelectedServerId(),
+                ) { servers, selectedServerId -> servers to selectedServerId }
+                    .flatMapLatest { (servers, selectedServerId) ->
                         channelFlow {
                             val connectionStateUpdateChannel =
                                 Channel<Pair<ServerId, Pair<ConnectionStatus, ServerInfo?>>>()
                             val uiServers: MutableMap<ServerId, ServerUiItem> = servers
-                                .map { ServerUiItem(it, ConnectionStatus.Connecting, null) }
+                                .map { ServerUiItem(it, ConnectionStatus.Connecting, null, it.id == selectedServerId) }
                                 .associateBy { it.server.id }
                                 .toMutableMap()
                             send(uiServers.values.toList())
@@ -103,6 +113,7 @@ internal class ServerStoreFactory(
 
         override fun executeIntent(intent: Intent, getState: () -> State) {
             when (intent) {
+                is Intent.SelectServer -> scope.launch { serversInteractor.setSelectedServer(intent.serverId) }
                 is Intent.DeleteServer -> scope.launch { serversInteractor.deleteServer(intent.serverId) }
             }
         }
