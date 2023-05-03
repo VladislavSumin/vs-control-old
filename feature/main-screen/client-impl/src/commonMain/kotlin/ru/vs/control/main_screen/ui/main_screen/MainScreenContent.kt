@@ -1,7 +1,5 @@
 package ru.vs.control.main_screen.ui.main_screen
 
-import androidx.compose.material3.DismissibleDrawerSheet
-import androidx.compose.material3.DismissibleNavigationDrawer
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ModalDrawerSheet
@@ -46,7 +44,6 @@ private fun MainScreenNavigationDrawer(content: @Composable () -> Unit) {
             )
     }
 }
-
 
 @Composable
 private fun MainScreenNavigation(component: MainScreenComponent) {
