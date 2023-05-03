@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<resources>
+    <string name="drawer_item_servers">Сервера</string>
+    <string name="drawer_item_entities">Сущности</string>
+</resources>

@@ -7,8 +7,10 @@ import com.arkivanov.decompose.router.stack.StackNavigation
 import com.arkivanov.decompose.router.stack.childStack
 import com.arkivanov.decompose.router.stack.push
 import com.arkivanov.decompose.value.Value
+import com.arkivanov.decompose.value.operator.map
 import com.arkivanov.essenty.parcelable.Parcelable
 import com.arkivanov.essenty.parcelable.Parcelize
+import ru.vs.control.entities.ui.entities.EntitiesComponent
 import ru.vs.control.root_navigation.ui.RootNavigationConfig
 import ru.vs.control.servers.ui.servers.ServersComponent
 import ru.vs.core.decompose.ComposeComponent
@@ -29,12 +31,18 @@ class MainScreenComponent(
         )
 
     internal val stack: Value<ChildStack<*, ComposeComponent>> = internalStack
+    internal val selectedDrawerElement = internalStack.map { it.active.configuration.drawerElement }
 
     private fun child(config: Config, componentContext: ComponentContext): ComposeComponent {
         val diComponentContext = DiComponentContext(componentContext, di)
         return when (config) {
+            is Config.Entities -> entitiesComponent(diComponentContext)
             is Config.Servers -> serversComponent(diComponentContext)
         }
+    }
+
+    private fun entitiesComponent(componentContext: DiComponentContext): EntitiesComponent {
+        return EntitiesComponent(componentContext)
     }
 
     private fun serversComponent(componentContext: DiComponentContext): ServersComponent {
@@ -48,8 +56,15 @@ class MainScreenComponent(
     @Composable
     override fun Render() = MainScreenContent(this)
 
+    private val Config.drawerElement: DrawerElement
+        get() = when (this) {
+            Config.Entities -> DrawerElement.Entities
+            Config.Servers -> DrawerElement.Servers
+        }
+
     @Parcelize
     private sealed interface Config : Parcelable {
+        object Entities : Config
         object Servers : Config
     }
 }

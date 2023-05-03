@@ -17,7 +17,7 @@ import ru.vs.core.uikit.local_configuration.LocalConfiguration
 @Composable
 internal fun MainScreenContent(component: MainScreenComponent) {
     Scaffold {
-        MainScreenNavigationDrawer {
+        MainScreenNavigationDrawer(component) {
             MainScreenNavigation(component)
         }
     }
@@ -25,21 +25,21 @@ internal fun MainScreenContent(component: MainScreenComponent) {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun MainScreenNavigationDrawer(content: @Composable () -> Unit) {
+private fun MainScreenNavigationDrawer(component: MainScreenComponent, content: @Composable () -> Unit) {
     val drawerState = rememberDrawerState(DrawerValue.Closed)
 
     when (LocalConfiguration.current.screenWidthSize) {
         Configuration.ScreenSize.Medium,
         Configuration.ScreenSize.Small ->
             ModalNavigationDrawer(
-                drawerContent = { ModalDrawerSheet { MainScreenDrawerContent() } },
+                drawerContent = { ModalDrawerSheet { MainScreenDrawerContent(component) } },
                 drawerState = drawerState,
                 content = content
             )
 
         Configuration.ScreenSize.Big ->
             PermanentNavigationDrawer(
-                drawerContent = { PermanentDrawerSheet { MainScreenDrawerContent() } },
+                drawerContent = { PermanentDrawerSheet { MainScreenDrawerContent(component) } },
                 content = content
             )
     }

@@ -13,22 +13,21 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationDrawerItem
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.arkivanov.decompose.extensions.compose.jetbrains.subscribeAsState
+import dev.icerock.moko.resources.StringResource
+import dev.icerock.moko.resources.compose.stringResource
+import ru.vs.control.main_screen.client_impl.MR
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-internal fun MainScreenDrawerContent() {
+internal fun MainScreenDrawerContent(component: MainScreenComponent) {
     Column(Modifier.padding(horizontal = 16.dp, vertical = 12.dp)) {
         Header(Modifier.fillMaxWidth())
         Divider()
-
-        NavigationDrawerItem(
-            label = { Text("Drawer content") },
-            selected = true,
-            onClick = {}
-        )
+        Body(component)
     }
 }
 
@@ -54,3 +53,23 @@ private fun Header(modifier: Modifier = Modifier) {
         )
     }
 }
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun Body(component: MainScreenComponent) {
+    val selectedElement by component.selectedDrawerElement.subscribeAsState()
+    DrawerElement.values().forEach { drawerElement ->
+        NavigationDrawerItem(
+            label = { Text(stringResource(drawerElement.titleRes)) },
+            selected = drawerElement == selectedElement,
+            onClick = {},
+            Modifier.padding(vertical = 4.dp)
+        )
+    }
+}
+
+private val DrawerElement.titleRes: StringResource
+    get() = when (this) {
+        DrawerElement.Entities -> MR.strings.drawer_item_entities
+        DrawerElement.Servers -> MR.strings.drawer_item_servers
+    }
