@@ -6,6 +6,7 @@
     <string name="servers_content_connection_status_connecting">Connecting</string>
     <string name="servers_content_connection_status_connected">Connected</string>
     <string name="servers_content_connection_status_connection_error">Connection error</string>
+    <string name="servers_content_connection_status_get_server_info_error">Error getting server info</string>
 
     <string name="edit_server_server_name">Server name</string>
     <string name="edit_server_server_hostname">Server hostname</string>

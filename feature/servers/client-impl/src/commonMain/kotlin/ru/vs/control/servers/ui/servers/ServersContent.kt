@@ -35,9 +35,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import dev.icerock.moko.resources.compose.stringResource
+import ru.vs.control.about_server.domain.AboutServerInteractor.ConnectionStatusWithServerInfo
 import ru.vs.control.servers.client_impl.MR
 import ru.vs.control.servers.ui.servers.ServersStore.ServerUiItem
-import ru.vs.control.servers_connection.domain.ServerConnectionInteractor
 import ru.vs.core.uikit.dropdown_menu.DropdownMenu
 import ru.vs.core.uikit.dropdown_menu.DropdownMenuItem
 
@@ -116,7 +116,7 @@ private fun ServerHeader(
                     maxLines = 1,
                 )
                 if (server.isSelected) {
-                    Spacer(Modifier.defaultMinSize(minWidth = 2.dp))
+                    Spacer(Modifier.defaultMinSize(minWidth = 8.dp))
 
                     Text(
                         "Selected",
@@ -182,20 +182,24 @@ private fun ServerConnectionStatus(server: ServerUiItem) {
 
         // TODO add colors to theme
         val statusColor = when (server.connectionStatus) {
-            ServerConnectionInteractor.ConnectionStatus.Connected -> Color.Green
-            ServerConnectionInteractor.ConnectionStatus.Connecting -> Color.Yellow
-            is ServerConnectionInteractor.ConnectionStatus.Reconnecting -> Color.Red
+            is ConnectionStatusWithServerInfo.Connected -> Color.Green
+            ConnectionStatusWithServerInfo.Connecting -> Color.Yellow
+            is ConnectionStatusWithServerInfo.FailedToGetServerInfo -> Color.Red
+            is ConnectionStatusWithServerInfo.Reconnecting -> Color.Red
         }
 
         val statusText = when (server.connectionStatus) {
-            ServerConnectionInteractor.ConnectionStatus.Connected ->
+            is ConnectionStatusWithServerInfo.Connected ->
                 stringResource(MR.strings.servers_content_connection_status_connected)
 
-            ServerConnectionInteractor.ConnectionStatus.Connecting ->
+            ConnectionStatusWithServerInfo.Connecting ->
                 stringResource(MR.strings.servers_content_connection_status_connecting)
 
-            is ServerConnectionInteractor.ConnectionStatus.Reconnecting ->
+            is ConnectionStatusWithServerInfo.Reconnecting ->
                 stringResource(MR.strings.servers_content_connection_status_connection_error)
+
+            is ConnectionStatusWithServerInfo.FailedToGetServerInfo ->
+                stringResource(MR.strings.servers_content_connection_status_get_server_info_error)
         }
 
         Text(
@@ -208,8 +212,9 @@ private fun ServerConnectionStatus(server: ServerUiItem) {
 
 @Composable
 private fun ServerServerInfo(server: ServerUiItem) {
+    val version = (server.connectionStatus as? ConnectionStatusWithServerInfo.Connected)?.serverInfo?.version
     Text(
-        "Server version: ${server.serverInfo?.version}",
+        "Server version: $version",
         style = MaterialTheme.typography.bodyMedium,
     )
 }

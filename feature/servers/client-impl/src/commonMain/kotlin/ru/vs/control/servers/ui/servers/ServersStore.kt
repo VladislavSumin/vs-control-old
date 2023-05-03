@@ -5,28 +5,31 @@ import com.arkivanov.mvikotlin.core.store.SimpleBootstrapper
 import com.arkivanov.mvikotlin.core.store.Store
 import com.arkivanov.mvikotlin.core.store.StoreFactory
 import com.arkivanov.mvikotlin.extensions.coroutines.CoroutineExecutor
-import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.channels.consumeEach
-import kotlinx.coroutines.flow.channelFlow
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import ru.vs.control.about_server.domain.AboutServerInteractor
-import ru.vs.control.about_server.domain.ServerInfo
+import ru.vs.control.about_server.domain.AboutServerInteractor.ConnectionStatusWithServerInfo
 import ru.vs.control.servers.domain.Server
 import ru.vs.control.servers.domain.ServerId
 import ru.vs.control.servers.domain.ServersInteractor
 import ru.vs.control.servers.ui.servers.ServersStore.Intent
 import ru.vs.control.servers.ui.servers.ServersStore.ServerUiItem
 import ru.vs.control.servers.ui.servers.ServersStore.State
-import ru.vs.control.servers_connection.domain.ServerConnectionInteractor.ConnectionStatus
-import ru.vs.control.servers_connection.domain.ServersConnectionInteractor
 
 internal interface ServersStore : Store<Intent, State, Nothing> {
     sealed class Intent {
+        /**
+         * Set current selected server
+         */
         data class SelectServer(val serverId: ServerId) : Intent()
+
+        /**
+         * Delete server
+         */
         data class DeleteServer(val serverId: ServerId) : Intent()
     }
 
@@ -36,9 +39,19 @@ internal interface ServersStore : Store<Intent, State, Nothing> {
     }
 
     data class ServerUiItem(
+        /**
+         * Server model
+         */
         val server: Server,
-        val connectionStatus: ConnectionStatus,
-        val serverInfo: ServerInfo?,
+
+        /**
+         * Current server connection status
+         */
+        val connectionStatus: ConnectionStatusWithServerInfo,
+
+        /**
+         * Is this server selected as default server
+         */
         val isSelected: Boolean,
     )
 }
@@ -46,19 +59,17 @@ internal interface ServersStore : Store<Intent, State, Nothing> {
 internal class ServerStoreFactory(
     private val storeFactory: StoreFactory,
     private val serversInteractor: ServersInteractor,
-    private val serversConnectionInteractor: ServersConnectionInteractor,
     private val aboutServerInteractor: AboutServerInteractor,
 ) {
-    fun create(): ServersStore =
-        object :
-            ServersStore,
-            Store<Intent, State, Nothing> by storeFactory.create(
-                name = ServersStore::class.simpleName,
-                initialState = State.Loaded(emptyList()),
-                bootstrapper = SimpleBootstrapper(Unit),
-                executorFactory = ::ExecutorImpl,
-                reducer = ReducerImpl
-            ) {}
+    fun create(): ServersStore = object :
+        ServersStore,
+        Store<Intent, State, Nothing> by storeFactory.create(
+            name = ServersStore::class.simpleName,
+            initialState = State.Loading,
+            bootstrapper = SimpleBootstrapper(Unit),
+            executorFactory = ::ExecutorImpl,
+            reducer = ReducerImpl
+        ) {}
 
     private sealed class Msg {
         data class ServersListUpdated(val servers: List<ServerUiItem>) : Msg()
@@ -67,48 +78,28 @@ internal class ServerStoreFactory(
     private inner class ExecutorImpl : CoroutineExecutor<Intent, Unit, State, Msg, Nothing>() {
         override fun executeAction(action: Unit, getState: () -> State) {
             scope.launch {
-                combine(
-                    serversInteractor.observeServers(),
-                    serversInteractor.observeSelectedServerId(),
-                ) { servers, selectedServerId -> servers to selectedServerId }
-                    .flatMapLatest { (servers, selectedServerId) ->
-                        channelFlow {
-                            val connectionStateUpdateChannel =
-                                Channel<Pair<ServerId, Pair<ConnectionStatus, ServerInfo?>>>()
-                            val uiServers: MutableMap<ServerId, ServerUiItem> = servers
-                                .map { ServerUiItem(it, ConnectionStatus.Connecting, null, it.id == selectedServerId) }
-                                .associateBy { it.server.id }
-                                .toMutableMap()
-                            send(uiServers.values.toList())
-
-                            servers.forEach { server: Server ->
-                                launch {
-                                    val connection = serversConnectionInteractor.getConnection(server)
-                                    connection.observeConnectionStatus()
-                                        .collect { connectionStatus ->
-                                            val serverInfo = if (connectionStatus is ConnectionStatus.Connected) {
-                                                aboutServerInteractor.getServerInfo(server)
-                                            } else null
-                                            val data = connectionStatus to serverInfo
-                                            connectionStateUpdateChannel.send(server.id to data)
-                                        }
-                                }
-                            }
-
-                            connectionStateUpdateChannel.consumeEach { (serverId, data) ->
-                                val (connectionStatus, serverInfo) = data
-                                uiServers[serverId] = uiServers[serverId]!!
-                                    .copy(
-                                        connectionStatus = connectionStatus,
-                                        serverInfo = serverInfo
-                                    )
-                                send(uiServers.values.toList())
-                            }
-                        }
-                    }
+                observeServerUiState()
                     .map { Msg.ServersListUpdated(it) }
                     .collect(::dispatch)
             }
+        }
+
+        private fun observeServerUiState(): Flow<List<ServerUiItem>> {
+            return combine(
+                serversInteractor.observeServers(),
+                serversInteractor.observeSelectedServerId(),
+            ) { servers, selectedServerId -> servers to selectedServerId }
+                .flatMapLatest { (servers, selectedServerId) ->
+                    combine(
+                        servers.map { server ->
+                            aboutServerInteractor.observeConnectionStatusWithServerInfo(server).map { server to it }
+                        }
+                    ) {
+                        it.map { (server, connectionStatus) ->
+                            ServerUiItem(server, connectionStatus, server.id == selectedServerId)
+                        }
+                    }
+                }
         }
 
         override fun executeIntent(intent: Intent, getState: () -> State) {

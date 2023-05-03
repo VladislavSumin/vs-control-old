@@ -6,6 +6,7 @@
     <string name="servers_content_connection_status_connecting">Подключение</string>
     <string name="servers_content_connection_status_connected">Подключено</string>
     <string name="servers_content_connection_status_connection_error">Ошибка подключения</string>
+    <string name="servers_content_connection_status_get_server_info_error">Ошибка при получении информации о сервере</string>
 
     <string name="edit_server_server_name">Имя сервера</string>
     <string name="edit_server_server_hostname">Hostname сервера</string>

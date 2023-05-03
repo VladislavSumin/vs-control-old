@@ -39,14 +39,17 @@ internal class MainScreenStoreFactory(
 
     private class BootstrapperImpl : CoroutineBootstrapper<Action>() {
         override fun invoke() {
+            // no op
         }
     }
 
     private class ExecutorImpl : CoroutineExecutor<Intent, Action, State, Msg, Label>() {
         override fun executeIntent(intent: Intent, getState: () -> State) {
+            // no op
         }
 
         override fun executeAction(action: Action, getState: () -> State) {
+            // no op
         }
     }
 
