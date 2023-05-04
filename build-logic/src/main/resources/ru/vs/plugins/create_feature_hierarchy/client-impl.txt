@@ -1,0 +1,19 @@
+plugins {
+    id("ru.vs.convention.preset.feature-client-impl")
+}
+
+android {
+    namespace = "ru.vs.control.{{ feature_name }}.client_impl"
+}
+
+kotlin {
+    sourceSets {
+        named("commonMain") {
+            dependencies {
+                api(projects.feature.{{ featureName }}.clientApi)
+                implementation(projects.feature.{{ featureName }}.dto)
+                implementation(projects.feature.{{ featureName }}.sharedImpl)
+            }
+        }
+    }
+}

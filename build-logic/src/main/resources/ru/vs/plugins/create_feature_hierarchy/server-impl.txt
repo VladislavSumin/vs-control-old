@@ -1,0 +1,15 @@
+plugins {
+    id("ru.vs.convention.preset.feature-server-impl")
+}
+
+kotlin {
+    sourceSets {
+        named("commonMain") {
+            dependencies {
+                api(projects.feature.{{ featureName }}.serverApi)
+                implementation(projects.feature.{{ featureName }}.dto)
+                implementation(projects.feature.{{ featureName }}.sharedImpl)
+            }
+        }
+    }
+}

@@ -1,5 +1,6 @@
 plugins {
     id("ru.vs.convention.check-updates")
+    id("ru.vs.plugins.create-feature-hierarchy")
 }
 
 allprojects {

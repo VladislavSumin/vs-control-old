@@ -1,0 +1,18 @@
+plugins {
+    id("ru.vs.convention.preset.feature-shared-impl")
+}
+
+android {
+    namespace = "ru.vs.control.{{ feature_name }}.shared_impl"
+}
+
+kotlin {
+    sourceSets {
+        named("commonMain") {
+            dependencies {
+                api(projects.feature.{{ featureName }}.sharedApi)
+                implementation(projects.feature.{{ featureName }}.dto)
+            }
+        }
+    }
+}

@@ -1,0 +1,17 @@
+plugins {
+    id("ru.vs.convention.preset.feature-shared-api")
+}
+
+android {
+    namespace = "ru.vs.control.{{ feature_name }}.shared_api"
+}
+
+kotlin {
+    sourceSets {
+        named("commonMain") {
+            dependencies {
+
+            }
+        }
+    }
+}
