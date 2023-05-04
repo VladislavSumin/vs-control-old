@@ -82,3 +82,16 @@ include(":client:macos")
 
 include(":server:common")
 include(":server:jvm")
+
+/**
+ * Include feature modules with default hierarchy
+ */
+fun includeFeature(name: String) {
+    include(":feature:$name:dto")
+    include(":feature:$name:shared-api")
+    include(":feature:$name:shared-impl")
+    include(":feature:$name:client-api")
+    include(":feature:$name:client-impl")
+    include(":feature:$name:server-api")
+    include(":feature:$name:server-impl")
+}
