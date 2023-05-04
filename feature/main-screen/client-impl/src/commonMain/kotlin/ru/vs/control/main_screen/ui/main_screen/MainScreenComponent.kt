@@ -5,6 +5,7 @@ import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.decompose.router.stack.ChildStack
 import com.arkivanov.decompose.router.stack.StackNavigation
 import com.arkivanov.decompose.router.stack.childStack
+import com.arkivanov.decompose.router.stack.navigate
 import com.arkivanov.decompose.router.stack.push
 import com.arkivanov.decompose.value.Value
 import com.arkivanov.decompose.value.operator.map
@@ -32,6 +33,13 @@ class MainScreenComponent(
 
     internal val stack: Value<ChildStack<*, ComposeComponent>> = internalStack
     internal val selectedDrawerElement = internalStack.map { it.active.configuration.drawerElement }
+
+    internal fun onSelectDrawerElement(drawerElement: DrawerElement) {
+        when (drawerElement) {
+            DrawerElement.Entities -> navigation.navigate { listOf(Config.Entities) }
+            DrawerElement.Servers -> navigation.navigate { listOf(Config.Servers) }
+        }
+    }
 
     private fun child(config: Config, componentContext: ComponentContext): ComposeComponent {
         val diComponentContext = DiComponentContext(componentContext, di)
