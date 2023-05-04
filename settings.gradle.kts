@@ -85,6 +85,7 @@ include(":server:jvm")
 
 /**
  * Include feature modules with default hierarchy
+ * add this function call and then run gradle task createFeatureHierarchy to create default configuration
  */
 fun includeFeature(name: String) {
     include(":feature:$name:dto")

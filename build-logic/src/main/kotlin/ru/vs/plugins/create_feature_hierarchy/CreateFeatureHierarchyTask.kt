@@ -4,6 +4,11 @@ import org.gradle.api.DefaultTask
 import org.gradle.api.tasks.TaskAction
 import ru.vs.build_logic.utils.snakeToCamelCase
 
+/**
+ * Creates default feature module structure.
+ * See [FEATURE_SUBMODULES] for known witch modules are created
+ * See [RESOURCE_BASE_PATH] ar resources to show default template files
+ */
 abstract class CreateFeatureHierarchyTask : DefaultTask() {
 
     init {
