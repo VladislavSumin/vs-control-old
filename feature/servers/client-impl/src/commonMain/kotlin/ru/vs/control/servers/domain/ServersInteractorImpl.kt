@@ -7,19 +7,6 @@ import kotlinx.coroutines.flow.flowOf
 import ru.vs.control.servers.repository.SelectedServerRepository
 import ru.vs.control.servers.repository.ServersRepository
 
-internal interface ServersInteractor {
-    fun observeServers(): Flow<List<Server>>
-    fun observeSelectedServerId(): Flow<ServerId?>
-    fun observeSelectedServer(): Flow<Server?>
-
-    suspend fun setSelectedServer(serverId: ServerId?)
-    suspend fun getServer(id: ServerId): Server
-    suspend fun findServer(id: ServerId): Server?
-    suspend fun addServer(server: Server)
-    suspend fun updateServer(server: Server)
-    suspend fun deleteServer(id: ServerId)
-}
-
 internal class ServersInteractorImpl(
     private val serversRepository: ServersRepository,
     private val selectedServerRepository: SelectedServerRepository,

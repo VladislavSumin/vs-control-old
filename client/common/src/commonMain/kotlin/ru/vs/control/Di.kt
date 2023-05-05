@@ -4,6 +4,7 @@ import org.kodein.di.DI
 import org.kodein.di.bindProvider
 import org.kodein.di.bindSingleton
 import ru.vs.control.about_server.featureAboutServer
+import ru.vs.control.entities.featureEntities
 import ru.vs.control.servers.featureServers
 import ru.vs.control.servers.service.ServerQueriesProvider
 import ru.vs.control.servers_connection.featureServersConnection
@@ -24,6 +25,7 @@ fun Modules.clientCommon() = DI.Module("client-common") {
     importOnce(Modules.coreSerializationJson())
 
     importOnce(Modules.featureAboutServer())
+    importOnce(Modules.featureEntities())
     importOnce(Modules.featureServers())
     importOnce(Modules.featureServersConnection())
 

@@ -37,6 +37,7 @@ kotlin {
         named("commonMain") {
             dependencies {
                 implementation(projects.feature.aboutServer.clientImpl)
+                implementation(projects.feature.entities.clientImpl)
                 implementation(projects.feature.mainScreen.clientImpl)
                 implementation(projects.feature.rootNavigation.clientImpl)
                 implementation(projects.feature.servers.clientImpl)
