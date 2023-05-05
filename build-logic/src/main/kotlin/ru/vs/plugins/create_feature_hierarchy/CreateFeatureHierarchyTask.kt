@@ -62,7 +62,6 @@ abstract class CreateFeatureHierarchyTask : DefaultTask() {
 
     companion object {
         private val FEATURE_SUBMODULES = setOf(
-            FeatureSubmoduleDescription("dto"),
             FeatureSubmoduleDescription("shared-api"),
             FeatureSubmoduleDescription("shared-impl"),
             FeatureSubmoduleDescription("client-api"),

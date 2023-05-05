@@ -89,7 +89,6 @@ include(":server:jvm")
  * add this function call and then run gradle task createFeatureHierarchy to create default configuration
  */
 fun includeFeature(name: String) {
-    include(":feature:$name:dto")
     include(":feature:$name:shared-api")
     include(":feature:$name:shared-impl")
     include(":feature:$name:client-api")

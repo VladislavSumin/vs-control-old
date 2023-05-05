@@ -11,7 +11,6 @@ kotlin {
         named("commonMain") {
             dependencies {
                 api(projects.feature.entities.sharedApi)
-                implementation(projects.feature.entities.dto)
             }
         }
     }
