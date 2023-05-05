@@ -18,7 +18,7 @@ kotlin {
         named("commonMain") {
             dependencies {
                 // Add client js compiled code as a static resource
-                implementation(project(mapOf("path" to ":client:js", "configuration" to "browserProdDist")))
+                // implementation(project(mapOf("path" to ":client:js", "configuration" to "browserProdDist")))
 
                 implementation(projects.feature.aboutServer.server)
 
