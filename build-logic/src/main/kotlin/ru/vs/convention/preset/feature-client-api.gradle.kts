@@ -20,7 +20,6 @@ plugins {
     // id("ru.vs.convention.kmp.wasm")
 
     id("kotlin-parcelize")
-
 }
 
 val coreLibs = rootProject.the<LibrariesForCoreLibs>()

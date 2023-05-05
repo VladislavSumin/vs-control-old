@@ -9,7 +9,8 @@ import ru.vs.build_logic.utils.stringProperty
  * Project configuration class
  * proxies all external configuration (by properties or by environment variables
  */
-abstract class ProjectConfiguration constructor(private val project: Project) {
+@Suppress("UnnecessaryAbstractClass")
+abstract class ProjectConfiguration(private val project: Project) {
     val version = project.stringProperty("ru.vs.control.version")
 }
 
