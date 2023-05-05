@@ -21,6 +21,7 @@ kotlin {
                 // implementation(project(mapOf("path" to ":client:js", "configuration" to "browserProdDist")))
 
                 implementation(projects.feature.aboutServer.server)
+                implementation(projects.feature.entities.serverImpl)
 
                 implementation(coreLibs.vs.core.ktor.server)
                 implementation(coreLibs.ktor.server.websocket)

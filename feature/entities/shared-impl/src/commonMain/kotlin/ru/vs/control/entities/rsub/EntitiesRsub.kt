@@ -6,5 +6,5 @@ import ru.vs.rsub.RSubInterface
 
 @RSubInterface
 interface EntitiesRsub {
-    fun observeEntities(): Flow<EntityDto>
+    fun observeEntities(): Flow<List<EntityDto>>
 }
