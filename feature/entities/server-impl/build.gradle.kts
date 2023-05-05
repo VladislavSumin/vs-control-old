@@ -1,16 +1,12 @@
 plugins {
-    id("ru.vs.convention.preset.feature-client-impl")
-}
-
-android {
-    namespace = "ru.vs.control.entities.client_impl"
+    id("ru.vs.convention.preset.feature-server-impl")
 }
 
 kotlin {
     sourceSets {
         named("commonMain") {
             dependencies {
-                api(projects.feature.entities.clientApi)
+                api(projects.feature.entities.serverApi)
                 implementation(projects.feature.entities.dto)
                 implementation(projects.feature.entities.sharedImpl)
             }

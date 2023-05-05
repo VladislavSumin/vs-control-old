@@ -60,11 +60,12 @@ include(":rsub:connector:ktor-websocket:server")
 include(":rsub:test")
 include(":rsub:playground")
 
+includeFeature("entities")
+
 include(":feature:about-server:client-api")
 include(":feature:about-server:client-impl")
 include(":feature:about-server:server")
 include(":feature:about-server:shared")
-include(":feature:entities:client-impl")
 include(":feature:main-screen:client-impl")
 include(":feature:root-navigation:client-api")
 include(":feature:root-navigation:client-impl")
