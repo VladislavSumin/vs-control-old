@@ -16,6 +16,7 @@ kotlin {
                 api(projects.feature.serversConnection.clientApi)
 
                 implementation(projects.feature.aboutServer.shared)
+                implementation(projects.feature.entities.sharedImpl)
 
                 implementation(projects.rsub.client)
                 implementation(projects.rsub.connector.ktorWebsocket.client)

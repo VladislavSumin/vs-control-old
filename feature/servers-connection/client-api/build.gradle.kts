@@ -16,6 +16,7 @@ kotlin {
 
                 // TODO проверка гипотизы, подключаем только как имплементацию
                 implementation(projects.feature.aboutServer.shared)
+                implementation(projects.feature.entities.sharedImpl)
             }
         }
     }

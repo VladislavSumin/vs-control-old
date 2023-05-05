@@ -2,9 +2,11 @@ package ru.vs.control.servers_connection.domain
 
 import kotlinx.coroutines.flow.Flow
 import ru.vs.control.about_server.rsub.AboutServerRSub
+import ru.vs.control.entities.rsub.EntitiesRsub
 
 interface ServerConnectionInteractor {
     val aboutServer: AboutServerRSub
+    val entities: EntitiesRsub
 
     fun observeConnectionStatus(): Flow<ConnectionStatus>
 
