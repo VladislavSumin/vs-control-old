@@ -63,7 +63,7 @@ class IdTest {
 
     companion object {
         private const val TEST_RAW_ID_SIMPLE = "test_id"
-        private const val TEST_RAW_ID_WITH_PARTS = "test/id/with/same/path"
+        private const val TEST_RAW_ID_WITH_PARTS = "test/id/with/same/path123"
         private const val TEST_RAW_ID_COMPLEX = "test/id/with_same_path"
     }
 }

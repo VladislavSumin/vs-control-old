@@ -22,7 +22,7 @@ internal class IdImpl(override val rawId: String) : Id {
     }
 
     companion object {
-        private const val ID_PART_VERIFICATION_REGEXP = "([a-z]+(_[a-z]+)*)"
+        private const val ID_PART_VERIFICATION_REGEXP = "([a-z0-9]+(_[a-z0-9]+)*)"
         private val ID_VERIFICATION_REGEXP =
             "^$ID_PART_VERIFICATION_REGEXP(/$ID_PART_VERIFICATION_REGEXP.)*\$".toRegex()
     }
