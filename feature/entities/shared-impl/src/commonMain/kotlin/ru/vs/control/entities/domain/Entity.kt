@@ -1,8 +1,9 @@
 package ru.vs.control.entities.domain
 
 import ru.vs.control.entities.dto.EntityDto
+import ru.vs.control.id.Id
 
-data class Entity(val id: String)
+data class Entity(val id: Id)
 
 fun EntityDto.toEntity() = Entity(id)
 fun Entity.toDto() = EntityDto(id)

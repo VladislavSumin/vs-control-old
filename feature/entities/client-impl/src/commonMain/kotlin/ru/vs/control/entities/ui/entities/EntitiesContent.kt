@@ -13,7 +13,7 @@ internal fun EntitiesContent(component: EntitiesComponent) {
     LazyColumn {
         item { Text("Entities screen") }
         items(state.entities) { entity ->
-            Text(entity.id)
+            Text(entity.id.rawId)
         }
     }
 }
