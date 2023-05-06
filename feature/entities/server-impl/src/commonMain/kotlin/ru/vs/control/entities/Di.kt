@@ -12,7 +12,7 @@ import ru.vs.core.di.Modules
 import ru.vs.core.di.i
 
 fun Modules.featureEntities() = DI.Module("feature-entities") {
-    bindSingleton<EntitiesRsub> { EntitiesRsubImpl() }
+    bindSingleton<EntitiesRsub> { EntitiesRsubImpl(i()) }
     bindSingleton<EntitiesRegistry> { EntitiesRegistryImpl() }
     bindSingleton<EntitiesInteractor> { EntitiesInteractorImpl(i()) }
 }

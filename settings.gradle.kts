@@ -49,6 +49,8 @@ if (isUseCoreSources) {
     includeBuild("../vs-core-kt")
 }
 
+include(":core:id")
+
 include(":rsub:core")
 include(":rsub:client")
 include(":rsub:server")
@@ -61,6 +63,7 @@ include(":rsub:test")
 include(":rsub:playground")
 
 includeFeature("entities")
+includeFeature("services")
 
 include(":feature:about-server:client-api")
 include(":feature:about-server:client-impl")
