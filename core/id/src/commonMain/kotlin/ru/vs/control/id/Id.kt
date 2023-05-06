@@ -1,12 +1,6 @@
 package ru.vs.control.id
 
-import kotlinx.serialization.KSerializer
 import kotlinx.serialization.Serializable
-import kotlinx.serialization.descriptors.PrimitiveKind
-import kotlinx.serialization.descriptors.PrimitiveSerialDescriptor
-import kotlinx.serialization.descriptors.SerialDescriptor
-import kotlinx.serialization.encoding.Decoder
-import kotlinx.serialization.encoding.Encoder
 
 @Serializable(IdSerializer::class)
 interface Id {
@@ -17,17 +11,19 @@ interface Id {
     }
 }
 
-internal class IdImpl(override val rawId: String) : Id
+internal class IdImpl(override val rawId: String) : Id {
 
-internal object IdSerializer : KSerializer<Id> {
-    override val descriptor: SerialDescriptor = PrimitiveSerialDescriptor("id", PrimitiveKind.STRING)
-
-    override fun deserialize(decoder: Decoder): Id {
-        val rawId = decoder.decodeString()
-        return Id(rawId)
+    init {
+        check(ID_VERIFICATION_REGEXP.matches(rawId)) { "Incorrect id format" }
     }
 
-    override fun serialize(encoder: Encoder, value: Id) {
-        encoder.encodeString(value.rawId)
+    override fun toString(): String {
+        return "Id($rawId)"
+    }
+
+    companion object {
+        private const val ID_PART_VERIFICATION_REGEXP = "([a-z]+(_[a-z]+)*)"
+        private val ID_VERIFICATION_REGEXP =
+            "^$ID_PART_VERIFICATION_REGEXP(/$ID_PART_VERIFICATION_REGEXP.)*\$".toRegex()
     }
 }
