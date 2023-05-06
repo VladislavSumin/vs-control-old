@@ -4,20 +4,20 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
-import ru.vs.control.entities.dto.EntityDto
 import ru.vs.control.servers_connection.domain.ServersConnectionInteractor
 
 internal interface EntitiesInteractor {
-    // TODO return DTO is temporary solution.
-    fun observeEntities(): Flow<List<EntityDto>>
+    fun observeEntities(): Flow<List<Entity>>
 }
 
 internal class EntitiesInteractorImpl(
     private val serversConnectionInteractor: ServersConnectionInteractor,
 ) : EntitiesInteractor {
-    override fun observeEntities(): Flow<List<EntityDto>> {
+    override fun observeEntities(): Flow<List<Entity>> {
         return serversConnectionInteractor.observeSelectedServerConnection()
             .map { connection -> connection?.entities }
-            .flatMapLatest { entities -> entities?.observeEntities() ?: flowOf(emptyList()) }
+            .flatMapLatest { entities ->
+                entities?.observeEntities()?.map { it.toEntity() } ?: flowOf(emptyList())
+            }
     }
 }

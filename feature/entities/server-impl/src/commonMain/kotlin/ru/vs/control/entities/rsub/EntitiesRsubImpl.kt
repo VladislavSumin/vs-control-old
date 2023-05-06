@@ -1,21 +1,15 @@
 package ru.vs.control.entities.rsub
 
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.flow.map
+import ru.vs.control.entities.domain.EntitiesInteractor
+import ru.vs.control.entities.domain.toDto
 import ru.vs.control.entities.dto.EntityDto
 
-internal class EntitiesRsubImpl : EntitiesRsub {
+internal class EntitiesRsubImpl(
+    private val entitiesInteractor: EntitiesInteractor,
+) : EntitiesRsub {
     override fun observeEntities(): Flow<List<EntityDto>> {
-        return flowOf(
-            listOf(
-                EntityDto("entity1"),
-                EntityDto("entity2"),
-                EntityDto("entity3"),
-                EntityDto("entity4"),
-                EntityDto("entity5"),
-                EntityDto("entity6"),
-                EntityDto("entity7"),
-            )
-        )
+        return entitiesInteractor.observeEntities().map { it.toDto() }
     }
 }

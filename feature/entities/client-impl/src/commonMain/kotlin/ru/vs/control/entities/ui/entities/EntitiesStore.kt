@@ -8,7 +8,7 @@ import com.arkivanov.mvikotlin.extensions.coroutines.CoroutineExecutor
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import ru.vs.control.entities.domain.EntitiesInteractor
-import ru.vs.control.entities.dto.EntityDto
+import ru.vs.control.entities.domain.Entity
 import ru.vs.control.entities.ui.entities.EntitiesStore.Intent
 import ru.vs.control.entities.ui.entities.EntitiesStore.Label
 import ru.vs.control.entities.ui.entities.EntitiesStore.State
@@ -17,7 +17,7 @@ internal interface EntitiesStore : Store<Intent, State, Label> {
 
     sealed interface Intent
 
-    data class State(val entities: List<EntityDto>)
+    data class State(val entities: List<Entity>)
 
     sealed interface Label
 }
@@ -39,7 +39,7 @@ internal class EntitiesStoreFactory(
             ) {}
 
     private sealed interface Msg {
-        data class EntitiesListUpdated(val entities: List<EntityDto>) : Msg
+        data class EntitiesListUpdated(val entities: List<Entity>) : Msg
     }
 
     private inner class ExecutorImpl : CoroutineExecutor<Intent, Unit, State, Msg, Label>() {
