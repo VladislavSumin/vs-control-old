@@ -34,6 +34,12 @@ tasks.register("ci") {
     // Server
     dependsOn(":server:jvm:buildFatJarMain")
 
+    // Tests
+    allprojects {
+        val allTests = tasks.findByName("allTest")
+        if (allTests != null) dependsOn(allTests)
+    }
+
     // Check dependencies
     dependsOn(":dependencyUpdates")
     dependsOn(gradle.includedBuild("vs-core-kt").task(":dependencyUpdates"))
