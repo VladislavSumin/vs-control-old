@@ -5,7 +5,8 @@ import org.kodein.di.bindSingleton
 import ru.vs.control.services.domain.ServicesInteractor
 import ru.vs.control.services.domain.ServicesInteractorImpl
 import ru.vs.core.di.Modules
+import ru.vs.core.di.i
 
 fun Modules.featureServices() = DI.Module("feature-services") {
-    bindSingleton<ServicesInteractor> { ServicesInteractorImpl() }
+    bindSingleton<ServicesInteractor> { ServicesInteractorImpl(i()) }
 }

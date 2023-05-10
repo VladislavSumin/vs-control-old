@@ -1,3 +1,5 @@
 package ru.vs.control.services.domain
 
-abstract class BaseService : Service
+import ru.vs.control.id.Id
+
+abstract class BaseService(override val id: Id) : Service

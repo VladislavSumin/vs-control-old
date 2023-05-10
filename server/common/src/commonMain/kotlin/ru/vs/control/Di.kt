@@ -1,5 +1,6 @@
 package ru.vs.control
 
+import kotlinx.coroutines.CoroutineScope
 import org.kodein.di.DI
 import org.kodein.di.bindSingleton
 import ru.vs.control.about_server.featureAboutServer
@@ -16,13 +17,15 @@ import ru.vs.core.di.Modules
 import ru.vs.core.di.i
 import ru.vs.core.serialization.json.coreSerializationJson
 
-val Di = DI.lazy {
+fun createDiGraph(serverScope: CoroutineScope) = DI.lazy {
     importOnce(Modules.coreSerializationJson())
 
     importOnce(Modules.featureAboutServer())
     importOnce(Modules.featureEntities())
     importOnce(Modules.featureServiceCamsNetsurv())
     importOnce(Modules.featureServices())
+
+    bindSingleton { serverScope }
 
     bindSingleton<AboutServerInteractor> { AboutServerInteractorImpl() }
 
