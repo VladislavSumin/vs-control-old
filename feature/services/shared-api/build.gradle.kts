@@ -10,6 +10,7 @@ kotlin {
     sourceSets {
         named("commonMain") {
             dependencies {
+                api(projects.core.id)
             }
         }
     }

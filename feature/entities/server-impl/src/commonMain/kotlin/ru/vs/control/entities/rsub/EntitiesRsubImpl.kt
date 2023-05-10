@@ -10,6 +10,6 @@ internal class EntitiesRsubImpl(
     private val entitiesInteractor: EntitiesInteractor,
 ) : EntitiesRsub {
     override fun observeEntities(): Flow<List<EntityDto>> {
-        return entitiesInteractor.observeEntities().map { it.toDto() }
+        return entitiesInteractor.observeEntities().map { it.values.toDto() }
     }
 }

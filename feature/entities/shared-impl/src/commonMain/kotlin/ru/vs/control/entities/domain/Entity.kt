@@ -8,5 +8,5 @@ data class Entity(val id: CompositeId)
 fun EntityDto.toEntity() = Entity(id)
 fun Entity.toDto() = EntityDto(id)
 
-fun List<EntityDto>.toEntity() = map { it.toEntity() }
-fun List<Entity>.toDto() = map { it.toDto() }
+fun Collection<EntityDto>.toEntity() = map { it.toEntity() }
+fun Collection<Entity>.toDto() = map { it.toDto() }

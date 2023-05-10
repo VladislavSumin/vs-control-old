@@ -22,6 +22,7 @@ kotlin {
 
                 implementation(projects.feature.aboutServer.server)
                 implementation(projects.feature.entities.serverImpl)
+                implementation(projects.feature.services.serverImpl)
 
                 implementation(coreLibs.vs.core.ktor.server)
                 implementation(coreLibs.ktor.server.websocket)
