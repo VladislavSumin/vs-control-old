@@ -2,6 +2,9 @@
 
 package ru.vs.rsub
 
+/**
+ * Basic rSub exception
+ */
 open class RSubException(message: String, cause: Throwable? = null) : RuntimeException(message, cause)
 
 /**

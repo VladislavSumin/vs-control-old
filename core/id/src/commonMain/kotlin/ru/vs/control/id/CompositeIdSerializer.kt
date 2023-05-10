@@ -7,18 +7,17 @@ import kotlinx.serialization.descriptors.SerialDescriptor
 import kotlinx.serialization.encoding.Decoder
 import kotlinx.serialization.encoding.Encoder
 
-internal object IdSerializer : KSerializer<Id> {
+internal object CompositeIdSerializer : KSerializer<CompositeId> {
     override val descriptor: SerialDescriptor = PrimitiveSerialDescriptor(
-        "ru.vs.control.id.Id",
-        PrimitiveKind.STRING
+        "ru.vs.control.id.CompositeId", PrimitiveKind.STRING
     )
 
-    override fun deserialize(decoder: Decoder): Id {
+    override fun deserialize(decoder: Decoder): CompositeId {
         val rawId = decoder.decodeString()
-        return Id(rawId)
+        return CompositeId(rawId)
     }
 
-    override fun serialize(encoder: Encoder, value: Id) {
+    override fun serialize(encoder: Encoder, value: CompositeId) {
         encoder.encodeString(value.rawId)
     }
 }
