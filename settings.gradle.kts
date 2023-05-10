@@ -64,6 +64,7 @@ include(":rsub:playground")
 
 includeFeature("entities")
 includeFeature("services")
+includeFeature("service-cams-netsurv")
 
 include(":feature:about-server:client-api")
 include(":feature:about-server:client-impl")

@@ -8,6 +8,7 @@ import ru.vs.control.domain.AboutServerInteractorImpl
 import ru.vs.control.entities.featureEntities
 import ru.vs.control.rsub.RSubServerFactory
 import ru.vs.control.rsub.RSubServerFactoryImpl
+import ru.vs.control.service_cams_netsurv.featureServiceCamsNetsurv
 import ru.vs.control.services.featureServices
 import ru.vs.control.web.WebServer
 import ru.vs.control.web.WebServerImpl
@@ -20,6 +21,7 @@ val Di = DI.lazy {
 
     importOnce(Modules.featureAboutServer())
     importOnce(Modules.featureEntities())
+    importOnce(Modules.featureServiceCamsNetsurv())
     importOnce(Modules.featureServices())
 
     bindSingleton<AboutServerInteractor> { AboutServerInteractorImpl() }
