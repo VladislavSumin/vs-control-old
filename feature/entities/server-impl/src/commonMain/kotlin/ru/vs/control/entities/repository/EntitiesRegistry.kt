@@ -1,11 +1,13 @@
 package ru.vs.control.entities.repository
 
+import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
+import kotlinx.coroutines.withContext
 import ru.vs.control.entities.domain.Entity
 import ru.vs.control.id.CompositeId
 
@@ -57,7 +59,9 @@ internal class EntitiesRegistryImpl : EntitiesRegistry {
                 storage.update { it[id] = entity }
             }
         } finally {
-            storage.update { it.remove(id) }
+            withContext(NonCancellable) {
+                storage.update { it.remove(id) }
+            }
         }
     }
 
