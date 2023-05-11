@@ -25,6 +25,7 @@ kotlin {
                 implementation(projects.feature.serviceCamsNetsurv.serverImpl)
                 implementation(projects.feature.services.serverImpl)
 
+                implementation(coreLibs.vs.core.ktor.network)
                 implementation(coreLibs.vs.core.ktor.server)
                 implementation(coreLibs.ktor.server.websocket)
 
