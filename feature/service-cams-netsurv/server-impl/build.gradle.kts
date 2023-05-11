@@ -1,5 +1,6 @@
 plugins {
     id("ru.vs.convention.preset.feature-server-impl")
+    id("ru.vs.convention.serialization.json")
 }
 
 kotlin {
