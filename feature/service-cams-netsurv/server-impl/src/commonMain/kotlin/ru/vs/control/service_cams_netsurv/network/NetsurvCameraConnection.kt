@@ -14,12 +14,22 @@ import io.ktor.utils.io.readShortLittleEndian
 import io.ktor.utils.io.writeFully
 import io.ktor.utils.io.writeIntLittleEndian
 import io.ktor.utils.io.writeShortLittleEndian
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withTimeout
 import ru.vs.control.service_cams_netsurv.protocol.CommandCode
 import ru.vs.control.service_cams_netsurv.protocol.CommandRepository
 import ru.vs.control.service_cams_netsurv.protocol.Msg
+
+private const val AUTH_RESPONSE_TIMEOUT = 20_000L
+private const val PING_RESPONSE_TIMEOUT = 20_000L
+private const val PING_SEND_INTERVAL = 10_000L
+private const val FIRST_PING_SEND_INTERVAL = 2_000L
+private const val PROCESS_RECEIVED_MESSAGE_TIMEOUT = 5_000L
 
 internal class NetsurvCameraConnection(
     private val selectorManager: SelectorManager,
@@ -45,24 +55,77 @@ internal class NetsurvCameraConnection(
 
     /**
      * Connect authenticate and hold connection opened while [block] is executing
-     * Additionally wrapping [runWithConnection] and add authentication before execute [block]
+     * Additionally wrapping [runWithConnection] add authentication before execute [block] and add ping required by
+     * netsurv cams protocol
      */
     private suspend inline fun runWithAuthenticatedConnection(
-        block: (
+        crossinline block: suspend (
             sessionId: Int,
             read: suspend () -> Msg,
             write: suspend (msg: Msg) -> Unit
         ) -> Unit
     ) {
         runWithConnection { read, write ->
+            coroutineScope {
 
-            // Authenticate
-            logger.trace { "Authenticating in $hostname:$port" }
-            write(CommandRepository.auth())
-            val sessionId = read().sessionId
-            logger.trace { "Authenticated in $hostname:$port, sessionId=$sessionId" }
+                // Authenticate
+                logger.trace { "Authenticating in $hostname:$port" }
+                val sessionId = withTimeout(AUTH_RESPONSE_TIMEOUT) {
+                    write(CommandRepository.auth())
+                    read().sessionId
+                }
+                logger.trace { "Authenticated in $hostname:$port, sessionId=$sessionId" }
 
-            block(sessionId, read, write)
+                val writeMessagesChannel = Channel<Msg>(capacity = Channel.RENDEZVOUS)
+                val writeMessagesTask = launch {
+                    for (msg in writeMessagesChannel) {
+                        write(msg)
+                    }
+                }
+
+                val receiveMessagesChannel = Channel<Msg>(capacity = Channel.RENDEZVOUS)
+                val readMessagesTask = launch {
+                    while (true) {
+                        val msg = withTimeout(PING_RESPONSE_TIMEOUT) { read() }
+                        when (msg.messageId) {
+                            CommandCode.KEEPALIVE_RSP -> {
+                                // logic here is simple, we received messages width timeout
+                                // if no message will be received after given timeout we reset the connection
+                                // ping response resetting counter
+
+                                // additionally we filter this
+
+                                logger.trace { "Receiving ping response from $hostname:$port" }
+                            }
+
+                            else -> {
+                                // We use rendezvous channel, and for guarantee correct message receiving
+                                // we add timeout here, to drop connection if we have unprocessed messages
+                                withTimeout(PROCESS_RECEIVED_MESSAGE_TIMEOUT) { receiveMessagesChannel.send(msg) }
+                            }
+                        }
+                    }
+                }
+
+                val pingTask = launch {
+                    delay(FIRST_PING_SEND_INTERVAL)
+                    while (true) {
+                        logger.trace { "Sending ping request to $hostname:$port" }
+                        writeMessagesChannel.send(CommandRepository.keepAlive(sessionId))
+                        delay(PING_SEND_INTERVAL)
+                    }
+                }
+
+                block(
+                    sessionId,
+                    { receiveMessagesChannel.receive() },
+                    { msg -> writeMessagesChannel.send(msg) }
+                )
+
+                pingTask.cancel()
+                writeMessagesTask.cancel()
+                readMessagesTask.cancel()
+            }
         }
     }
 

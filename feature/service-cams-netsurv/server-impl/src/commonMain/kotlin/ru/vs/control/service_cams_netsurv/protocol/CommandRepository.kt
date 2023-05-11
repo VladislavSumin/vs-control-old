@@ -4,6 +4,8 @@ import io.ktor.utils.io.core.toByteArray
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 
+private const val HEXADECIMAL = 16
+
 // TODO rewrite this
 internal object CommandRepository {
 
@@ -15,11 +17,11 @@ internal object CommandRepository {
         "UserName" to "admin"
     )
 
-//    fun keepAlive(sessionID: Int) = compile(
-//        CommandCode.KEEPALIVE_REQ, sessionID,
-//        "Name" to "KeepAlive",
-//        "SessionID" to "0x%X".format(sessionID)
-//    )
+    fun keepAlive(sessionID: Int) = compile(
+        CommandCode.KEEPALIVE_REQ, sessionID,
+        "Name" to "KeepAlive",
+        "SessionID" to "0x${sessionID.toString(HEXADECIMAL)}"
+    )
 //
 //    fun monitorClaim(sessionID: Int) = compile(
 //        CommandCode.MONITOR_CLAIM, sessionID,
