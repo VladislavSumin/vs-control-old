@@ -4,6 +4,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
+import ru.vs.control.entities.dto.toEntity
 import ru.vs.control.servers_connection.domain.ServersConnectionInteractor
 
 internal interface EntitiesInteractor {

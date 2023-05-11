@@ -21,6 +21,6 @@ fun Modules.featureServiceCamsNetsurv() = DI.Module("feature-service-cams-netsur
     bindSingleton<NetsurvCamsRepository> { NetsurvCamsRepositoryImpl() }
 
     // Domain
-    bindSingleton<NetsurvCameraInteractorFactory> { NetsurvCameraInteractorFactoryImpl(i()) }
+    bindSingleton<NetsurvCameraInteractorFactory> { NetsurvCameraInteractorFactoryImpl(i(), i()) }
     bindSingleton<NetsurvCamsService> { NetsurvCamsServiceImpl(i(), i()) }
 }

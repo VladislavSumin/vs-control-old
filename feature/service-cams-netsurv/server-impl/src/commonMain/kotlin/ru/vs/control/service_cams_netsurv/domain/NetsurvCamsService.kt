@@ -12,12 +12,12 @@ import ru.vs.control.services.domain.Service
 
 interface NetsurvCamsService : Service
 
-private const val ID = "cams/netsurv"
+internal val NETSURV_CAMS_SERVICE_ID = Id("cams/netsurv")
 
 internal class NetsurvCamsServiceImpl(
     private val netsurvCamsRepository: NetsurvCamsRepository,
     private val netsurvCameraInteractorFactory: NetsurvCameraInteractorFactory,
-) : BaseService(Id(ID)), NetsurvCamsService {
+) : BaseService(NETSURV_CAMS_SERVICE_ID), NetsurvCamsService {
     private val logger = KotlinLogging.logger("NetsurvCamsService")
 
     override suspend fun run() {

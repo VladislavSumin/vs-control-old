@@ -10,4 +10,11 @@ internal class EntitiesInteractorImpl(
     override fun observeEntities(): Flow<Map<CompositeId, Entity>> {
         return entitiesRegistry.observeEntities()
     }
+
+    override suspend fun holdEntity(
+        initialValue: Entity,
+        block: suspend (update: suspend (entity: Entity) -> Unit) -> Unit
+    ) {
+        entitiesRegistry.holdEntity(initialValue, block)
+    }
 }
