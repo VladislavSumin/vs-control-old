@@ -9,6 +9,26 @@ private const val HEXADECIMAL = 16
 // TODO rewrite this
 internal object CommandRepository {
 
+    // TODO add password hash calculation
+    // from here https://github.com/kinsi55/node_dvripclient/blob/master/lib/dvripclient.js
+    //		// Absolutely stupid custom password "hashing". Special thanks to https://github.com/tothi/pwn-hisilicon-dvr#password-hash-function
+    //		// There isnt really any protection involved with this... An attacker can just as well sniff the hash and use that to authenticate.
+    //		// By checking out the Github link you should come to the conclusion that any device of this kind should *never* be directly
+    //		// exposed to the internet anways.
+    //		if(UseHash) {
+    //			const pw_md5 = createHash("md5").update(Password).digest();
+    //			let HashBuilder = "";
+    //
+    //			for(let i = 0; i < 8; i++) {
+    //				let n = (pw_md5[2 * i] + pw_md5[2 * i + 1]) % 62;
+    //				if(n > 9)
+    //					n += (n > 35) ? 13 : 7;
+    //
+    //				HashBuilder += String.fromCharCode(n + 48);
+    //			}
+    //
+    //			Password = HashBuilder;
+    //		}
     fun auth() = compile(
         CommandCode.LOGIN_REQ, 0,
         "EncryptType" to "MD5",
