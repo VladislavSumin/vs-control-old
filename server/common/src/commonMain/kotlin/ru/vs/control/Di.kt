@@ -15,8 +15,8 @@ import ru.vs.control.web.WebServer
 import ru.vs.control.web.WebServerImpl
 import ru.vs.core.di.Modules
 import ru.vs.core.di.i
-import ru.vs.core.serialization.json.coreSerializationJson
 import ru.vs.core.ktor_network.coreKtorNetwork
+import ru.vs.core.serialization.json.coreSerializationJson
 
 fun createDiGraph(serverScope: CoroutineScope) = DI.lazy {
     importOnce(Modules.coreKtorNetwork())
