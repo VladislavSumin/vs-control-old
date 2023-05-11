@@ -89,7 +89,7 @@ internal class NetsurvCameraConnection(
                         val msg = withTimeout(PING_RESPONSE_TIMEOUT) { read() }
                         when (msg.messageId) {
                             CommandCode.KEEPALIVE_RSP -> {
-                                // logic here is simple, we received messages width timeout
+                                // logic here is simple, we received messages with timeout
                                 // if no message will be received after given timeout we reset the connection
                                 // ping response resetting counter
 
