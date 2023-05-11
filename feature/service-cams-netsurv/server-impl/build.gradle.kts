@@ -10,7 +10,8 @@ kotlin {
                 api(projects.feature.serviceCamsNetsurv.serverApi)
                 api(projects.feature.serviceCamsNetsurv.sharedImpl)
 
-                api(projects.feature.services.serverApi)
+                implementation(projects.feature.entities.serverApi)
+                implementation(projects.feature.services.serverApi)
                 implementation(coreLibs.vs.core.ktor.network)
             }
         }
