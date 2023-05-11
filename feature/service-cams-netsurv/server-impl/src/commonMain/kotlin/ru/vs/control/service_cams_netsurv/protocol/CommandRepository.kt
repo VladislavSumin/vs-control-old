@@ -69,10 +69,10 @@ internal object CommandRepository {
 //        "SessionID" to "0x%X".format(sessionID)
 //    )
 
-    private fun compile(commandCode: CommandCode, sessionID: Int, vararg pairs: Pair<String, Any>) =
+    private fun compile(commandCode: CommandCode, sessionID: Int, vararg pairs: Pair<String, String>) =
         compile(commandCode, sessionID, pairs.toMap())
 
-    private fun compile(commandCode: CommandCode, sessionID: Int, map: Map<String, Any>) =
+    private fun compile(commandCode: CommandCode, sessionID: Int, map: Map<String, String>) =
         newInstance(commandCode, map.toJsonString().toByteArray(), sessionID)
 
     private fun newInstance(messageId: CommandCode, data: ByteArray, sessionId: Int = 0) =
@@ -83,5 +83,5 @@ internal object CommandRepository {
             sessionId = sessionId
         )
 
-    private fun Map<String, Any>.toJsonString(): String = Json.encodeToString(this)
+    private fun Map<String, String>.toJsonString(): String = Json.encodeToString(this)
 }
