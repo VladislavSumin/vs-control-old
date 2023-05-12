@@ -14,6 +14,7 @@ import io.ktor.utils.io.readShortLittleEndian
 import io.ktor.utils.io.writeFully
 import io.ktor.utils.io.writeIntLittleEndian
 import io.ktor.utils.io.writeShortLittleEndian
+import kotlinx.coroutines.TimeoutCancellationException
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.channels.ProducerScope
 import kotlinx.coroutines.coroutineScope
@@ -62,6 +63,11 @@ internal class NetsurvCameraConnection(
             }
     }
 
+    /**
+     * Apply reconnection policy to [runWithAuthenticatedConnection] function
+     * Holds connection && try to reconnect on exceptions while run [block] or on internal connection exception.
+     * If [block] successfully finished close connection and complete flow
+     */
     private fun <T> runWithAutoReconnect(
         block: suspend ProducerScope<T>.(
             sessionId: Int,
@@ -124,7 +130,12 @@ internal class NetsurvCameraConnection(
                 val receiveMessagesChannel = Channel<Msg>(capacity = Channel.RENDEZVOUS)
                 val readMessagesTask = launch {
                     while (true) {
-                        val msg = withTimeout(PING_RESPONSE_TIMEOUT) { read() }
+                        val msg = try {
+                            withTimeout(PING_RESPONSE_TIMEOUT) { read() }
+                        } catch (e: TimeoutCancellationException) {
+                            // TimeoutCancellationException doesn't crash parent scope
+                            throw TimeoutException("Timeout while reading message", e)
+                        }
                         when (msg.messageId) {
                             CommandCode.KEEPALIVE_RSP -> {
                                 // logic here is simple, we received messages with timeout
@@ -137,9 +148,15 @@ internal class NetsurvCameraConnection(
                             }
 
                             else -> {
-                                // We use rendezvous channel, and for guarantee correct message receiving
-                                // we add timeout here, to drop connection if we have unprocessed messages
-                                withTimeout(PROCESS_RECEIVED_MESSAGE_TIMEOUT) { receiveMessagesChannel.send(msg) }
+                                try {
+                                    // We use rendezvous channel, and for guarantee correct message receiving
+                                    // we add timeout here, to drop connection if we have unprocessed messages
+                                    withTimeout(PROCESS_RECEIVED_MESSAGE_TIMEOUT) { receiveMessagesChannel.send(msg) }
+                                    withTimeout(PING_RESPONSE_TIMEOUT) { read() }
+                                } catch (e: TimeoutCancellationException) {
+                                    // TimeoutCancellationException doesn't crash parent scope
+                                    throw TimeoutException("Timeout while processing message", e)
+                                }
                             }
                         }
                     }
@@ -214,15 +231,28 @@ internal class NetsurvCameraConnection(
         }
     }
 
+    /**
+     * Connection states statuses for [runWithAutoReconnect] function
+     */
     private sealed interface ConnectionState<out T> {
+        /**
+         * Emits at fists connection try
+         */
         object Connecting : ConnectionState<Nothing>
 
-        data class Connected<T>(
-            val state: T
-        ) : ConnectionState<T>
+        /**
+         * Emits by outer logic inside [runWithAutoReconnect] block function
+         * While outer logic doesn't emit this state status will be [Connecting] or [Reconnecting]
+         */
+        data class Connected<T>(val state: T) : ConnectionState<T>
 
+        /**
+         * Emits immediately after connection exception.
+         */
         data class Reconnecting(val e: Exception) : ConnectionState<Nothing>
     }
+
+    class TimeoutException(message: String, cause: Throwable) : RuntimeException(message, cause)
 }
 
 /**
