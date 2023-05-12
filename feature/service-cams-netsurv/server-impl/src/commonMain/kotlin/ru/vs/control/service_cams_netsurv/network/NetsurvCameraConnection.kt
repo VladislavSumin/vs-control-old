@@ -15,10 +15,13 @@ import io.ktor.utils.io.writeFully
 import io.ktor.utils.io.writeIntLittleEndian
 import io.ktor.utils.io.writeShortLittleEndian
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.channels.ProducerScope
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.channelFlow
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withTimeout
 import ru.vs.control.service_cams_netsurv.protocol.CommandCode
@@ -35,20 +38,55 @@ internal class NetsurvCameraConnection(
     private val selectorManager: SelectorManager,
     private val hostname: String,
     private val port: Int,
+    private val reconnectInterval: Long = 5_000L,
 ) {
 
     private val logger = KotlinLogging.logger("NetsurvCameraConnection")
 
     fun observeConnectionStatus(): Flow<Boolean> {
-        return flow {
-            emit(false)
-            try {
-                runWithAuthenticatedConnection { _, _, _ ->
-                    emit(true)
-                    delay(Long.MAX_VALUE)
+        return runWithAutoReconnect { _, _, _ ->
+            send(Unit)
+
+            // Keep connection open
+            delay(Long.MAX_VALUE)
+        }
+            .onEach {
+                logger.debug { "New connection state with $hostname:$port is $it" }
+            }
+            .map {
+                when (it) {
+                    is ConnectionState.Connected -> true
+                    ConnectionState.Connecting,
+                    is ConnectionState.Reconnecting -> false
                 }
-            } finally {
-                emit(false)
+            }
+    }
+
+    private fun <T> runWithAutoReconnect(
+        block: suspend ProducerScope<T>.(
+            sessionId: Int,
+            read: suspend () -> Msg,
+            write: suspend (msg: Msg) -> Unit
+        ) -> Unit
+    ): Flow<ConnectionState<T>> = channelFlow {
+        // Send initial state
+        send(ConnectionState.Connecting)
+        var isRunning = true
+        while (isRunning) {
+            try {
+                runWithAuthenticatedConnection { sessionId, read, write ->
+
+                    channelFlow { block(sessionId, read, write) }
+                        .map { ConnectionState.Connected(it) }
+                        .collect { send(it) }
+
+                    // if we go here without exception then close connection
+                    isRunning = false
+                }
+            } catch (@Suppress("TooGenericExceptionCaught") e: Exception) {
+                // TODO Split network and other exceptions
+                send(ConnectionState.Reconnecting(e))
+                delay(reconnectInterval)
             }
         }
     }
@@ -174,6 +212,16 @@ internal class NetsurvCameraConnection(
         } finally {
             logger.trace { "Tcp connection with $hostname:$port closed" }
         }
+    }
+
+    private sealed interface ConnectionState<out T> {
+        object Connecting : ConnectionState<Nothing>
+
+        data class Connected<T>(
+            val state: T
+        ) : ConnectionState<T>
+
+        data class Reconnecting(val e: Exception) : ConnectionState<Nothing>
     }
 }
 
