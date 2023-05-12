@@ -77,6 +77,7 @@ internal class NetsurvCameraConnection(
     ): Flow<ConnectionState<T>> = channelFlow {
         // Send initial state
         send(ConnectionState.Connecting)
+
         var isRunning = true
         while (isRunning) {
             try {
@@ -90,7 +91,6 @@ internal class NetsurvCameraConnection(
                     isRunning = false
                 }
             } catch (@Suppress("TooGenericExceptionCaught") e: Exception) {
-                // TODO Split network and other exceptions
                 send(ConnectionState.Reconnecting(e))
                 delay(reconnectInterval)
             }
@@ -243,6 +243,8 @@ internal class NetsurvCameraConnection(
         /**
          * Emits by outer logic inside [runWithAutoReconnect] block function
          * While outer logic doesn't emit this state status will be [Connecting] or [Reconnecting]
+         *
+         * @param state - any payload for outer logic
          */
         data class Connected<T>(val state: T) : ConnectionState<T>
 
