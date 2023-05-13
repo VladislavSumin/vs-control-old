@@ -13,6 +13,7 @@ kotlin {
                 implementation(projects.feature.entities.serverApi)
                 implementation(projects.feature.services.serverApi)
                 implementation(coreLibs.vs.core.ktor.network)
+                implementation(coreLibs.vs.core.okio)
             }
         }
     }
