@@ -78,14 +78,12 @@ private fun Server(server: ServerUiItem, component: ServersComponent, modifier: 
     Card(
         modifier.clickable { component.onClickSelectServer(server.server.id) }
     ) {
-        Box(modifier = Modifier.padding(horizontal = 16.dp, vertical = 12.dp)) {
-            Column {
-                ServerHeader(server, component)
-                Divider(Modifier.fillMaxWidth())
-                Spacer(Modifier.defaultMinSize(minHeight = 8.dp))
-                ServerConnectionStatus(server)
-                ServerServerInfo(server)
-            }
+        Column(modifier = Modifier.padding(horizontal = 16.dp, vertical = 12.dp)) {
+            ServerHeader(server, component)
+            Divider(Modifier.fillMaxWidth())
+            Spacer(Modifier.defaultMinSize(minHeight = 8.dp))
+            ServerConnectionStatus(server)
+            ServerServerInfo(server)
         }
     }
 }
