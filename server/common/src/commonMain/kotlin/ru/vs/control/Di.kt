@@ -32,5 +32,5 @@ fun createDiGraph(serverScope: CoroutineScope) = DI.lazy {
     bindSingleton<AboutServerInteractor> { AboutServerInteractorImpl() }
 
     bindSingleton<WebServer> { WebServerImpl(i()) }
-    bindSingleton<RSubServerFactory> { RSubServerFactoryImpl(i(), i()) }
+    bindSingleton<RSubServerFactory> { RSubServerFactoryImpl(i(), i(), i()) }
 }
