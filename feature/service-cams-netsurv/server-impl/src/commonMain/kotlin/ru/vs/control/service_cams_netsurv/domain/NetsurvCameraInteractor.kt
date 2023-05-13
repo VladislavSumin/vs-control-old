@@ -1,10 +1,9 @@
 package ru.vs.control.service_cams_netsurv.domain
 
 import io.github.oshai.KotlinLogging
-import kotlinx.coroutines.flow.collect
 import ru.vs.control.entities.domain.EntitiesInteractor
 import ru.vs.control.entities.domain.Entity
-import ru.vs.control.entities.domain.StubEntityPrimaryState
+import ru.vs.control.entities.domain.base_entity_states.BooleanEntityState
 import ru.vs.control.id.CompositeId
 import ru.vs.control.id.Id
 import ru.vs.control.service_cams_netsurv.network.NetsurvCameraConnectionFactory
@@ -26,12 +25,16 @@ internal class NetsurvCameraInteractorImpl(
         entitiesInteractor.holdEntity(
             Entity(
                 id = CompositeId(NETSURV_CAMS_SERVICE_ID, Id("${camera.baseId}/connection_status")),
-                primaryState = StubEntityPrimaryState
+                primaryState = BooleanEntityState(false)
             )
-        ) {
+        ) { update ->
             try {
                 logger.debug { "run $camera" }
-                connection.observeConnectionStatus().collect()
+                connection.observeConnectionStatus().collect { isConnected ->
+                    update {
+                        it.copy(primaryState = BooleanEntityState(isConnected))
+                    }
+                }
             } finally {
                 logger.debug { "cancel run $camera" }
             }

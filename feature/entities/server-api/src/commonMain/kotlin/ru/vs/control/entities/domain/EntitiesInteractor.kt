@@ -20,7 +20,7 @@ interface EntitiesInteractor {
         initialValue: Entity,
         block: suspend (
             update: suspend (
-                entity: Entity
+                (entity: Entity) -> Entity
             ) -> Unit
         ) -> Unit
     )

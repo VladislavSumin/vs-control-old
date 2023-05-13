@@ -7,10 +7,4 @@ import kotlinx.serialization.Serializable
  */
 @Suppress("UnnecessaryAbstractClass")
 @Serializable
-abstract class EntityPrimaryState
-
-/**
- * Just for test, it will be removed later
- */
-@Serializable
-object StubEntityPrimaryState : EntityPrimaryState()
+abstract class EntityState

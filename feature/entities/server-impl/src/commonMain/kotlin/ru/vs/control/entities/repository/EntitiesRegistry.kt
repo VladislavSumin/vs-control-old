@@ -27,7 +27,7 @@ internal interface EntitiesRegistry {
         initialValue: Entity,
         block: suspend (
             update: suspend (
-                entity: Entity
+                (entity: Entity) -> Entity
             ) -> Unit
         ) -> Unit
     )
@@ -42,9 +42,10 @@ internal class EntitiesRegistryImpl : EntitiesRegistry {
 
     override suspend fun holdEntity(
         initialValue: Entity,
-        block: suspend (update: suspend (entity: Entity) -> Unit) -> Unit
+        block: suspend (update: suspend ((entity: Entity) -> Entity) -> Unit) -> Unit
     ) {
         val id = initialValue.id
+        var currentEntity: Entity = initialValue
 
         storage.update { entities ->
             if (entities.containsKey(id)) error("Entity with ${initialValue.id} already exist")
@@ -52,11 +53,16 @@ internal class EntitiesRegistryImpl : EntitiesRegistry {
         }
 
         try {
-            block { entity ->
-                check(entity.id == id) {
-                    "Illegal entity update. Trying update old state with $id to new state with ${entity.id}"
+            block { updateFunction ->
+
+                val newValue = updateFunction(currentEntity)
+
+                check(newValue.id == id) {
+                    "Illegal entity update. Trying update old state with $id to new state with ${newValue.id}"
                 }
-                storage.update { it[id] = entity }
+
+                storage.update { it[id] = newValue }
+                currentEntity = newValue
             }
         } finally {
             withContext(NonCancellable) {

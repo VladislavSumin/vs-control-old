@@ -13,7 +13,7 @@ internal class EntitiesInteractorImpl(
 
     override suspend fun holdEntity(
         initialValue: Entity,
-        block: suspend (update: suspend (entity: Entity) -> Unit) -> Unit
+        block: suspend (update: suspend ((entity: Entity) -> Entity) -> Unit) -> Unit
     ) {
         entitiesRegistry.holdEntity(initialValue, block)
     }

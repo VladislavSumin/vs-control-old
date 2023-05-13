@@ -5,16 +5,16 @@ import org.kodein.di.DI
 import org.kodein.di.bindSingleton
 import org.kodein.di.inBindSet
 import org.kodein.di.singleton
-import ru.vs.control.entities.dto.EntityPrimaryStateSerializerModuleFactory
-import ru.vs.control.entities.dto.EntityPrimaryStateSerializerModuleFactoryImpl
+import ru.vs.control.entities.dto.EntityStateSerializerModuleFactory
+import ru.vs.control.entities.dto.EntityStateSerializerModuleFactoryImpl
 import ru.vs.core.di.Modules
 import ru.vs.core.di.i
 
 fun Modules.featureEntitiesShared() = DI.Module("feature-entities-shared") {
-    bindSingleton<EntityPrimaryStateSerializerModuleFactory> { EntityPrimaryStateSerializerModuleFactoryImpl() }
+    bindSingleton<EntityStateSerializerModuleFactory> { EntityStateSerializerModuleFactoryImpl() }
 
     // Register EntityPrimaryState serializer module in default json parser instance
     inBindSet<SerializersModule> {
-        add { singleton { i<EntityPrimaryStateSerializerModuleFactory>().create() } }
+        add { singleton { i<EntityStateSerializerModuleFactory>().create() } }
     }
 }
