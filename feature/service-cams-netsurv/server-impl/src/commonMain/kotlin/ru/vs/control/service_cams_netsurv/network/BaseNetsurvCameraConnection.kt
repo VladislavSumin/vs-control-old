@@ -31,7 +31,7 @@ import ru.vs.control.service_cams_netsurv.protocol.Msg
 private const val AUTH_RESPONSE_TIMEOUT = 20_000L
 private const val PING_RESPONSE_TIMEOUT = 20_000L
 private const val PING_SEND_INTERVAL = 10_000L
-private const val FIRST_PING_SEND_INTERVAL = 1_000L
+private const val FIRST_PING_SEND_INTERVAL = 2_000L
 private const val PROCESS_RECEIVED_MESSAGE_TIMEOUT = 5_000L
 
 @Suppress("UnnecessaryAbstractClass")
@@ -136,7 +136,6 @@ internal abstract class BaseNetsurvCameraConnection(
                                     // We use rendezvous channel, and for guarantee correct message receiving
                                     // we add timeout here, to drop connection if we have unprocessed messages
                                     withTimeout(PROCESS_RECEIVED_MESSAGE_TIMEOUT) { receiveMessagesChannel.send(msg) }
-                                    withTimeout(PING_RESPONSE_TIMEOUT) { read() }
                                 } catch (e: TimeoutCancellationException) {
                                     // TimeoutCancellationException doesn't crash parent scope
                                     throw TimeoutException("Timeout while processing message", e)
@@ -147,7 +146,6 @@ internal abstract class BaseNetsurvCameraConnection(
                 }
 
                 val pingTask = launch {
-                    // interesting fact, netsurv cams ignore first ping request
                     delay(FIRST_PING_SEND_INTERVAL)
                     while (true) {
                         logger.trace { "Sending ping request to $hostname:$port" }
