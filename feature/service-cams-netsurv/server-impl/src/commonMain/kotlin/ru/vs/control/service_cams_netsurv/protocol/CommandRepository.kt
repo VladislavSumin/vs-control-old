@@ -63,7 +63,7 @@ internal object CommandRepository {
     fun monitorStart(sessionID: Int) = compile(
         commandCode = CommandCode.MONITOR_REQ,
         sessionID = sessionID,
-        data = MonitorClaimRequest(
+        data = MonitorStartRequest(
             opMonitor = OpMonitorRequest(action = "Start"),
             sessionID = sessionID.toHexadecimalString(),
         ),

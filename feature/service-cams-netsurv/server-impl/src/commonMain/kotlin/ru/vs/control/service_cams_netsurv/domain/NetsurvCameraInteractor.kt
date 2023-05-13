@@ -25,7 +25,7 @@ internal class NetsurvCameraInteractorImpl(
     // but netsurv cams not running video stream again after cancel it (need connection restart).
     // To avoid telemetry lost on stop video stream using two separate connection
     private val telemetryConnection = connectionFactory.createTelemetry(camera.hostname, camera.port)
-    private val videoStreamConnection = connectionFactory.createVideo(camera.hostname, camera.port)
+//    private val videoStreamConnection = connectionFactory.createVideo(camera.hostname, camera.port)
 
     override suspend fun run() {
         coroutineScope {
@@ -66,7 +66,24 @@ internal class NetsurvCameraInteractorImpl(
     }
 
     private suspend fun runVideoStream() {
-//        videoStreamConnection.observeVideoStream().collect {
+//        coroutineScope {
+//            println("AAAAAAAAAA 1")
+//            val path = "${camera.baseId}.264".toPath()
+//            FileSystem.FS.write(path, mustCreate = true) {
+//            val record = launch {
+//                println("AAAAAAAAAA 2")
+//                videoStreamConnection.observeVideoStream().collect {
+//                        write(it)
+//                        print("C")
+//                        flush()
+//                }
+//            }
+//
+//                delay(25_000)
+//                println("AAAAAAAAAA 3")
+//                record.cancelAndJoin()
+//                println("AAAAAAAAAA 4")
+//            }
 //        }
     }
 
