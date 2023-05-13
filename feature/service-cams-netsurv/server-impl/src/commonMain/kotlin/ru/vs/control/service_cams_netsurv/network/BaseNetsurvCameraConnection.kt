@@ -22,7 +22,6 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.channelFlow
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withTimeout
 import ru.vs.control.service_cams_netsurv.protocol.CommandCode
@@ -35,40 +34,22 @@ private const val PING_SEND_INTERVAL = 10_000L
 private const val FIRST_PING_SEND_INTERVAL = 2_000L
 private const val PROCESS_RECEIVED_MESSAGE_TIMEOUT = 5_000L
 
-internal class NetsurvCameraConnection(
+@Suppress("UnnecessaryAbstractClass")
+internal abstract class BaseNetsurvCameraConnection(
     private val selectorManager: SelectorManager,
-    private val hostname: String,
-    private val port: Int,
+    protected val hostname: String,
+    protected val port: Int,
     private val reconnectInterval: Long = 5_000L,
 ) {
 
-    private val logger = KotlinLogging.logger("NetsurvCameraConnection")
-
-    fun observeConnectionStatus(): Flow<Boolean> {
-        return runWithAutoReconnect { _, _, _ ->
-            send(Unit)
-
-            // Keep connection open
-            delay(Long.MAX_VALUE)
-        }
-            .onEach {
-                logger.debug { "New connection state with $hostname:$port is $it" }
-            }
-            .map {
-                when (it) {
-                    is ConnectionState.Connected -> true
-                    ConnectionState.Connecting,
-                    is ConnectionState.Reconnecting -> false
-                }
-            }
-    }
+    protected val logger = KotlinLogging.logger(this::class.simpleName ?: "<Unnamed>BaseNetsurvCameraConnection")
 
     /**
      * Apply reconnection policy to [runWithAuthenticatedConnection] function
      * Holds connection && try to reconnect on exceptions while run [block] or on internal connection exception.
      * If [block] successfully finished close connection and complete flow
      */
-    private fun <T> runWithAutoReconnect(
+    protected fun <T> runWithAutoReconnect(
         block: suspend ProducerScope<T>.(
             sessionId: Int,
             read: suspend () -> Msg,
@@ -116,7 +97,9 @@ internal class NetsurvCameraConnection(
                 logger.trace { "Authenticating in $hostname:$port" }
                 val sessionId = withTimeout(AUTH_RESPONSE_TIMEOUT) {
                     write(CommandRepository.auth())
-                    read().sessionId
+                    val msg = read()
+                    check(msg.messageId == CommandCode.LOGIN_RSP)
+                    msg.sessionId
                 }
                 logger.trace { "Authenticated in $hostname:$port, sessionId=$sessionId" }
 
@@ -234,7 +217,7 @@ internal class NetsurvCameraConnection(
     /**
      * Connection states statuses for [runWithAutoReconnect] function
      */
-    private sealed interface ConnectionState<out T> {
+    sealed interface ConnectionState<out T> {
         /**
          * Emits at fists connection try
          */

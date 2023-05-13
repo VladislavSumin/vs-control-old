@@ -86,10 +86,10 @@ internal object CommandRepository {
 //        "SessionID" to "0x%X".format(sessionID)
 //    )
 //
-//    fun alarmStart(sessionID: Int) = compile(
-//        CommandCode.GUARD_REQ, sessionID,
-//        "SessionID" to "0x%X".format(sessionID)
-//    )
+    fun alarmStart(sessionID: Int) = compile(
+        CommandCode.GUARD_REQ, sessionID,
+        "SessionID" to "0x${sessionID.toString(HEXADECIMAL)}"
+    )
 
     private fun compile(commandCode: CommandCode, sessionID: Int, vararg pairs: Pair<String, String>) =
         compile(commandCode, sessionID, pairs.toMap())

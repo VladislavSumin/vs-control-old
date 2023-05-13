@@ -15,7 +15,7 @@ import ru.vs.core.di.i
 
 fun Modules.featureServiceCamsNetsurv() = DI.Module("feature-service-cams-netsurv") {
     // Network
-    bindSingleton<NetsurvCameraConnectionFactory> { NetsurvCameraConnectionFactoryImpl(i()) }
+    bindSingleton<NetsurvCameraConnectionFactory> { NetsurvCameraConnectionFactoryImpl(i(), i()) }
 
     // Repository
     bindSingleton<NetsurvCamsRepository> { NetsurvCamsRepositoryImpl() }

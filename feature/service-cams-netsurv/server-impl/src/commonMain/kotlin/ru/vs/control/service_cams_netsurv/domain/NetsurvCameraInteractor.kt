@@ -1,6 +1,8 @@
 package ru.vs.control.service_cams_netsurv.domain
 
 import io.github.oshai.KotlinLogging
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.launch
 import ru.vs.control.entities.domain.EntitiesInteractor
 import ru.vs.control.entities.domain.Entity
 import ru.vs.control.entities.domain.base_entity_states.BooleanEntityState
@@ -19,25 +21,49 @@ internal class NetsurvCameraInteractorImpl(
 ) : NetsurvCameraInteractor {
     private val logger = KotlinLogging.logger("NetsurvCameraInteractor")
 
-    private val connection = connectionFactory.create(camera.hostname, camera.port)
+    private val telemetryConnection = connectionFactory.createTelemetry(camera.hostname, camera.port)
+    // private val videoStreamConnection = connectionFactory.createTelemetry(camera.hostname, camera.port)
 
     override suspend fun run() {
+        coroutineScope {
+            launch { runConnectionState() }
+            launch { runMotionState() }
+        }
+    }
+
+    private suspend fun runConnectionState() {
         entitiesInteractor.holdEntity(
             Entity(
-                id = CompositeId(NETSURV_CAMS_SERVICE_ID, Id("${camera.baseId}/connection_status")),
+                id = generateEntityId("connection_status"),
                 primaryState = BooleanEntityState(false)
             )
         ) { update ->
-            try {
-                logger.debug { "run $camera" }
-                connection.observeConnectionStatus().collect { isConnected ->
-                    update {
-                        it.copy(primaryState = BooleanEntityState(isConnected))
-                    }
+            logger.debug { "run $camera" }
+            telemetryConnection.observeConnectionStatus().collect { isConnected ->
+                update {
+                    it.copy(primaryState = BooleanEntityState(isConnected))
                 }
-            } finally {
-                logger.debug { "cancel run $camera" }
             }
         }
+    }
+
+    private suspend fun runMotionState() {
+        entitiesInteractor.holdEntity(
+            Entity(
+                id = generateEntityId("motion_status"),
+                primaryState = BooleanEntityState(false)
+            )
+        ) { update ->
+            logger.debug { "run $camera" }
+            telemetryConnection.observeMotionStatus().collect { isMotion ->
+                update {
+                    it.copy(primaryState = BooleanEntityState(isMotion))
+                }
+            }
+        }
+    }
+
+    private fun generateEntityId(subId: String): CompositeId {
+        return CompositeId(NETSURV_CAMS_SERVICE_ID, Id("${camera.baseId}/$subId"))
     }
 }
