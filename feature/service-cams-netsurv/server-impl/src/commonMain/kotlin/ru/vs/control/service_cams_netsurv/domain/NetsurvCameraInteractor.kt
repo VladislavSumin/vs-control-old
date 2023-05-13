@@ -38,7 +38,6 @@ internal class NetsurvCameraInteractorImpl(
                 primaryState = BooleanEntityState(false)
             )
         ) { update ->
-            logger.debug { "run $camera" }
             telemetryConnection.observeConnectionStatus().collect { isConnected ->
                 update {
                     it.copy(primaryState = BooleanEntityState(isConnected))
@@ -54,7 +53,6 @@ internal class NetsurvCameraInteractorImpl(
                 primaryState = BooleanEntityState(false)
             )
         ) { update ->
-            logger.debug { "run $camera" }
             telemetryConnection.observeMotionStatus().collect { isMotion ->
                 update {
                     it.copy(primaryState = BooleanEntityState(isMotion))
