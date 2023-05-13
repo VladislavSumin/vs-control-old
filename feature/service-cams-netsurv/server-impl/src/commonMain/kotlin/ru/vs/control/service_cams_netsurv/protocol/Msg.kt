@@ -1,5 +1,7 @@
 package ru.vs.control.service_cams_netsurv.protocol
 
+import io.ktor.utils.io.core.String
+
 /**
  * Message structure:
  * +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
@@ -44,7 +46,7 @@ internal data class Msg(
     fun getDataAsString(): String {
         // Skipping last symbol when converting binary data to string because for strings last symbol
         // equals '\0' end of string symbol, at kotlin we don't need to add it to string
-        return data.sliceArray(0 until dataLength - 2).contentToString()
+        return String(data.sliceArray(0 until dataLength - 2))
     }
 
     override fun equals(other: Any?): Boolean {

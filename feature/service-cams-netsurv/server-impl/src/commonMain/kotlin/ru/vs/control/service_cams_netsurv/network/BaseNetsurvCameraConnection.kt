@@ -31,7 +31,7 @@ import ru.vs.control.service_cams_netsurv.protocol.Msg
 private const val AUTH_RESPONSE_TIMEOUT = 20_000L
 private const val PING_RESPONSE_TIMEOUT = 20_000L
 private const val PING_SEND_INTERVAL = 10_000L
-private const val FIRST_PING_SEND_INTERVAL = 2_000L
+private const val FIRST_PING_SEND_INTERVAL = 1_000L
 private const val PROCESS_RECEIVED_MESSAGE_TIMEOUT = 5_000L
 
 @Suppress("UnnecessaryAbstractClass")
@@ -83,7 +83,7 @@ internal abstract class BaseNetsurvCameraConnection(
      * Additionally wrapping [runWithConnection] add authentication before execute [block] and add ping required by
      * netsurv cams protocol
      */
-    private suspend inline fun runWithAuthenticatedConnection(
+    protected suspend inline fun runWithAuthenticatedConnection(
         crossinline block: suspend (
             sessionId: Int,
             read: suspend () -> Msg,
@@ -99,6 +99,7 @@ internal abstract class BaseNetsurvCameraConnection(
                     write(CommandRepository.auth())
                     val msg = read()
                     check(msg.messageId == CommandCode.LOGIN_RSP)
+                    // TODO Check message search return code and verify is login valid
                     msg.sessionId
                 }
                 logger.trace { "Authenticated in $hostname:$port, sessionId=$sessionId" }
@@ -146,6 +147,7 @@ internal abstract class BaseNetsurvCameraConnection(
                 }
 
                 val pingTask = launch {
+                    // interesting fact, netsurv cams ignore first ping request
                     delay(FIRST_PING_SEND_INTERVAL)
                     while (true) {
                         logger.trace { "Sending ping request to $hostname:$port" }

@@ -21,13 +21,17 @@ internal class NetsurvCameraInteractorImpl(
 ) : NetsurvCameraInteractor {
     private val logger = KotlinLogging.logger("NetsurvCameraInteractor")
 
+    // We have to separate connection here, because have functionality to receive video stream only if it needed
+    // but netsurv cams not running video stream again after cancel it (need connection restart).
+    // To avoid telemetry lost on stop video stream using two separate connection
     private val telemetryConnection = connectionFactory.createTelemetry(camera.hostname, camera.port)
-    // private val videoStreamConnection = connectionFactory.createTelemetry(camera.hostname, camera.port)
+    private val videoStreamConnection = connectionFactory.createVideo(camera.hostname, camera.port)
 
     override suspend fun run() {
         coroutineScope {
             launch { runConnectionState() }
             launch { runMotionState() }
+            launch { runVideoStream() }
         }
     }
 
@@ -59,6 +63,11 @@ internal class NetsurvCameraInteractorImpl(
                 }
             }
         }
+    }
+
+    private suspend fun runVideoStream() {
+//        videoStreamConnection.observeVideoStream().collect {
+//        }
     }
 
     private fun generateEntityId(subId: String): CompositeId {
