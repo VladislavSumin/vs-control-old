@@ -19,6 +19,7 @@ kotlin {
 
                 implementation(projects.feature.entities.clientImpl)
                 implementation(projects.feature.servers.clientImpl)
+                implementation(projects.feature.services.clientImpl)
             }
         }
     }

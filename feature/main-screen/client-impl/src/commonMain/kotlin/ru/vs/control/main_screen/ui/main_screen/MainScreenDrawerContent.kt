@@ -85,5 +85,6 @@ private fun Body(
 private val DrawerElement.titleRes: StringResource
     get() = when (this) {
         DrawerElement.Entities -> MR.strings.drawer_item_entities
+        DrawerElement.Services -> MR.strings.drawer_item_services
         DrawerElement.Servers -> MR.strings.drawer_item_servers
     }

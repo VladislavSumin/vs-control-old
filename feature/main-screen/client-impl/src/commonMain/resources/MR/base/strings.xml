@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <resources>
-    <string name="drawer_item_servers">Servers</string>
     <string name="drawer_item_entities">Entities</string>
+    <string name="drawer_item_services">Services</string>
+    <string name="drawer_item_servers">Servers</string>
 </resources>
