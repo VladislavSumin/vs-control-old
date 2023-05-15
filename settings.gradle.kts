@@ -91,7 +91,7 @@ include(":client:android")
 include(":client:ios")
 if (coreConfiguration.kmp.js.isEnabled) include(":client:js")
 include(":client:jvm")
-include(":client:macos")
+if (coreConfiguration.kmp.macos.isEnabled) include(":client:macos")
 
 include(":server:common")
 include(":server:jvm")
