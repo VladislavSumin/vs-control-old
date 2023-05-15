@@ -1,3 +1,5 @@
+import ru.vs.build_logic.createCoreConfiguration
+
 enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 
 rootProject.name = "vs-control"
@@ -44,6 +46,12 @@ dependencyResolutionManagement {
     }
 }
 
+plugins {
+    id("ru.vs.plugins.settings-stub")
+}
+
+val coreConfiguration = createCoreConfiguration()
+
 val isUseCoreSources = extra["ru.vs.control.use_core_sources"].toString().toBoolean()
 if (isUseCoreSources) {
     includeBuild("../vs-core-kt")
@@ -81,7 +89,7 @@ include(":feature:servers-connection:client-impl")
 include(":client:common")
 include(":client:android")
 include(":client:ios")
-include(":client:js")
+if (coreConfiguration.kmp.js.isEnabled) include(":client:js")
 include(":client:jvm")
 include(":client:macos")
 
