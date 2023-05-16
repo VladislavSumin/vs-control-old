@@ -2,7 +2,7 @@ import ru.vs.build_logic.utils.android
 
 plugins {
     id("ru.vs.convention.preset.feature-client-impl")
-    id("ru.vs.convention.kmp.cocoapods")
+    // id("ru.vs.convention.kmp.cocoapods")
     id("ru.vs.convention.resources")
     id("app.cash.sqldelight")
 }
@@ -26,12 +26,12 @@ multiplatformResources {
 }
 
 kotlin {
-    cocoapods {
-        version = "0.0.1"
-        summary = "control-common library"
-        name = "control-common"
-        homepage = "https://github.com/VladislavSumin/vs-control"
-    }
+//    cocoapods {
+//        version = "0.0.1"
+//        summary = "control-common library"
+//        name = "control-common"
+//        homepage = "https://github.com/VladislavSumin/vs-control"
+//    }
 
     sourceSets {
         named("commonMain") {

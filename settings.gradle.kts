@@ -1,5 +1,3 @@
-import ru.vs.build_logic.createCoreConfiguration
-
 enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 
 rootProject.name = "vs-control"
@@ -46,12 +44,6 @@ dependencyResolutionManagement {
     }
 }
 
-plugins {
-    id("ru.vs.plugins.settings-stub")
-}
-
-val coreConfiguration = createCoreConfiguration()
-
 val isUseCoreSources = extra["ru.vs.control.use_core_sources"].toString().toBoolean()
 if (isUseCoreSources) {
     includeBuild("../vs-core-kt")
@@ -87,11 +79,18 @@ include(":feature:servers-connection:client-api")
 include(":feature:servers-connection:client-impl")
 
 include(":client:common")
-include(":client:android")
-include(":client:ios")
-if (coreConfiguration.kmp.js.isEnabled) include(":client:js")
 include(":client:jvm")
-if (coreConfiguration.kmp.macos.isEnabled) include(":client:macos")
+include(":client:android")
+
+if (getBooleanProperty("ru.vs.core.kmp.js.enabled", true)) include(":client:js")
+
+if (getBooleanProperty("ru.vs.core.kmp.iosX64.enabled", true) ||
+    getBooleanProperty("ru.vs.core.kmp.iosArm64.enabled", true)
+) include(":client:ios")
+
+if (getBooleanProperty("ru.vs.core.kmp.macosX64.enabled", true) ||
+    getBooleanProperty("ru.vs.core.kmp.macosArm64.enabled", true)
+) include(":client:macos")
 
 include(":server:common")
 include(":server:jvm")
@@ -107,4 +106,12 @@ fun includeFeature(name: String) {
     include(":feature:$name:client-impl")
     include(":feature:$name:server-api")
     include(":feature:$name:server-impl")
+}
+
+/**
+ * We can't use plugins for core-build-logic in settings because its triggers convention evaluation and crash
+ * See https://github.com/gradle/gradle/issues/16532
+ */
+fun getBooleanProperty(name: String, defaultValue: Boolean): Boolean {
+    return providers.gradleProperty(name).map { it.toBoolean() }.getOrElse(defaultValue)
 }
