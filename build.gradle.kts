@@ -2,6 +2,7 @@ import io.gitlab.arturbosch.detekt.Detekt
 
 plugins {
     id("ru.vs.convention.check-updates")
+    id("ru.vs.convention.analyze.check-module-graph")
     id("ru.vs.plugins.create-feature-hierarchy")
 }
 
