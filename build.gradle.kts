@@ -26,8 +26,11 @@ moduleGraphAssert {
         ":client:.* -> .*",
         ":server:.* -> .*",
         ".* -> :rsub:.*",
-        ".*client-impl -> .*shared-impl",
-        ".*server-impl -> .*shared-impl",
+        ".*:client-impl -> .*:shared-impl",
+        ".*:server-impl -> .*:shared-impl",
+
+        // TODO try to brake this dependency
+        ":feature:servers-connection:client-api -> .*:shared-impl",
     )
 }
 
@@ -52,7 +55,8 @@ tasks.register("ci") {
         if (allTests != null) dependsOn(allTests)
     }
 
-    // Check dependencies
+    // Checks
     dependsOn(":dependencyUpdates")
     dependsOn(gradle.includedBuild("vs-core-kt").task(":dependencyUpdates"))
+    dependsOn(":assertModuleGraph")
 }
