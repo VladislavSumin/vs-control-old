@@ -11,7 +11,7 @@ kotlin {
             dependencies {
                 api(projects.feature.rootNavigation.clientApi)
 
-                implementation(projects.feature.mainScreen.clientImpl)
+                implementation(projects.feature.mainScreen.clientApi)
                 implementation(projects.feature.servers.clientApi)
             }
         }

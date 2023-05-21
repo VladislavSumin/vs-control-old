@@ -8,13 +8,14 @@ import com.arkivanov.decompose.router.stack.childStack
 import com.arkivanov.decompose.router.stack.pop
 import com.arkivanov.decompose.value.Value
 import org.kodein.di.instance
-import ru.vs.control.main_screen.ui.main_screen.MainScreenComponent
+import ru.vs.control.main_screen.ui.main_screen.MainScreenComponentFactory
 import ru.vs.control.root_navigation.ui.RootNavigationConfig
 import ru.vs.control.servers.ui.edit_server.EditServerComponentFactory
 import ru.vs.core.decompose.ComposeComponent
 import ru.vs.core.decompose.DiComponentContext
 
 class RootNavigationComponent(context: DiComponentContext) : ComposeComponent, DiComponentContext by context {
+    private val mainScreenComponentFactory: MainScreenComponentFactory by instance()
     private val editServerComponentFactory: EditServerComponentFactory by instance()
 
     private val navigation = StackNavigation<RootNavigationConfig>()
@@ -37,8 +38,8 @@ class RootNavigationComponent(context: DiComponentContext) : ComposeComponent, D
         }
     }
 
-    private fun mainScreenComponent(diComponentContext: DiComponentContext): MainScreenComponent {
-        return MainScreenComponent(
+    private fun mainScreenComponent(diComponentContext: DiComponentContext): ComposeComponent {
+        return mainScreenComponentFactory.create(
             diComponentContext,
             navigation,
         )

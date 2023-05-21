@@ -15,7 +15,7 @@ kotlin {
     sourceSets {
         named("commonMain") {
             dependencies {
-                implementation(projects.feature.rootNavigation.clientApi)
+                implementation(projects.feature.mainScreen.clientApi)
 
                 implementation(projects.feature.entities.clientImpl)
                 implementation(projects.feature.servers.clientImpl)

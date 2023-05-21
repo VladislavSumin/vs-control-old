@@ -18,7 +18,7 @@ import ru.vs.control.services.ui.services.ServicesComponent
 import ru.vs.core.decompose.ComposeComponent
 import ru.vs.core.decompose.DiComponentContext
 
-class MainScreenComponent(
+internal class MainScreenComponent(
     context: DiComponentContext,
     private val rootNavigation: StackNavigation<RootNavigationConfig>
 ) : ComposeComponent, DiComponentContext by context {
@@ -32,10 +32,10 @@ class MainScreenComponent(
             childFactory = ::child
         )
 
-    internal val stack: Value<ChildStack<*, ComposeComponent>> = internalStack
-    internal val selectedDrawerElement = internalStack.map { it.active.configuration.drawerElement }
+    val stack: Value<ChildStack<*, ComposeComponent>> = internalStack
+    val selectedDrawerElement = internalStack.map { it.active.configuration.drawerElement }
 
-    internal fun onSelectDrawerElement(drawerElement: DrawerElement) {
+    fun onSelectDrawerElement(drawerElement: DrawerElement) {
         when (drawerElement) {
             DrawerElement.Entities -> navigation.navigate { listOf(Config.Entities) }
             DrawerElement.Services -> navigation.navigate { listOf(Config.Services) }

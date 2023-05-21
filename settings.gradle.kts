@@ -63,6 +63,7 @@ include(":rsub:test")
 include(":rsub:playground")
 
 includeFeature("entities")
+includeClientFeature("main-screen")
 includeFeature("services")
 includeFeature("service-cams-netsurv")
 
@@ -70,7 +71,6 @@ include(":feature:about-server:client-api")
 include(":feature:about-server:client-impl")
 include(":feature:about-server:server")
 include(":feature:about-server:shared")
-include(":feature:main-screen:client-impl")
 include(":feature:root-navigation:client-api")
 include(":feature:root-navigation:client-impl")
 include(":feature:servers:client-api")
@@ -102,8 +102,16 @@ include(":server:jvm")
 fun includeFeature(name: String) {
     include(":feature:$name:shared-api")
     include(":feature:$name:shared-impl")
+    includeClientFeature(name)
+    includeServerFeature(name)
+}
+
+fun includeClientFeature(name: String) {
     include(":feature:$name:client-api")
     include(":feature:$name:client-impl")
+}
+
+fun includeServerFeature(name: String) {
     include(":feature:$name:server-api")
     include(":feature:$name:server-impl")
 }
