@@ -11,10 +11,11 @@ import com.arkivanov.decompose.value.Value
 import com.arkivanov.decompose.value.operator.map
 import com.arkivanov.essenty.parcelable.Parcelable
 import com.arkivanov.essenty.parcelable.Parcelize
-import ru.vs.control.entities.ui.entities.EntitiesComponent
+import org.kodein.di.instance
+import ru.vs.control.entities.ui.entities.EntitiesComponentFactory
 import ru.vs.control.root_navigation.ui.RootNavigationConfig
-import ru.vs.control.servers.ui.servers.ServersComponent
-import ru.vs.control.services.ui.services.ServicesComponent
+import ru.vs.control.servers.ui.servers.ServersComponentFactory
+import ru.vs.control.services.ui.services.ServicesComponentFactory
 import ru.vs.core.decompose.ComposeComponent
 import ru.vs.core.decompose.DiComponentContext
 
@@ -22,6 +23,10 @@ internal class MainScreenComponent(
     context: DiComponentContext,
     private val rootNavigation: StackNavigation<RootNavigationConfig>
 ) : ComposeComponent, DiComponentContext by context {
+    private val entitiesComponentFactory: EntitiesComponentFactory by instance()
+    private val serversComponentFactory: ServersComponentFactory by instance()
+    private val servicesComponentFactory: ServicesComponentFactory by instance()
+
     private val navigation = StackNavigation<Config>()
 
     private val internalStack: Value<ChildStack<Config, ComposeComponent>> =
@@ -52,16 +57,16 @@ internal class MainScreenComponent(
         }
     }
 
-    private fun entitiesComponent(componentContext: DiComponentContext): EntitiesComponent {
-        return EntitiesComponent(componentContext)
+    private fun entitiesComponent(componentContext: DiComponentContext): ComposeComponent {
+        return entitiesComponentFactory.create(componentContext)
     }
 
-    private fun servicesComponent(componentContext: DiComponentContext): ServicesComponent {
-        return ServicesComponent(componentContext)
+    private fun servicesComponent(componentContext: DiComponentContext): ComposeComponent {
+        return servicesComponentFactory.create(componentContext)
     }
 
-    private fun serversComponent(componentContext: DiComponentContext): ServersComponent {
-        return ServersComponent(
+    private fun serversComponent(componentContext: DiComponentContext): ComposeComponent {
+        return serversComponentFactory.create(
             componentContext,
             openAddServerScreen = { rootNavigation.push(RootNavigationConfig.EditServer(null)) },
             openEditServerScreen = { serverId -> rootNavigation.push(RootNavigationConfig.EditServer(serverId)) },

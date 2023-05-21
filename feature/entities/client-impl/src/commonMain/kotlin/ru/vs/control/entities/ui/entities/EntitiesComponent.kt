@@ -8,12 +8,12 @@ import org.kodein.di.instance
 import ru.vs.core.decompose.ComposeComponent
 import ru.vs.core.decompose.DiComponentContext
 
-class EntitiesComponent(context: DiComponentContext) : ComposeComponent, DiComponentContext by context {
+internal class EntitiesComponent(context: DiComponentContext) : ComposeComponent, DiComponentContext by context {
     private val store: EntitiesStore = instanceKeeper.getStore {
         direct.instance<EntitiesStoreFactory>().create()
     }
 
-    internal val state = store.stateFlow
+    val state = store.stateFlow
 
     @Composable
     override fun Render() = EntitiesContent(this)

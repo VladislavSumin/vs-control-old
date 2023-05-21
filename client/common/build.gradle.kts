@@ -42,6 +42,7 @@ kotlin {
                 implementation(projects.feature.rootNavigation.clientImpl)
                 implementation(projects.feature.servers.clientImpl)
                 implementation(projects.feature.serversConnection.clientImpl)
+                implementation(projects.feature.services.clientImpl)
 
                 implementation(coreLibs.vs.core.database)
             }

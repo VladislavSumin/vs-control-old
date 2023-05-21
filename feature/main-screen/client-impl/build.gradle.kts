@@ -17,9 +17,9 @@ kotlin {
             dependencies {
                 implementation(projects.feature.mainScreen.clientApi)
 
-                implementation(projects.feature.entities.clientImpl)
-                implementation(projects.feature.servers.clientImpl)
-                implementation(projects.feature.services.clientImpl)
+                implementation(projects.feature.entities.clientApi)
+                implementation(projects.feature.servers.clientApi)
+                implementation(projects.feature.services.clientApi)
             }
         }
     }
