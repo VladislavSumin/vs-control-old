@@ -20,6 +20,17 @@ val detektBuildLogic = tasks.register<Detekt>("detektBuildLogic") {
 }
 tasks.named("detekt").configure { dependsOn(detektBuildLogic) }
 
+// Add custom allowance for assertions plugin
+moduleGraphAssert {
+    allowed += arrayOf(
+        ":client:.* -> .*",
+        ":server:.* -> .*",
+        ".* -> :rsub:.*",
+        ".*client-impl -> .*shared-impl",
+        ".*server-impl -> .*shared-impl",
+    )
+}
+
 tasks.register("ci") {
     // Client
     dependsOn(":client:android:assembleDebug")
