@@ -15,7 +15,7 @@ kotlin {
             dependencies {
                 api(projects.feature.serversConnection.clientApi)
 
-                implementation(projects.feature.aboutServer.shared)
+                implementation(projects.feature.aboutServer.sharedImpl)
                 implementation(projects.feature.entities.sharedImpl)
 
                 implementation(projects.rsub.client)

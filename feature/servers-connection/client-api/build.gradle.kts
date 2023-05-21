@@ -15,7 +15,7 @@ kotlin {
                 api(projects.feature.servers.clientApi)
 
                 // TODO проверка гипотизы, подключаем только как имплементацию
-                implementation(projects.feature.aboutServer.shared)
+                implementation(projects.feature.aboutServer.sharedImpl)
                 implementation(projects.feature.entities.sharedImpl)
             }
         }

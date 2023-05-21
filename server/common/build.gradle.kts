@@ -20,7 +20,7 @@ kotlin {
                 // Add client js compiled code as a static resource
                 // implementation(project(mapOf("path" to ":client:js", "configuration" to "browserProdDist")))
 
-                implementation(projects.feature.aboutServer.server)
+                implementation(projects.feature.aboutServer.serverImpl)
                 implementation(projects.feature.entities.serverImpl)
                 implementation(projects.feature.serviceCamsNetsurv.serverImpl)
                 implementation(projects.feature.services.serverImpl)

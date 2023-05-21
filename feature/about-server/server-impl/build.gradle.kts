@@ -6,7 +6,7 @@ kotlin {
     sourceSets {
         named("commonMain") {
             dependencies {
-                api(projects.feature.aboutServer.shared)
+                api(projects.feature.aboutServer.sharedImpl)
             }
         }
     }
