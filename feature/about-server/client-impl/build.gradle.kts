@@ -11,6 +11,7 @@ kotlin {
             dependencies {
                 api(projects.feature.aboutServer.clientApi)
 
+                implementation(projects.feature.aboutServer.sharedImpl)
                 implementation(projects.feature.serversConnection.clientApi)
             }
         }

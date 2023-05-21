@@ -12,7 +12,6 @@ kotlin {
     sourceSets {
         named("commonMain") {
             dependencies {
-                api(projects.feature.aboutServer.sharedImpl)
                 api(projects.feature.servers.clientApi)
             }
         }
