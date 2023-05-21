@@ -11,7 +11,7 @@ import ru.vs.core.decompose.ComposeComponent
 import ru.vs.core.decompose.DiComponentContext
 import ru.vs.core.decompose.createCoroutineScope
 
-class EditServerComponent(
+internal class EditServerComponent(
     context: DiComponentContext,
     serverId: Long?,
     closeScreen: () -> Unit,
@@ -31,8 +31,8 @@ class EditServerComponent(
         }
     }
 
-    internal val state = store.stateFlow
-    internal fun accept(intent: EditServerStore.Intent) = store.accept(intent)
+    val state = store.stateFlow
+    fun accept(intent: EditServerStore.Intent) = store.accept(intent)
 
     @Composable
     override fun Render() = EditServerContent(this)

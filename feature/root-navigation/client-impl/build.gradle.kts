@@ -12,7 +12,7 @@ kotlin {
                 api(projects.feature.rootNavigation.clientApi)
 
                 implementation(projects.feature.mainScreen.clientImpl)
-                implementation(projects.feature.servers.clientImpl)
+                implementation(projects.feature.servers.clientApi)
             }
         }
     }

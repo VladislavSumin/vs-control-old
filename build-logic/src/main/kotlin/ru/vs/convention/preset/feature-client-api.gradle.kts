@@ -29,6 +29,7 @@ kotlin {
         named("commonMain") {
             dependencies {
                 implementation(coreLibs.vs.core.coroutines)
+                implementation(coreLibs.vs.core.decompose)
                 implementation(coreLibs.essenty.parcelable)
             }
         }

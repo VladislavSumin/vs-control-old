@@ -22,7 +22,7 @@ import ru.vs.control.servers.ui.edit_server.EditServerStore.Intent
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun EditServerContent(component: EditServerComponent) {
+internal fun EditServerContent(component: EditServerComponent) {
     val state by component.state.collectAsState()
     Scaffold(
         topBar = { EditServerTopBar(state, component) },

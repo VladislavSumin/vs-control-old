@@ -19,7 +19,6 @@ kotlin {
         named("commonMain") {
             dependencies {
                 implementation(coreLibs.vs.core.compose)
-                implementation(coreLibs.vs.core.decompose)
                 implementation(coreLibs.vs.core.di)
                 implementation(coreLibs.vs.core.keyValueStorage)
                 implementation(coreLibs.vs.core.ktor.client)
