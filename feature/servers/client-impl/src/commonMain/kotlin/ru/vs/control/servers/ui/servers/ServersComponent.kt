@@ -3,28 +3,39 @@ package ru.vs.control.servers.ui.servers
 import androidx.compose.runtime.Composable
 import com.arkivanov.mvikotlin.core.instancekeeper.getStore
 import com.arkivanov.mvikotlin.extensions.coroutines.stateFlow
+import kotlinx.coroutines.flow.map
 import org.kodein.di.direct
 import org.kodein.di.instance
 import ru.vs.control.servers.domain.ServerId
-import ru.vs.control.servers.ui.servers.ServersStore.Intent
+import ru.vs.control.servers.ui.server_card.ServerCardComponent
 import ru.vs.core.decompose.ComposeComponent
 import ru.vs.core.decompose.DiComponentContext
+import ru.vs.core.decompose.asNavigationSource
+import ru.vs.core.decompose.createCoroutineScope
+import ru.vs.core.decompose.router.list.childList
 
 internal class ServersComponent(
     componentContext: DiComponentContext,
     private val openAddServerScreen: () -> Unit,
     private val openEditServerScreen: (ServerId) -> Unit,
 ) : ComposeComponent, DiComponentContext by componentContext {
+    private val scope = lifecycle.createCoroutineScope()
     private val store: ServersStore = instanceKeeper.getStore {
         direct.instance<ServerStoreFactory>().create()
     }
 
-    val state = store.stateFlow
+    val serversList = childList(
+        source = store.stateFlow.map { it.servers }.asNavigationSource(scope),
+        childFactory = { server, context ->
+            ServerCardComponent(
+                server,
+                DiComponentContext(context, di),
+                openEditServerScreen
+            )
+        }
+    )
 
     fun onClickAddServer() = openAddServerScreen()
-    fun onClickSelectServer(serverId: ServerId) = store.accept(Intent.SelectServer(serverId))
-    fun onClickEditServer(serverId: ServerId) = openEditServerScreen(serverId)
-    fun onClickDeleteServer(serverId: ServerId) = store.accept(Intent.DeleteServer(serverId))
 
     @Composable
     override fun Render() = ServersContent(this)
