@@ -13,9 +13,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.arkivanov.decompose.extensions.compose.jetbrains.subscribeAsState
-import ru.vs.control.servers.domain.Server
-import ru.vs.control.servers.ui.server_card.ServerCardComponent
-import ru.vs.core.decompose.router.list.ChildList
 
 @Composable
 internal fun ServersContent(component: ServersComponent) {
@@ -25,7 +22,7 @@ internal fun ServersContent(component: ServersComponent) {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun Servers(component: ServersComponent) {
-    val servers: ChildList<Server, ServerCardComponent> by component.serversList.subscribeAsState()
+    val servers by component.serversList.subscribeAsState()
     Scaffold(
         floatingActionButton = { AddServer(component) }
     ) { padding ->
@@ -33,7 +30,7 @@ private fun Servers(component: ServersComponent) {
             Modifier.padding(padding),
             verticalArrangement = Arrangement.spacedBy(4.dp)
         ) {
-            items(servers.items) { it.instance.Render() }
+            items(servers) { it.instance.Render() }
         }
     }
 }
