@@ -11,6 +11,7 @@ kotlin {
         named("commonMain") {
             dependencies {
                 api(projects.feature.entities.sharedApi)
+                api(coreLibs.vs.core.di)
             }
         }
     }
