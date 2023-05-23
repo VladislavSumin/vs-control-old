@@ -9,7 +9,7 @@ import ru.vs.control.id.CompositeId
 data class EntityDto(val id: CompositeId, val primaryState: EntityState)
 
 fun EntityDto.toEntity() = Entity(id, primaryState)
-fun Entity.toDto() = EntityDto(id, primaryState)
+fun Entity<*>.toDto() = EntityDto(id, primaryState)
 
 fun Collection<EntityDto>.toEntity() = map { it.toEntity() }
-fun Collection<Entity>.toDto() = map { it.toDto() }
+fun Collection<Entity<*>>.toDto() = map { it.toDto() }

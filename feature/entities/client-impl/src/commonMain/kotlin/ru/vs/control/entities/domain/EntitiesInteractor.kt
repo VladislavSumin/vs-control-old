@@ -8,13 +8,13 @@ import ru.vs.control.entities.dto.toEntity
 import ru.vs.control.servers_connection.domain.ServersConnectionInteractor
 
 internal interface EntitiesInteractor {
-    fun observeEntities(): Flow<List<Entity>>
+    fun observeEntities(): Flow<List<Entity<*>>>
 }
 
 internal class EntitiesInteractorImpl(
     private val serversConnectionInteractor: ServersConnectionInteractor,
 ) : EntitiesInteractor {
-    override fun observeEntities(): Flow<List<Entity>> {
+    override fun observeEntities(): Flow<List<Entity<*>>> {
         return serversConnectionInteractor.observeSelectedServerConnection()
             .map { connection -> connection?.entities }
             .flatMapLatest { entities ->

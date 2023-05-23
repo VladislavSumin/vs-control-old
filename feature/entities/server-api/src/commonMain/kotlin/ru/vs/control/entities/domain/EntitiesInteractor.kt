@@ -5,7 +5,7 @@ import kotlinx.coroutines.flow.update
 import ru.vs.control.id.CompositeId
 
 interface EntitiesInteractor {
-    fun observeEntities(): Flow<Map<CompositeId, Entity>>
+    fun observeEntities(): Flow<Map<CompositeId, Entity<*>>>
 
     /**
      * Holds entity with given [Entity.id] while [block] is running. When exits from [block] remove entity from registry
@@ -16,11 +16,11 @@ interface EntitiesInteractor {
      * @param initialValue - initial entity state
      * @param block - block running at caller coroutine context
      */
-    suspend fun holdEntity(
-        initialValue: Entity,
+    suspend fun <T : EntityState> holdEntity(
+        initialValue: Entity<T>,
         block: suspend (
             update: suspend (
-                (entity: Entity) -> Entity
+                (entity: Entity<T>) -> Entity<T>
             ) -> Unit
         ) -> Unit
     )
@@ -29,7 +29,7 @@ interface EntitiesInteractor {
      * Holds entity with given [Entity.id] while called coroutine is running.
      * When cancel called coroutine scope remove entity from registry
      */
-    suspend fun holdConstantEntity(
-        value: Entity,
+    suspend fun <T : EntityState> holdConstantEntity(
+        value: Entity<T>,
     ): Nothing
 }

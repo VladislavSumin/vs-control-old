@@ -17,7 +17,7 @@ internal interface EntitiesStore : Store<Intent, State, Label> {
 
     sealed interface Intent
 
-    data class State(val entities: List<Entity>)
+    data class State(val entities: List<Entity<*>>)
 
     sealed interface Label
 }
@@ -39,7 +39,7 @@ internal class EntitiesStoreFactory(
             ) {}
 
     private sealed interface Msg {
-        data class EntitiesListUpdated(val entities: List<Entity>) : Msg
+        data class EntitiesListUpdated(val entities: List<Entity<*>>) : Msg
     }
 
     private inner class ExecutorImpl : CoroutineExecutor<Intent, Unit, State, Msg, Label>() {

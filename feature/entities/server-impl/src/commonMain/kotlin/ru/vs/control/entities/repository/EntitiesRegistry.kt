@@ -9,25 +9,27 @@ import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.withContext
 import ru.vs.control.entities.domain.Entity
+import ru.vs.control.entities.domain.EntityState
 import ru.vs.control.id.CompositeId
 
 internal interface EntitiesRegistry {
-    fun observeEntities(): Flow<Map<CompositeId, Entity>>
+    fun observeEntities(): Flow<Map<CompositeId, Entity<*>>>
 
     /**
      * Holds entity with given [Entity.id] while [block] is running. When exits from [block] remove entity from registry
      *
      * [update] - update function to safely update current entity
      * Attention! Update function may update only one entity (id must be equal [initialValue] id)
+     * Attention! [Entity.primaryState] must be same as [initialValue]
      *
      * @param initialValue - initial entity state
      * @param block - block running at caller coroutine context
      */
-    suspend fun holdEntity(
-        initialValue: Entity,
+    suspend fun <T : EntityState> holdEntity(
+        initialValue: Entity<T>,
         block: suspend (
             update: suspend (
-                (entity: Entity) -> Entity
+                (entity: Entity<T>) -> Entity<T>
             ) -> Unit
         ) -> Unit
     )
@@ -36,16 +38,16 @@ internal interface EntitiesRegistry {
 internal class EntitiesRegistryImpl : EntitiesRegistry {
     private val storage = EntitiesStorage()
 
-    override fun observeEntities(): Flow<Map<CompositeId, Entity>> {
+    override fun observeEntities(): Flow<Map<CompositeId, Entity<*>>> {
         return storage.entities
     }
 
-    override suspend fun holdEntity(
-        initialValue: Entity,
-        block: suspend (update: suspend ((entity: Entity) -> Entity) -> Unit) -> Unit
+    override suspend fun <T : EntityState> holdEntity(
+        initialValue: Entity<T>,
+        block: suspend (update: suspend ((entity: Entity<T>) -> Entity<T>) -> Unit) -> Unit
     ) {
         val id = initialValue.id
-        var currentEntity: Entity = initialValue
+        var currentEntity: Entity<T> = initialValue
 
         storage.update { entities ->
             if (entities.containsKey(id)) error("Entity with ${initialValue.id} already exist")
@@ -75,12 +77,12 @@ internal class EntitiesRegistryImpl : EntitiesRegistry {
      * Given safely access to internal storage collection
      */
     private class EntitiesStorage {
-        private val entitiesMut = MutableStateFlow(mapOf<CompositeId, Entity>())
+        private val entitiesMut = MutableStateFlow(mapOf<CompositeId, Entity<*>>())
         private val lock = Mutex()
 
-        val entities: StateFlow<Map<CompositeId, Entity>> = entitiesMut
+        val entities: StateFlow<Map<CompositeId, Entity<*>>> = entitiesMut
 
-        suspend fun update(block: (entities: MutableMap<CompositeId, Entity>) -> Unit) {
+        suspend fun update(block: (entities: MutableMap<CompositeId, Entity<*>>) -> Unit) {
             lock.withLock {
                 val newData = entitiesMut.value.toMutableMap()
                 block(newData)
