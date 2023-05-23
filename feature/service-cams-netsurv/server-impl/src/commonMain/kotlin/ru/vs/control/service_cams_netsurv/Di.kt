@@ -14,6 +14,8 @@ import ru.vs.core.di.Modules
 import ru.vs.core.di.i
 
 fun Modules.featureServiceCamsNetsurv() = DI.Module("feature-service-cams-netsurv") {
+    importOnce(Modules.featureServiceCamsNetsurvShared())
+
     // Network
     bindSingleton<NetsurvCameraConnectionFactory> { NetsurvCameraConnectionFactoryImpl(i(), i()) }
 

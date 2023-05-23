@@ -24,4 +24,12 @@ interface EntitiesInteractor {
             ) -> Unit
         ) -> Unit
     )
+
+    /**
+     * Holds entity with given [Entity.id] while called coroutine is running.
+     * When cancel called coroutine scope remove entity from registry
+     */
+    suspend fun holdConstantEntity(
+        value: Entity,
+    ): Nothing
 }

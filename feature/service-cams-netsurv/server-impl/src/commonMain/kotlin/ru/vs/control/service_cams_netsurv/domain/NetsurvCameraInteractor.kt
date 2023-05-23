@@ -8,6 +8,7 @@ import ru.vs.control.entities.domain.Entity
 import ru.vs.control.entities.domain.base_entity_states.BooleanEntityState
 import ru.vs.control.id.CompositeId
 import ru.vs.control.id.Id
+import ru.vs.control.service_cams_netsurv.entity_states.NetsurvLiveVideoStreamEntityState
 import ru.vs.control.service_cams_netsurv.network.NetsurvCameraConnectionFactory
 
 internal interface NetsurvCameraInteractor {
@@ -31,7 +32,7 @@ internal class NetsurvCameraInteractorImpl(
         coroutineScope {
             launch { runConnectionState() }
             launch { runMotionState() }
-            launch { runVideoStream() }
+            launch { runLiveVideoStreamState() }
         }
     }
 
@@ -65,26 +66,13 @@ internal class NetsurvCameraInteractorImpl(
         }
     }
 
-    private suspend fun runVideoStream() {
-//        coroutineScope {
-//            println("AAAAAAAAAA 1")
-//            val path = "${camera.baseId}.264".toPath()
-//            FileSystem.FS.write(path, mustCreate = true) {
-//            val record = launch {
-//                println("AAAAAAAAAA 2")
-//                videoStreamConnection.observeVideoStream().collect {
-//                        write(it)
-//                        print("C")
-//                        flush()
-//                }
-//            }
-//
-//                delay(25_000)
-//                println("AAAAAAAAAA 3")
-//                record.cancelAndJoin()
-//                println("AAAAAAAAAA 4")
-//            }
-//        }
+    private suspend fun runLiveVideoStreamState() {
+        entitiesInteractor.holdConstantEntity(
+            Entity(
+                id = generateEntityId("live_video_stream"),
+                primaryState = NetsurvLiveVideoStreamEntityState(camera.baseId)
+            )
+        )
     }
 
     private fun generateEntityId(subId: String): CompositeId {

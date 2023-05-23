@@ -11,6 +11,7 @@ kotlin {
         named("commonMain") {
             dependencies {
                 api(projects.feature.serviceCamsNetsurv.sharedApi)
+                api(projects.feature.entities.sharedApi)
             }
         }
     }
