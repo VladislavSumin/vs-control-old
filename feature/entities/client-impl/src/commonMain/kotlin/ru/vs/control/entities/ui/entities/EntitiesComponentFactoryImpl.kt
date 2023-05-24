@@ -1,10 +1,12 @@
 package ru.vs.control.entities.ui.entities
 
+import com.arkivanov.decompose.ComponentContext
 import ru.vs.core.decompose.ComposeComponent
-import ru.vs.core.decompose.DiComponentContext
 
-internal class EntitiesComponentFactoryImpl : EntitiesComponentFactory {
-    override fun create(componentContext: DiComponentContext): ComposeComponent {
-        return EntitiesComponent(componentContext)
+internal class EntitiesComponentFactoryImpl(
+    private val entitiesStoreFactory: EntitiesStoreFactory,
+) : EntitiesComponentFactory {
+    override fun create(componentContext: ComponentContext): ComposeComponent {
+        return EntitiesComponent(entitiesStoreFactory, componentContext)
     }
 }
