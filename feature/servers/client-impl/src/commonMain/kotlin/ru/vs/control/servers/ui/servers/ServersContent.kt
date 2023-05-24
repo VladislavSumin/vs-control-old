@@ -30,7 +30,7 @@ private fun Servers(component: ServersComponent) {
             Modifier.padding(padding),
             verticalArrangement = Arrangement.spacedBy(4.dp)
         ) {
-            items(servers) { it.instance.Render() }
+            items(servers) { it.Render() }
         }
     }
 }

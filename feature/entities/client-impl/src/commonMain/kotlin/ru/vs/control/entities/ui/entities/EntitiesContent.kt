@@ -17,7 +17,7 @@ internal fun EntitiesContent(component: EntitiesComponent) {
     ) {
         item { Text("Entities screen") }
         items(state) { child ->
-            child.instance.Render()
+            child.Render()
         }
     }
 }
