@@ -3,7 +3,7 @@ package ru.vs.control.id
 import kotlinx.serialization.Serializable
 
 @Serializable(CompositeIdSerializer::class)
-interface CompositeId {
+interface CompositeId : Comparable<CompositeId> {
     val firstPart: Id
     val secondPart: Id
 
@@ -21,6 +21,10 @@ internal class CompositeIdImpl(
 ) : CompositeId {
 
     override val rawId: String = "${firstPart.rawId}#${secondPart.rawId}"
+
+    override fun compareTo(other: CompositeId): Int {
+        return rawId.compareTo(other.rawId)
+    }
 
     override fun toString(): String {
         return "CompositeId($rawId)"
