@@ -13,7 +13,7 @@ import ru.vs.core.di.i
 fun Modules.featureEntities() = DI.Module("feature-entities") {
     importOnce(Modules.featureEntitiesShared())
 
-    bindSingleton<EntitiesInteractor> { EntitiesInteractorImpl(i()) }
+    bindSingleton<EntitiesInteractor> { EntitiesInteractorImpl(i(), i()) }
     bindSingleton { EntitiesStoreFactory(i(), i()) }
     bindSingleton<EntitiesComponentFactory> { EntitiesComponentFactoryImpl() }
 }

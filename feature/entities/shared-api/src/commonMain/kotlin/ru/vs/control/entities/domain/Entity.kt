@@ -9,3 +9,5 @@ import ru.vs.control.id.CompositeId
  * @param T - primary state type
  */
 data class Entity<T : EntityState>(val id: CompositeId, val primaryState: T)
+
+typealias Entities<T> = Map<CompositeId, Entity<T>>

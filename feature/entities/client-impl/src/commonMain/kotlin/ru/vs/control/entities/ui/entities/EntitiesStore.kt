@@ -50,7 +50,7 @@ internal class EntitiesStoreFactory(
         override fun executeAction(action: Unit, getState: () -> State) {
             scope.launch {
                 entitiesInteractor.observeEntities()
-                    .map { it.sortedBy { it.id.rawId } }
+                    .map { it.values.sortedBy { it.id.rawId } }
                     .map { Msg.EntitiesListUpdated(it) }
                     .collect(::dispatch)
             }
