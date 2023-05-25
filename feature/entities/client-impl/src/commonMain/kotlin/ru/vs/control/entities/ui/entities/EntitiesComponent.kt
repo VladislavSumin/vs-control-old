@@ -13,6 +13,7 @@ import ru.vs.core.decompose.ComposeComponent
 import ru.vs.core.decompose.asNavigationSource
 import ru.vs.core.decompose.createCoroutineScope
 import ru.vs.core.decompose.router.list.childList
+import ru.vs.core.decompose.router.list.childListWithState
 
 internal class EntitiesComponent(
     entitiesStoreFactory: EntitiesStoreFactory,
@@ -21,10 +22,11 @@ internal class EntitiesComponent(
     private val scope = lifecycle.createCoroutineScope()
     private val store: EntitiesStore = instanceKeeper.getStore { entitiesStoreFactory.create() }
 
-    val entitiesList: Value<List<EntityStateComponent>> = childList(
+    val entitiesList: Value<List<EntityStateComponent>> = childListWithState(
         source = store.stateFlow.map { it.entities }.asNavigationSource(scope),
-        childFactory = { entity, context ->
-            UnknownEntityStateComponent(MutableStateFlow(entity), context)
+        idSelector = { it.id },
+        childFactory = { entityState, context ->
+            UnknownEntityStateComponent(entityState, context)
         }
     )
 
