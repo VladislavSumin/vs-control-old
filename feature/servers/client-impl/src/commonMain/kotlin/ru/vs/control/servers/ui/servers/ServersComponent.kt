@@ -26,6 +26,7 @@ internal class ServersComponent(
 
     val serversList = childList(
         source = store.stateFlow.map { it.servers }.asNavigationSource(scope),
+        initialState = { store.state.servers },
         childFactory = { server, context ->
             ServerCardComponent(
                 server,
