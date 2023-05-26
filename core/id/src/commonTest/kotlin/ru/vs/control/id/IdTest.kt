@@ -1,5 +1,6 @@
 package ru.vs.control.id
 
+import org.jetbrains.annotations.TestOnly
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
@@ -59,6 +60,14 @@ class IdTest {
     fun rawIdEqualsCreationId() {
         val id = Id(TEST_RAW_ID_SIMPLE)
         assertEquals(TEST_RAW_ID_SIMPLE, id.rawId)
+    }
+
+    @Test
+    fun checkEquals() {
+        val id1 = Id(TEST_RAW_ID_SIMPLE)
+        val id2 = Id(TEST_RAW_ID_SIMPLE)
+        assertEquals(id1.hashCode(), id2.hashCode())
+        assertEquals(id1, id2)
     }
 
     companion object {

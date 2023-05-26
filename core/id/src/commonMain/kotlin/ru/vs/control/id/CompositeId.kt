@@ -30,6 +30,22 @@ internal class CompositeIdImpl(
         return "CompositeId($rawId)"
     }
 
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (javaClass != other?.javaClass) return false
+
+        other as CompositeIdImpl
+
+        if (firstPart != other.firstPart) return false
+        return secondPart == other.secondPart
+    }
+
+    override fun hashCode(): Int {
+        var result = firstPart.hashCode()
+        result = 31 * result + secondPart.hashCode()
+        return result
+    }
+
     companion object {
         fun fromRawCompositeId(rawCompositeId: String): CompositeId {
             val rawIds = rawCompositeId.split("#", limit = 2)

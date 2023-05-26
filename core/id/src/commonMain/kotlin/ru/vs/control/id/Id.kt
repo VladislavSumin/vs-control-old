@@ -21,6 +21,19 @@ internal class IdImpl(override val rawId: String) : Id {
         return "Id($rawId)"
     }
 
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (javaClass != other?.javaClass) return false
+
+        other as IdImpl
+
+        return rawId == other.rawId
+    }
+
+    override fun hashCode(): Int {
+        return rawId.hashCode()
+    }
+
     companion object {
         private const val ID_PART_VERIFICATION_REGEXP = "([a-z0-9]+(_[a-z0-9]+)*)"
         private val ID_VERIFICATION_REGEXP =
