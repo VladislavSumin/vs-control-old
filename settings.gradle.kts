@@ -67,6 +67,7 @@ includeFeature("entities")
 includeClientFeature("main-screen")
 includeFeature("services")
 includeFeature("service-cams-netsurv")
+includeFeature("service-debug")
 
 include(":feature:root-navigation:client-api")
 include(":feature:root-navigation:client-impl")
