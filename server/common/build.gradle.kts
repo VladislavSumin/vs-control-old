@@ -23,6 +23,7 @@ kotlin {
                 implementation(projects.feature.aboutServer.serverImpl)
                 implementation(projects.feature.entities.serverImpl)
                 implementation(projects.feature.serviceCamsNetsurv.serverImpl)
+                implementation(projects.feature.serviceDebug.serverImpl)
                 implementation(projects.feature.services.serverImpl)
 
                 implementation(coreLibs.vs.core.ktor.network)

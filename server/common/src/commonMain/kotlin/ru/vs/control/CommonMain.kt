@@ -6,6 +6,7 @@ import org.kodein.di.direct
 import org.kodein.di.instance
 import ru.vs.control.domain.AboutServerInteractor
 import ru.vs.control.service_cams_netsurv.domain.NetsurvCamsService
+import ru.vs.control.service_debug.domain.DebugService
 import ru.vs.control.services.domain.ServicesInteractor
 import ru.vs.control.web.WebServer
 
@@ -28,6 +29,7 @@ fun commonMain() {
 
         // Register services
         // TODO move this code to another place
+        servicesInteractor.registerService(di.direct.instance<DebugService>())
         servicesInteractor.registerService(di.direct.instance<NetsurvCamsService>())
 
         // Run web server
