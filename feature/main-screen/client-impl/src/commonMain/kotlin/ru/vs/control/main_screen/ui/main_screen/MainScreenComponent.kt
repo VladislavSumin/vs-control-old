@@ -65,11 +65,11 @@ internal class MainScreenComponent(
         return servicesComponentFactory.create(componentContext)
     }
 
-    private fun serversComponent(componentContext: DiComponentContext): ComposeComponent {
+    private fun serversComponent(context: ComponentContext): ComposeComponent {
         return serversComponentFactory.create(
-            componentContext,
             openAddServerScreen = { rootNavigation.push(RootNavigationConfig.EditServer(null)) },
             openEditServerScreen = { serverId -> rootNavigation.push(RootNavigationConfig.EditServer(serverId)) },
+            context = context,
         )
     }
 
