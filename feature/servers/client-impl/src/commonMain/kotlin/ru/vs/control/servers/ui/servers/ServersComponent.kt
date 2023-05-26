@@ -2,13 +2,13 @@ package ru.vs.control.servers.ui.servers
 
 import androidx.compose.runtime.Composable
 import com.arkivanov.decompose.ComponentContext
+import com.arkivanov.decompose.value.operator.map
 import com.arkivanov.mvikotlin.core.instancekeeper.getStore
 import com.arkivanov.mvikotlin.extensions.coroutines.stateFlow
-import kotlinx.coroutines.flow.map
 import ru.vs.control.servers.domain.ServerId
 import ru.vs.control.servers.ui.server_card.ServerCardComponentFactory
 import ru.vs.core.decompose.ComposeComponent
-import ru.vs.core.decompose.asNavigationSource
+import ru.vs.core.decompose.asValue
 import ru.vs.core.decompose.createCoroutineScope
 import ru.vs.core.decompose.router.list.childList
 
@@ -23,8 +23,7 @@ internal class ServersComponent(
     private val store: ServersStore = instanceKeeper.getStore { serverStoreFactory.create() }
 
     val serversList = childList(
-        source = store.stateFlow.map { it.servers }.asNavigationSource(scope),
-        initialState = { store.state.servers },
+        state = store.stateFlow.asValue(scope).map { it.servers },
         childFactory = { server, context ->
             serverCardComponentFactory.create(
                 server,
