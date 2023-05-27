@@ -1,6 +1,5 @@
 package ru.vs.control.id
 
-import org.jetbrains.annotations.TestOnly
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
