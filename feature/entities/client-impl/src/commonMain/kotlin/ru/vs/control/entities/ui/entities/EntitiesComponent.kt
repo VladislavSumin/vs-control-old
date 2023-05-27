@@ -20,7 +20,7 @@ internal class EntitiesComponent(
     private val scope = lifecycle.createCoroutineScope()
     private val store: EntitiesStore = instanceKeeper.getStore { entitiesStoreFactory.create() }
 
-    val entitiesList: Value<List<EntityStateComponent>> = childListWithState(
+    val entitiesList: Value<List<EntityStateComponent<*>>> = childListWithState(
         state = store.stateFlow.asValue(scope).map { it.entities },
         idSelector = { it.id },
         childFactory = { entityState, context ->

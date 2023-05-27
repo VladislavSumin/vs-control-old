@@ -4,10 +4,13 @@ import androidx.compose.runtime.Composable
 import com.arkivanov.decompose.ComponentContext
 import kotlinx.coroutines.flow.StateFlow
 import ru.vs.control.entities.domain.Entity
-import ru.vs.control.entities.ui.entities.entity_state.EntityStateComponent
+import ru.vs.control.entities.domain.EntityState
+import ru.vs.control.entities.ui.entities.entity_state.BaseEntityStateComponent
 
-internal class UnknownEntityStateComponent(val state: StateFlow<Entity<*>>, context: ComponentContext) :
-    EntityStateComponent, ComponentContext by context {
+internal class UnknownEntityStateComponent(
+    state: StateFlow<Entity<out EntityState>>,
+    context: ComponentContext
+) : BaseEntityStateComponent<EntityState>(state, context) {
     @Composable
     override fun Render() = UnknownEntityStateContent(this)
 }

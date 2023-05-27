@@ -1,4 +1,4 @@
-package ru.vs.control.entities.ui.entities.unknown_entity_state
+package ru.vs.control.entities.ui.entities.boolean_entity_state
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -12,12 +12,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 
 @Composable
-internal fun UnknownEntityStateContent(component: UnknownEntityStateComponent) {
+internal fun BooleanEntityStateContent(component: BooleanEntityStateComponent) {
     val entity by component.entityState.collectAsState()
     Card(Modifier.fillMaxWidth()) {
         Column(modifier = Modifier.padding(horizontal = 16.dp, vertical = 12.dp)) {
             Text(entity.id.rawId)
-            Text(entity.primaryState.toString())
+            Text("Boolean=${entity.primaryState.value}")
         }
     }
 }
