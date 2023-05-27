@@ -4,8 +4,6 @@ import com.arkivanov.decompose.ComponentContext
 import kotlinx.coroutines.flow.StateFlow
 import ru.vs.control.entities.domain.Entity
 import ru.vs.control.entities.domain.EntityState
-import ru.vs.control.entities.domain.base_entity_states.BooleanEntityState
-import ru.vs.control.entities.ui.entities.boolean_entity_state.BooleanEntityStateComponentFactory
 import ru.vs.control.entities.ui.entities.unknown_entity_state.UnknownEntityStateComponent
 import kotlin.reflect.KClass
 
@@ -20,10 +18,11 @@ internal interface EntityStateComponentFactoryRegistry {
     ): EntityStateComponent<*>
 }
 
-internal class EntityStateComponentFactoryRegistryImpl : EntityStateComponentFactoryRegistry {
-    private val factories: Map<KClass<BooleanEntityState>, EntityStateComponentFactory<*>> = mapOf(
-        BooleanEntityState::class to BooleanEntityStateComponentFactory(),
-    )
+internal class EntityStateComponentFactoryRegistryImpl(
+    factoriesSet: Set<EntityStateComponentFactory<*>>,
+) : EntityStateComponentFactoryRegistry {
+    private val factories: Map<KClass<out EntityState>, EntityStateComponentFactory<*>> =
+        factoriesSet.associateBy { it.entityStateType }
 
     override fun create(state: StateFlow<Entity<out EntityState>>, context: ComponentContext): EntityStateComponent<*> {
         val factory = factories[state.value.primaryState::class]
