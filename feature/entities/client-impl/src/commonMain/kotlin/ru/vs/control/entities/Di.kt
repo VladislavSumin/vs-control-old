@@ -7,13 +7,23 @@ import ru.vs.control.entities.domain.EntitiesInteractorImpl
 import ru.vs.control.entities.ui.entities.EntitiesComponentFactory
 import ru.vs.control.entities.ui.entities.EntitiesComponentFactoryImpl
 import ru.vs.control.entities.ui.entities.EntitiesStoreFactory
+import ru.vs.control.entities.ui.entities.entity_state.EntityStateComponentFactoryRegistry
+import ru.vs.control.entities.ui.entities.entity_state.EntityStateComponentFactoryRegistryImpl
 import ru.vs.core.di.Modules
 import ru.vs.core.di.i
 
 fun Modules.featureEntities() = DI.Module("feature-entities") {
     importOnce(Modules.featureEntitiesShared())
 
+    // Interactors
     bindSingleton<EntitiesInteractor> { EntitiesInteractorImpl(i(), i()) }
+
+    // Store factories
     bindSingleton { EntitiesStoreFactory(i(), i()) }
-    bindSingleton<EntitiesComponentFactory> { EntitiesComponentFactoryImpl(i()) }
+
+    // Component factories
+    bindSingleton<EntitiesComponentFactory> { EntitiesComponentFactoryImpl(i(), i()) }
+
+    // Other
+    bindSingleton<EntityStateComponentFactoryRegistry> { EntityStateComponentFactoryRegistryImpl() }
 }

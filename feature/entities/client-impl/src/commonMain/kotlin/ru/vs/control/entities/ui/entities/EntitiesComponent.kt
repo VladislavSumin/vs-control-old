@@ -7,13 +7,14 @@ import com.arkivanov.decompose.value.operator.map
 import com.arkivanov.mvikotlin.core.instancekeeper.getStore
 import com.arkivanov.mvikotlin.extensions.coroutines.stateFlow
 import ru.vs.control.entities.ui.entities.entity_state.EntityStateComponent
-import ru.vs.control.entities.ui.entities.unknown_entity_state.UnknownEntityStateComponent
+import ru.vs.control.entities.ui.entities.entity_state.EntityStateComponentFactoryRegistry
 import ru.vs.core.decompose.ComposeComponent
 import ru.vs.core.decompose.asValue
 import ru.vs.core.decompose.createCoroutineScope
 import ru.vs.core.decompose.router.list.childListWithState
 
 internal class EntitiesComponent(
+    private val entityStateComponentFactoryRegistry: EntityStateComponentFactoryRegistry,
     entitiesStoreFactory: EntitiesStoreFactory,
     context: ComponentContext
 ) : ComposeComponent, ComponentContext by context {
@@ -24,7 +25,7 @@ internal class EntitiesComponent(
         state = store.stateFlow.asValue(scope).map { it.entities },
         idSelector = { it.id },
         childFactory = { entityState, context ->
-            UnknownEntityStateComponent(entityState, context)
+            entityStateComponentFactoryRegistry.create(entityState, context)
         }
     )
 
