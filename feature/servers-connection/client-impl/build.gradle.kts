@@ -17,6 +17,7 @@ kotlin {
 
                 implementation(projects.feature.aboutServer.sharedImpl)
                 implementation(projects.feature.entities.sharedImpl)
+                implementation(projects.feature.serviceCamsNetsurv.sharedImpl)
 
                 implementation(projects.rsub.client)
                 implementation(projects.rsub.connector.ktorWebsocket.client)

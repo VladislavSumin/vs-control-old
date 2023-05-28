@@ -8,6 +8,7 @@ import com.google.devtools.ksp.symbol.Modifier
 import com.squareup.kotlinpoet.FunSpec
 import com.squareup.kotlinpoet.KModifier
 import com.squareup.kotlinpoet.MemberName
+import com.squareup.kotlinpoet.ParameterSpec
 import com.squareup.kotlinpoet.PropertySpec
 import com.squareup.kotlinpoet.TypeSpec
 import com.squareup.kotlinpoet.asClassName
@@ -112,12 +113,15 @@ class RSSubInterfaceProxyGenerator(
     private fun generateSuspendProxyFunction(interfaceName: String, function: KSFunctionDeclaration): FunSpec {
         return FunSpec.builder(function.simpleName.asString())
             .addModifiers(KModifier.OVERRIDE, KModifier.SUSPEND)
+            .addParameters(function.parameters.map { ParameterSpec(it.name!!.asString(), it.type.toTypeName()) })
             .returns(function.returnType!!.toTypeName())
+            .addArgumentsStatement(function)
             .addCode(
-                "return %M(%S, %S)",
+                "return %M(%S, %S, %N)",
                 processSuspend,
                 interfaceName,
-                function.simpleName.asString()
+                function.simpleName.asString(),
+                ARGUMENTS_NAME
             )
             .build()
     }
@@ -125,18 +129,27 @@ class RSSubInterfaceProxyGenerator(
     private fun generateFlowProxyFunction(interfaceName: String, function: KSFunctionDeclaration): FunSpec {
         return FunSpec.builder(function.simpleName.asString())
             .addModifiers(KModifier.OVERRIDE)
+            .addParameters(function.parameters.map { ParameterSpec(it.name!!.asString(), it.type.toTypeName()) })
             .returns(function.returnType!!.toTypeName())
+            .addArgumentsStatement(function)
             .addCode(
-                "return %M(%S, %S)",
+                "return %M(%S, %S, %N)",
                 processFlow,
                 interfaceName,
-                function.simpleName.asString()
+                function.simpleName.asString(),
+                ARGUMENTS_NAME
             )
             .build()
+    }
+
+    private fun FunSpec.Builder.addArgumentsStatement(function: KSFunctionDeclaration): FunSpec.Builder {
+        val params = function.parameters.joinToString { it.name!!.asString() }
+        return addStatement("val $ARGUMENTS_NAME = listOf<Any>($params)")
     }
 
     companion object {
         private val processSuspend = MemberName("", "processSuspend")
         private val processFlow = MemberName("", "processFlow")
+        private const val ARGUMENTS_NAME = "arguments"
     }
 }

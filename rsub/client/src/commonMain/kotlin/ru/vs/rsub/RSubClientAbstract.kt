@@ -143,13 +143,15 @@ open class RSubClientAbstract(
     protected suspend inline fun <reified T : Any> processSuspend(
         interfaceName: String,
         methodName: String,
-    ): T = processSuspend(interfaceName, methodName, typeOf<T>())
+        arguments: List<Any>? = null,
+    ): T = processSuspend(interfaceName, methodName, typeOf<T>(), arguments)
 
     @Suppress("TooGenericExceptionCaught")
     protected suspend fun <T : Any> processSuspend(
         interfaceName: String,
         methodName: String,
-        type: KType
+        type: KType,
+        arguments: List<Any>?,
     ): T {
         return withConnection { connection ->
             val id = nextId.getAndIncrement()
@@ -175,14 +177,16 @@ open class RSubClientAbstract(
 
     protected inline fun <reified T : Any> processFlow(
         interfaceName: String,
-        methodName: String
-    ): Flow<T> = processFlow(interfaceName, methodName, typeOf<T>())
+        methodName: String,
+        arguments: List<Any>? = null,
+    ): Flow<T> = processFlow(interfaceName, methodName, typeOf<T>(), arguments)
 
     @Suppress("TooGenericExceptionCaught")
     protected fun <T : Any> processFlow(
         interfaceName: String,
         methodName: String,
-        type: KType
+        type: KType,
+        arguments: List<Any>?,
     ): Flow<T> = channelFlow {
         // Check reconnect policy
         val throwException = true
