@@ -143,8 +143,12 @@ class RSSubInterfaceProxyGenerator(
     }
 
     private fun FunSpec.Builder.addArgumentsStatement(function: KSFunctionDeclaration): FunSpec.Builder {
-        val params = function.parameters.joinToString { it.name!!.asString() }
-        return addStatement("val $ARGUMENTS_NAME = listOf<Any>($params)")
+        return if (function.parameters.size > 0) {
+            val params = function.parameters.joinToString { it.name!!.asString() }
+            addStatement("val $ARGUMENTS_NAME = listOf<Any>($params)")
+        } else {
+            addStatement("val $ARGUMENTS_NAME: List<Any>? = null")
+        }
     }
 
     companion object {
