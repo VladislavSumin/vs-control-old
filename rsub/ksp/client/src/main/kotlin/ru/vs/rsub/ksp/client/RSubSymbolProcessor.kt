@@ -29,20 +29,31 @@ class RSubSymbolProcessor(
     private val proxyGenerator = RSSubInterfaceProxyGenerator(logger)
 
     override fun process(resolver: Resolver): List<KSAnnotated> {
+        // Getting all classes and interfaces annotated with @RSubClient
         resolver.getSymbolsWithAnnotation(RSubClient::class.qualifiedName!!)
             .forEach(this::processRSubClients)
 
+        // Always process all elements
         return emptyList()
     }
 
+    /**
+     * Processing client rSub definition annotated with [RSubClient]
+     */
     private fun processRSubClients(client: KSAnnotated) {
-        generateRSubClientImpl(client as KSClassDeclaration)
+        check(client is KSClassDeclaration) {
+            "Only KSClassDeclaration supported, but $client was received"
+        }
+        generateRSubClientImpl(client)
     }
 
+    /**
+     * Generating new class with name client.name + Impl that's provide all client functionality
+     */
     private fun generateRSubClientImpl(client: KSClassDeclaration) {
         val name = client.simpleName.asString() + "Impl"
+        val constructor = generateConstructor()
         val clazz = with(proxyGenerator) {
-            val constructor = generateConstructor()
             TypeSpec.classBuilder(name)
                 .addOriginatingKSFile(client.containingFile!!)
                 .addModifiers(KModifier.INTERNAL)
@@ -50,7 +61,7 @@ class RSubSymbolProcessor(
                 .addSuperinterface(client.toClassName())
                 .primaryConstructor(constructor)
                 .addSuperclassConstructorParameter(constructor.parameters.joinToString { it.name })
-                .generateProxyClassesWithProxyInstances(client.getAllProperties())
+                .generateProxyClassesWithProxyInstances(client)
                 .build()
         }
 

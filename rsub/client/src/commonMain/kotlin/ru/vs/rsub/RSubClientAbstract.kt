@@ -306,10 +306,13 @@ open class RSubClientAbstract(
         name: String,
         methodName: String,
         // arguments: Array<Any?>?
-    ) = send(RSubClientMessage.Subscribe(id, name, methodName))
+    ) = send(RSubClientMessage.Subscribe(id, name, methodName, null))
 
     private suspend fun ConnectionState.Connected.unsubscribe(id: Int) = send(RSubClientMessage.Unsubscribe(id))
 
+    /**
+     * Represents states of server connection states
+     */
     private sealed class ConnectionState(val status: RSubConnectionStatus) {
         object Connecting : ConnectionState(RSubConnectionStatus.Connecting)
         class Connected(
@@ -320,5 +323,9 @@ open class RSubClientAbstract(
         class ConnectionFailed(error: Exception) : ConnectionState(RSubConnectionStatus.Reconnecting(error))
     }
 
+    /**
+     * Special exception throws when server returns [RSubServerMessage.FlowComplete]
+     * Later this expedition catch and correctly close client side flow
+     */
     private class FlowCompleted : Exception()
 }

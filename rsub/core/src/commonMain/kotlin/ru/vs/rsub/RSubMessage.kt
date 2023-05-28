@@ -20,6 +20,7 @@ sealed interface RSubMessage {
          * Subscribes to new subscription it may be flow return function or suspend function
          * @param interfaceName - interface name to find in server implementations
          * @param functionName - function inside [interfaceName]
+         * @param arguments - function arguments
          */
         @Serializable
         @SerialName("subscribe")
@@ -27,6 +28,7 @@ sealed interface RSubMessage {
             override val id: Int,
             val interfaceName: String,
             val functionName: String,
+            val arguments: List<JsonElement>?,
         ) : RSubClientMessage
 
         /**

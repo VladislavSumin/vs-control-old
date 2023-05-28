@@ -20,26 +20,31 @@ class RSSubInterfaceProxyGenerator(
 ) {
 
     fun TypeSpec.Builder.generateProxyClassesWithProxyInstances(
-        superProperties: Sequence<KSPropertyDeclaration>
+        supperInterface: KSClassDeclaration
     ): TypeSpec.Builder {
-        superProperties.forEach { generateProxyClassWithProxyInstance(it) }
+        supperInterface.getAllProperties().forEach { generateProxyClassWithProxyInstance(it) }
         return this
     }
 
-    private fun TypeSpec.Builder.generateProxyClassWithProxyInstance(superProperty: KSPropertyDeclaration) {
+    private fun TypeSpec.Builder.generateProxyClassWithProxyInstance(
+        superProperty: KSPropertyDeclaration
+    ) {
+        // Check interface property return type it must be another interface market with RSubInterface annotation
         val superInterface = superProperty.type.resolve().declaration as KSClassDeclaration
+
+        // Adds property that's implements given superInterface
         addProperty(generateProxyHolder(superProperty, superInterface))
+
         addType(generateProxyClass(superInterface))
     }
 
-    private fun generateProxyClass(superInterface: KSClassDeclaration): TypeSpec {
-        return TypeSpec.classBuilder("${superInterface.simpleName.asString()}Impl")
-            .addModifiers(KModifier.PRIVATE, KModifier.INNER)
-            .addSuperinterface(superInterface.toClassName())
-            .addFunctions(generateProxyFunctions(superInterface))
-            .build()
-    }
-
+    /**
+     * Generate properties override holder with [generateProxyClass] impl
+     * Output example:
+     * ```
+     *  public override val entities: EntitiesRsub = EntitiesRsubImpl()
+     * ```
+     */
     private fun generateProxyHolder(
         superProperty: KSPropertyDeclaration,
         superInterface: KSClassDeclaration
@@ -53,6 +58,27 @@ class RSSubInterfaceProxyGenerator(
             .build()
     }
 
+    /**
+     * Generate proxy implementation for given [superInterface]
+     * Output example:
+     * ```
+     *   private inner class EntitiesRsubImpl : EntitiesRsub {
+     *     public override fun observeEntities(): Flow<List<EntityDto>> = processFlow("EntitiesRsub", "observeEntities")
+     *   }
+     * ```
+     */
+    private fun generateProxyClass(superInterface: KSClassDeclaration): TypeSpec {
+        return TypeSpec.classBuilder("${superInterface.simpleName.asString()}Impl")
+            .addModifiers(KModifier.PRIVATE, KModifier.INNER)
+            .addSuperinterface(superInterface.toClassName())
+            .addFunctions(generateProxyFunctions(superInterface))
+            .build()
+    }
+
+    /**
+     * Generates function implementation for function at given [baseInterface]
+     * @see generateProxyFunction
+     */
     private fun generateProxyFunctions(baseInterface: KSClassDeclaration): Iterable<FunSpec> {
         val interfaceName = baseInterface.simpleName.asString()
         return baseInterface.getAllFunctions()
@@ -61,14 +87,21 @@ class RSSubInterfaceProxyGenerator(
             .asIterable()
     }
 
+    /**
+     * Generate function implementation
+     * @see generateSuspendProxyFunction
+     * @see generateProxyFunction
+     */
     private fun generateProxyFunction(interfaceName: String, function: KSFunctionDeclaration): FunSpec {
         return when {
             function.modifiers.contains(Modifier.SUSPEND) -> {
                 generateSuspendProxyFunction(interfaceName, function)
             }
+
             function.returnType!!.resolve().toClassName() == Flow::class.asClassName() -> {
                 generateFlowProxyFunction(interfaceName, function)
             }
+
             else -> {
                 logger.error("Cannot generate wrapper for this function", function)
                 error("Cannot generate wrapper for this function")
