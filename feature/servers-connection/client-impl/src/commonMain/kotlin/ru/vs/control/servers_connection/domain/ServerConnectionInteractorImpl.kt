@@ -8,6 +8,7 @@ import ru.vs.control.about_server.rsub.AboutServerRSub
 import ru.vs.control.entities.rsub.EntitiesRsub
 import ru.vs.control.servers.domain.Server
 import ru.vs.control.servers_connection.rsub.ServerRSubClientImpl
+import ru.vs.control.service_cams_netsurv.rsub.NetsurvCamsRsub
 import ru.vs.rsub.RSubConnectionStatus
 import ru.vs.rsub.connector.ktor_websocket.RSubConnectorKtorWebSocket
 
@@ -27,6 +28,7 @@ internal class ServerConnectionInteractorImpl(
 
     override val aboutServer: AboutServerRSub get() = client.aboutServer
     override val entities: EntitiesRsub get() = client.entities
+    override val netsurvCams: NetsurvCamsRsub get() = client.netsurvCams
 
     override fun observeConnectionStatus(): Flow<ServerConnectionInteractor.ConnectionStatus> =
         client.observeConnectionStatus().map { it.toConnectionStatus() }
