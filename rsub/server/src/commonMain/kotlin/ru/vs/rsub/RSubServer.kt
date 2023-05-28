@@ -12,13 +12,30 @@ import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.serializer
+import ru.vs.rsub.RSubMessage.RSubClientMessage
+import ru.vs.rsub.RSubMessage.RSubServerMessage
 import kotlin.reflect.KType
 
+/**
+ * Entry point for rSub server code.
+ *
+ * Implementation of [RSubServerSubscriptionsAbstract] may generate automatically by KSP
+ * @see [RSubServerSubscriptions] annotation
+ *
+ * @param rSubServerSubscriptions - set of your subscriptions implementations
+ * @param json - pass here custom json serializer with included your polymorphic class serializers
+ * @param logger - logger for internal rSub logging
+ */
 class RSubServer(
     private val rSubServerSubscriptions: RSubServerSubscriptionsAbstract,
     private val json: Json = Json,
     private val logger: KLogger = KotlinLogging.logger("RSubServer"),
 ) {
+
+    /**
+     * Process new [RSubConnection], this function block calling coroutine until connection open.
+     * Cancelling this function will close the connection
+     */
     suspend fun handleNewConnection(connection: RSubConnection): Unit = coroutineScope {
         ConnectionHandler(connection).handle()
     }
@@ -26,16 +43,20 @@ class RSubServer(
     private inner class ConnectionHandler(
         private val connection: RSubConnection
     ) {
+        /**
+         * Map of active subscriptions
+         * key - unique subscription id
+         * value - coroutine job associated with given subscription id
+         */
         private val activeSubscriptions = mutableMapOf<Int, Job>()
 
         suspend fun handle() {
             coroutineScope {
                 logger.debug { "Handle new connection" }
-                connection.receive.collect {
-                    when (val request = Json.decodeFromString<RSubMessage>(it)) {
-                        is RSubMessage.Subscribe -> processSubscribe(request, this)
-                        is RSubMessage.Unsubscribe -> processUnsubscribe(request)
-                        else -> throw RSubException("Unexpected message type $request")
+                connection.receive.collect { rawRequest ->
+                    when (val request = Json.decodeFromString<RSubClientMessage>(rawRequest)) {
+                        is RSubClientMessage.Subscribe -> processSubscribe(request, this)
+                        is RSubClientMessage.Unsubscribe -> processUnsubscribe(request)
                     }
                 }
             }
@@ -44,6 +65,9 @@ class RSubServer(
             logger.debug { "Connection closed" }
         }
 
+        /**
+         * Encodes [message] to Json and send it to client
+         */
         private suspend fun send(message: RSubMessage) {
             connection.send(json.encodeToString(message))
         }
@@ -52,7 +76,7 @@ class RSubServer(
         // TODO add error handling
         // TODO make cancelable
         @Suppress("TooGenericExceptionCaught", "InstanceOfCheckForException")
-        private suspend fun processSubscribe(request: RSubMessage.Subscribe, scope: CoroutineScope) {
+        private suspend fun processSubscribe(request: RSubClientMessage.Subscribe, scope: CoroutineScope) {
             val job = scope.launch(start = CoroutineStart.LAZY) {
                 logger.trace { "Subscribe id=${request.id} to ${request.interfaceName}::${request.functionName}" }
 
@@ -68,11 +92,11 @@ class RSubServer(
                         is RSubServerSubscription.FlowSub<*> -> {
                             val flow = impl.get()
                             flow.collect { sendData(request.id, it, impl.type) }
-                            send(RSubMessage.FlowComplete(request.id))
+                            send(RSubServerMessage.FlowComplete(request.id))
                         }
                     }
                 } catch (e: Exception) {
-                    send(RSubMessage.Error(request.id))
+                    send(RSubServerMessage.Error(request.id))
                     activeSubscriptions.remove(request.id)
 
                     if (e is CancellationException) throw e
@@ -89,14 +113,14 @@ class RSubServer(
             job.start()
         }
 
-        private fun processUnsubscribe(request: RSubMessage) {
+        private fun processUnsubscribe(request: RSubClientMessage.Unsubscribe) {
             logger.trace { "Cancel subscription id=${request.id}" }
             activeSubscriptions.remove(request.id)?.cancel()
         }
 
         private suspend fun sendData(id: Int, data: Any?, type: KType) {
             val responsePayload = json.encodeToJsonElement(json.serializersModule.serializer(type), data)
-            val message = RSubMessage.Data(id, responsePayload)
+            val message = RSubServerMessage.Data(id, responsePayload)
             send(message)
         }
     }

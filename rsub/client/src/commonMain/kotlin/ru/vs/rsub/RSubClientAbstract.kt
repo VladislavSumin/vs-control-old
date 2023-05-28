@@ -30,6 +30,8 @@ import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.serializer
+import ru.vs.rsub.RSubMessage.RSubClientMessage
+import ru.vs.rsub.RSubMessage.RSubServerMessage
 import kotlin.reflect.KType
 import kotlin.reflect.typeOf
 
@@ -235,7 +237,7 @@ open class RSubClientAbstract(
         return ConnectionState.Connected(
             send = { connection.send(json.encodeToString(it)) },
             incoming = connection.receive
-                .map { json.decodeFromString<RSubMessage>(it) }
+                .map { json.decodeFromString<RSubServerMessage>(it) }
                 .onEach { logger.trace { "Received message: $it" } }
                 // Hot observable, subscribe immediately, shared, no buffer, connection scoped
                 .shareIn(scope, SharingStarted.Eagerly)
@@ -290,14 +292,13 @@ open class RSubClientAbstract(
     }
 
     @Suppress("ThrowsCount")
-    private fun <T : Any> parseServerMessage(message: RSubMessage, type: KType): T = when (message) {
-        is RSubMessage.Data -> {
+    private fun <T : Any> parseServerMessage(message: RSubServerMessage, type: KType): T = when (message) {
+        is RSubServerMessage.Data -> {
             json.decodeFromJsonElement(json.serializersModule.serializer(type), message.data) as T
         }
 
-        is RSubMessage.FlowComplete -> throw FlowCompleted()
-        is RSubMessage.Error -> throw RSubServerException("Server return error")
-        is RSubMessage.Subscribe, is RSubMessage.Unsubscribe -> throw RSubException("Unexpected server data")
+        is RSubServerMessage.FlowComplete -> throw FlowCompleted()
+        is RSubServerMessage.Error -> throw RSubServerException("Server return error")
     }
 
     private suspend fun ConnectionState.Connected.subscribe(
@@ -305,15 +306,15 @@ open class RSubClientAbstract(
         name: String,
         methodName: String,
         // arguments: Array<Any?>?
-    ) = send(RSubMessage.Subscribe(id, name, methodName))
+    ) = send(RSubClientMessage.Subscribe(id, name, methodName))
 
-    private suspend fun ConnectionState.Connected.unsubscribe(id: Int) = send(RSubMessage.Unsubscribe(id))
+    private suspend fun ConnectionState.Connected.unsubscribe(id: Int) = send(RSubClientMessage.Unsubscribe(id))
 
     private sealed class ConnectionState(val status: RSubConnectionStatus) {
         object Connecting : ConnectionState(RSubConnectionStatus.Connecting)
         class Connected(
             val send: suspend (message: RSubMessage) -> Unit,
-            val incoming: Flow<RSubMessage>
+            val incoming: Flow<RSubServerMessage>
         ) : ConnectionState(RSubConnectionStatus.Connected)
 
         class ConnectionFailed(error: Exception) : ConnectionState(RSubConnectionStatus.Reconnecting(error))
