@@ -63,12 +63,25 @@ class RSubSubscriptionWrapperGenerator(
 
         val methodName = method.simpleName.asString()
         this
-            .beginControlFlow(
-                "%M[%S] = %M",
+            .addStatement(
+                "%M[%S] = %M(",
                 methodImpls,
                 methodName,
                 wrapperFunction,
             )
+            .apply {
+                if (method.parameters.isEmpty()) {
+                    addStatement("null")
+                } else {
+                    addStatement("listOf(")
+                    method.parameters.forEach {
+                        val className = it.type.resolve().toClassName()
+                        addStatement("%M<%T>(),", typeOfMember, className)
+                    }
+                    addStatement(")")
+                }
+            }
+            .beginControlFlow(")")
             .addStatement(
                 "arguments -> %L.%L(",
                 PARAM_NAME,
@@ -96,5 +109,6 @@ class RSubSubscriptionWrapperGenerator(
             .member("createFlow")
         private val methodImpls = MemberName("", "methodImpls")
         private val flowClassName = Flow::class.asClassName()
+        private val typeOfMember = MemberName("kotlin.reflect", "typeOf")
     }
 }

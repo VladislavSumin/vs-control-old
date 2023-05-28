@@ -29,6 +29,7 @@ import kotlinx.coroutines.yield
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.encodeToJsonElement
 import kotlinx.serialization.serializer
 import ru.vs.rsub.RSubMessage.RSubClientMessage
 import ru.vs.rsub.RSubMessage.RSubServerMessage
@@ -151,7 +152,7 @@ open class RSubClientAbstract(
         interfaceName: String,
         methodName: String,
         type: KType,
-        arguments: List<Any>?,
+        arguments: List<Any?>?,
     ): T {
         return withConnection { connection ->
             val id = nextId.getAndIncrement()
@@ -160,7 +161,7 @@ open class RSubClientAbstract(
                     val responseDeferred = async { connection.incoming.filter { it.id == id }.first() }
                     // yield для гарантии старта async ДО подписки
                     yield()
-                    connection.subscribe(id, interfaceName, methodName)
+                    connection.subscribe(id, interfaceName, methodName, arguments)
                     val response = responseDeferred.await()
                     parseServerMessage<T>(response, type)
                 }
@@ -178,7 +179,7 @@ open class RSubClientAbstract(
     protected inline fun <reified T : Any> processFlow(
         interfaceName: String,
         methodName: String,
-        arguments: List<Any>? = null,
+        arguments: List<Any?>? = null,
     ): Flow<T> = processFlow(interfaceName, methodName, typeOf<T>(), arguments)
 
     @Suppress("TooGenericExceptionCaught")
@@ -186,7 +187,7 @@ open class RSubClientAbstract(
         interfaceName: String,
         methodName: String,
         type: KType,
-        arguments: List<Any>?,
+        arguments: List<Any?>?,
     ): Flow<T> = channelFlow {
         // Check reconnect policy
         val throwException = true
@@ -211,7 +212,7 @@ open class RSubClientAbstract(
                     }
                     // yield для гарантии старта launch ДО подписки
                     yield()
-                    connection.subscribe(id, interfaceName, methodName)
+                    connection.subscribe(id, interfaceName, methodName, arguments)
                 }
             } catch (e: Exception) {
                 when (e) {
@@ -309,8 +310,11 @@ open class RSubClientAbstract(
         id: Int,
         name: String,
         methodName: String,
-        // arguments: Array<Any?>?
-    ) = send(RSubClientMessage.Subscribe(id, name, methodName, null))
+        arguments: List<Any?>?,
+    ) {
+        val serializedArguments = arguments?.map { json.encodeToJsonElement(it) }
+        send(RSubClientMessage.Subscribe(id, name, methodName, serializedArguments))
+    }
 
     private suspend fun ConnectionState.Connected.unsubscribe(id: Int) = send(RSubClientMessage.Unsubscribe(id))
 

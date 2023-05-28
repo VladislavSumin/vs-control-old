@@ -11,6 +11,7 @@ import kotlinx.coroutines.launch
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.JsonElement
 import kotlinx.serialization.serializer
 import ru.vs.rsub.RSubMessage.RSubClientMessage
 import ru.vs.rsub.RSubMessage.RSubServerMessage
@@ -85,14 +86,12 @@ class RSubServer(
                 try {
                     when (impl) {
                         is RSubServerSubscription.SuspendSub<*> -> {
-                            // TODO!!!
-                            val response = impl.get(null)
+                            val response = impl.get(parseArguments(impl, request.arguments))
                             sendData(request.id, response, impl.type)
                         }
 
                         is RSubServerSubscription.FlowSub<*> -> {
-                            // TODO!!!
-                            val flow = impl.get(null)
+                            val flow = impl.get(parseArguments(impl, request.arguments))
                             flow.collect { sendData(request.id, it, impl.type) }
                             send(RSubServerMessage.FlowComplete(request.id))
                         }
@@ -113,6 +112,18 @@ class RSubServer(
             }
             activeSubscriptions[request.id] = job
             job.start()
+        }
+
+        private fun parseArguments(
+            impl: RSubServerSubscription,
+            arguments: List<JsonElement?>?
+        ): List<Any?>? {
+            check(impl.argumentTypes?.size == arguments?.size)
+            return impl.argumentTypes?.zip(arguments!!) { type, instance ->
+                if (instance != null)
+                    json.decodeFromJsonElement(json.serializersModule.serializer(type), instance)
+                else null
+            }
         }
 
         private fun processUnsubscribe(request: RSubClientMessage.Unsubscribe) {
