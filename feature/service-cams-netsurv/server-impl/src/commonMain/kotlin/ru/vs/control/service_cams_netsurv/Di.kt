@@ -10,11 +10,16 @@ import ru.vs.control.service_cams_netsurv.network.NetsurvCameraConnectionFactory
 import ru.vs.control.service_cams_netsurv.network.NetsurvCameraConnectionFactoryImpl
 import ru.vs.control.service_cams_netsurv.repository.NetsurvCamsRepository
 import ru.vs.control.service_cams_netsurv.repository.NetsurvCamsRepositoryImpl
+import ru.vs.control.service_cams_netsurv.rsub.NetsurvCamsRsub
+import ru.vs.control.service_cams_netsurv.rsub.NetsurvCamsRsubImpl
 import ru.vs.core.di.Modules
 import ru.vs.core.di.i
 
 fun Modules.featureServiceCamsNetsurv() = DI.Module("feature-service-cams-netsurv") {
     importOnce(Modules.featureServiceCamsNetsurvShared())
+
+    // rSub
+    bindSingleton<NetsurvCamsRsub> { NetsurvCamsRsubImpl() }
 
     // Network
     bindSingleton<NetsurvCameraConnectionFactory> { NetsurvCameraConnectionFactoryImpl(i(), i()) }
