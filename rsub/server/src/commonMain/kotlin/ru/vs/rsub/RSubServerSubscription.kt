@@ -8,30 +8,34 @@ sealed interface RSubServerSubscription {
     val type: KType
 
     interface SuspendSub<T> : RSubServerSubscription {
-        suspend fun get(): T
+        suspend fun get(arguments: List<Any>?): T
     }
 
     interface FlowSub<T> : RSubServerSubscription {
-        fun get(): Flow<T>
+        fun get(arguments: List<Any>?): Flow<T>
     }
 
     companion object {
-        inline fun <reified T> createSuspend(crossinline method: suspend () -> T): SuspendSub<T> {
+        inline fun <reified T> createSuspend(
+            crossinline method: suspend (arguments: List<Any>?) -> T
+        ): SuspendSub<T> {
             return object : SuspendSub<T> {
                 override val type: KType = typeOf<T>()
 
-                override suspend fun get(): T {
-                    return method()
+                override suspend fun get(arguments: List<Any>?): T {
+                    return method(arguments)
                 }
             }
         }
 
-        inline fun <reified T> createFlow(crossinline flow: () -> Flow<T>): FlowSub<T> {
+        inline fun <reified T> createFlow(
+            crossinline flow: (arguments: List<Any>?) -> Flow<T>
+        ): FlowSub<T> {
             return object : FlowSub<T> {
                 override val type: KType = typeOf<T>()
 
-                override fun get(): Flow<T> {
-                    return flow()
+                override fun get(arguments: List<Any>?): Flow<T> {
+                    return flow(arguments)
                 }
             }
         }

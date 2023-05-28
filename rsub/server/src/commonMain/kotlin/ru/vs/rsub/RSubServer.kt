@@ -85,12 +85,14 @@ class RSubServer(
                 try {
                     when (impl) {
                         is RSubServerSubscription.SuspendSub<*> -> {
-                            val response = impl.get()
+                            // TODO!!!
+                            val response = impl.get(null)
                             sendData(request.id, response, impl.type)
                         }
 
                         is RSubServerSubscription.FlowSub<*> -> {
-                            val flow = impl.get()
+                            // TODO!!!
+                            val flow = impl.get(null)
                             flow.collect { sendData(request.id, it, impl.type) }
                             send(RSubServerMessage.FlowComplete(request.id))
                         }

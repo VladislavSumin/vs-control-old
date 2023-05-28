@@ -60,8 +60,29 @@ class RSubSubscriptionWrapperGenerator(
     }
 
     private fun CodeBlock.Builder.generateInitializerTyped(wrapperFunction: MemberName, method: KSFunctionDeclaration) {
+
         val methodName = method.simpleName.asString()
-        addStatement("%M[%S] = %M(%L::%L)", methodImpls, methodName, wrapperFunction, PARAM_NAME, methodName)
+        this
+            .beginControlFlow(
+                "%M[%S] = %M",
+                methodImpls,
+                methodName,
+                wrapperFunction,
+            )
+            .addStatement(
+                "arguments -> %L.%L(",
+                PARAM_NAME,
+                methodName
+            )
+            .apply {
+                method.parameters
+                    .map { it.type.resolve().toClassName() }
+                    .forEachIndexed { index, className ->
+                        addStatement("arguments!![%L] as %T,", index.toString(), className)
+                    }
+            }
+            .addStatement(")")
+            .endControlFlow()
     }
 
     companion object {
