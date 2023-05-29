@@ -12,7 +12,7 @@ import ru.vs.control.services.domain.Service
 
 interface NetsurvCamsService : Service
 
-internal val NETSURV_CAMS_SERVICE_ID = Id("cams/netsurv")
+internal val NETSURV_CAMS_SERVICE_ID = Id.SimpleId("cams/netsurv")
 
 internal class NetsurvCamsServiceImpl(
     private val netsurvCamsRepository: NetsurvCamsRepository,

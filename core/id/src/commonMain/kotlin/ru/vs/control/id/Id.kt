@@ -2,41 +2,36 @@ package ru.vs.control.id
 
 import kotlinx.serialization.Serializable
 
+@Suppress("SERIALIZER_TYPE_INCOMPATIBLE")
 @Serializable(IdSerializer::class)
-interface Id {
+sealed interface Id {
     val rawId: String
 
-    companion object {
-        operator fun invoke(rawId: String): Id = IdImpl(rawId)
-    }
-}
-
-internal class IdImpl(override val rawId: String) : Id {
-
-    init {
-        check(ID_VERIFICATION_REGEXP.matches(rawId)) { "Incorrect id format" }
+    @Serializable(IdSerializer::class)
+    interface SimpleId : Id {
+        companion object {
+            operator fun invoke(rawId: String): SimpleId = SimpleIdImpl(rawId)
+        }
     }
 
-    override fun toString(): String {
-        return "Id($rawId)"
+    @Serializable(IdSerializer::class)
+    interface CompositeId : Id {
+        val parts: List<SimpleId>
     }
 
-    override fun equals(other: Any?): Boolean {
-        if (this === other) return true
-        if (other == null || this::class != other::class) return false
+    @Serializable(IdSerializer::class)
+    interface DoubleId : CompositeId {
+        val firstPart: SimpleId
+        val secondPart: SimpleId
 
-        other as IdImpl
-
-        return rawId == other.rawId
-    }
-
-    override fun hashCode(): Int {
-        return rawId.hashCode()
+        companion object {
+            operator fun invoke(firstPart: SimpleId, secondPart: SimpleId): DoubleId =
+                DoubleIdImpl(firstPart, secondPart)
+        }
     }
 
     companion object {
-        private const val ID_PART_VERIFICATION_REGEXP = "([a-z0-9]+(_[a-z0-9]+)*)"
-        private val ID_VERIFICATION_REGEXP =
-            "^$ID_PART_VERIFICATION_REGEXP(/$ID_PART_VERIFICATION_REGEXP.)*\$".toRegex()
+        operator fun invoke(rawId: String): Id = IdFactory.createId(rawId)
+        operator fun invoke(vararg ids: Id): Id = IdFactory.createId(ids.asIterable())
     }
 }

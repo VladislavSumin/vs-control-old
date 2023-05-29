@@ -9,12 +9,11 @@ import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.shareIn
 import ru.vs.control.entities.dto.toEntity
-import ru.vs.control.id.CompositeId
 import ru.vs.control.servers_connection.domain.ServersConnectionInteractor
 
 internal interface EntitiesInteractor {
     fun observeEntities(): Flow<Entities<*>>
-    fun observeEntity(entityId: CompositeId): Flow<Entity<*>?>
+    fun observeEntity(entityId: EntityId): Flow<Entity<*>?>
 }
 
 internal class EntitiesInteractorImpl(
@@ -43,7 +42,7 @@ internal class EntitiesInteractorImpl(
         return entitiesFlow
     }
 
-    override fun observeEntity(entityId: CompositeId): Flow<Entity<*>?> {
+    override fun observeEntity(entityId: EntityId): Flow<Entity<*>?> {
         return entitiesFlow.map { it[entityId] }
     }
 }

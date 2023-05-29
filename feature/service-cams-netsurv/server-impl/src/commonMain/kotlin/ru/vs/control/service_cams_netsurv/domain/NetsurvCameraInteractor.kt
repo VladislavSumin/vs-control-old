@@ -5,8 +5,8 @@ import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 import ru.vs.control.entities.domain.EntitiesInteractor
 import ru.vs.control.entities.domain.Entity
+import ru.vs.control.entities.domain.EntityId
 import ru.vs.control.entities.domain.base_entity_states.BooleanEntityState
-import ru.vs.control.id.CompositeId
 import ru.vs.control.id.Id
 import ru.vs.control.service_cams_netsurv.entity_states.NetsurvLiveVideoStreamEntityState
 import ru.vs.control.service_cams_netsurv.network.NetsurvCameraConnectionFactory
@@ -75,7 +75,7 @@ internal class NetsurvCameraInteractorImpl(
         )
     }
 
-    private fun generateEntityId(subId: String): CompositeId {
-        return CompositeId(NETSURV_CAMS_SERVICE_ID, Id("${camera.baseId}/$subId"))
+    private fun generateEntityId(subId: String): EntityId {
+        return EntityId(NETSURV_CAMS_SERVICE_ID, Id.SimpleId("${camera.baseId}/$subId"))
     }
 }

@@ -9,11 +9,11 @@ import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.withContext
 import ru.vs.control.entities.domain.Entity
+import ru.vs.control.entities.domain.EntityId
 import ru.vs.control.entities.domain.EntityState
-import ru.vs.control.id.CompositeId
 
 internal interface EntitiesRegistry {
-    fun observeEntities(): Flow<Map<CompositeId, Entity<*>>>
+    fun observeEntities(): Flow<Map<EntityId, Entity<*>>>
 
     /**
      * Holds entity with given [Entity.id] while [block] is running. When exits from [block] remove entity from registry
@@ -38,7 +38,7 @@ internal interface EntitiesRegistry {
 internal class EntitiesRegistryImpl : EntitiesRegistry {
     private val storage = EntitiesStorage()
 
-    override fun observeEntities(): Flow<Map<CompositeId, Entity<*>>> {
+    override fun observeEntities(): Flow<Map<EntityId, Entity<*>>> {
         return storage.entities
     }
 
@@ -77,12 +77,12 @@ internal class EntitiesRegistryImpl : EntitiesRegistry {
      * Given safely access to internal storage collection
      */
     private class EntitiesStorage {
-        private val entitiesMut = MutableStateFlow(mapOf<CompositeId, Entity<*>>())
+        private val entitiesMut = MutableStateFlow(mapOf<EntityId, Entity<*>>())
         private val lock = Mutex()
 
-        val entities: StateFlow<Map<CompositeId, Entity<*>>> = entitiesMut
+        val entities: StateFlow<Map<EntityId, Entity<*>>> = entitiesMut
 
-        suspend fun update(block: (entities: MutableMap<CompositeId, Entity<*>>) -> Unit) {
+        suspend fun update(block: (entities: MutableMap<EntityId, Entity<*>>) -> Unit) {
             lock.withLock {
                 val newData = entitiesMut.value.toMutableMap()
                 block(newData)
