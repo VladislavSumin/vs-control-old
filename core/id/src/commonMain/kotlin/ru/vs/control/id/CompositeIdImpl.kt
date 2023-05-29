@@ -7,4 +7,17 @@ internal class CompositeIdImpl(override val parts: List<Id.SimpleId>) : Id.Compo
     }
 
     override val rawId: String by lazy { parts.joinToString(separator = "#") { it.rawId } }
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other == null || this::class != other::class) return false
+
+        other as CompositeIdImpl
+
+        return parts == other.parts
+    }
+
+    override fun hashCode(): Int {
+        return parts.hashCode()
+    }
 }
