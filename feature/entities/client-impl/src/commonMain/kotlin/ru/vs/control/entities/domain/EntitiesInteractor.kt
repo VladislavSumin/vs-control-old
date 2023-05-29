@@ -12,7 +12,14 @@ import ru.vs.control.entities.dto.toEntity
 import ru.vs.control.servers_connection.domain.ServersConnectionInteractor
 
 internal interface EntitiesInteractor {
+    /**
+     * Observe entities from current default server
+     */
     fun observeEntities(): Flow<Entities<*>>
+
+    /**
+     * Observe entity by [entityId] from current default server
+     */
     fun observeEntity(entityId: EntityId): Flow<Entity<*>?>
 }
 

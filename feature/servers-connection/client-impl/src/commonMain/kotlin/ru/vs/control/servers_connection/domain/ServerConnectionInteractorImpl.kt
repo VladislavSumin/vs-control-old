@@ -15,7 +15,7 @@ import ru.vs.rsub.connector.ktor_websocket.RSubConnectorKtorWebSocket
 internal class ServerConnectionInteractorImpl(
     httpClient: HttpClient,
     json: Json,
-    server: Server,
+    override val server: Server,
 ) : ServerConnectionInteractor {
     private val client: ServerRSubClientImpl = ServerRSubClientImpl(
         RSubConnectorKtorWebSocket(
