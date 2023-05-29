@@ -33,10 +33,9 @@ internal class EntitiesInteractorImpl(
      */
     private val entitiesFlow: SharedFlow<Entities<*>> =
         serversConnectionInteractor.observeSelectedServerConnection()
-            .map { connection -> connection?.entities }
-            .flatMapLatest { entities ->
-                entities?.observeEntities()
-                    ?.map { it.toEntity().associateBy(Entity<*>::id) }
+            .flatMapLatest { connection ->
+                connection?.entities?.observeEntities()
+                    ?.map { it.toEntity(connection.server).associateBy(Entity<*>::id) }
                     ?: flowOf(emptyMap())
             }
             .shareIn(
