@@ -6,12 +6,12 @@ import ru.vs.core.decompose.ComposeComponent
 
 internal class EntitiesComponentFactoryImpl(
     private val entityStateComponentFactoryRegistry: EntityStateComponentFactoryRegistry,
-    private val entitiesStoreFactory: EntitiesStoreFactory,
+    private val entitiesViewModelFactory: EntitiesViewModelFactory,
 ) : EntitiesComponentFactory {
     override fun create(componentContext: ComponentContext): ComposeComponent {
         return EntitiesComponent(
             entityStateComponentFactoryRegistry,
-            entitiesStoreFactory,
+            entitiesViewModelFactory,
             componentContext
         )
     }
