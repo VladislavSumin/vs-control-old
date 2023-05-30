@@ -26,7 +26,7 @@ class RSubSymbolProcessor(
     private val codeGenerator: CodeGenerator,
     logger: KSPLogger
 ) : SymbolProcessor {
-    private val proxyGenerator = RSSubInterfaceProxyGenerator(logger)
+    private val proxyGenerator = RSubInterfaceProxyGenerator(logger)
 
     override fun process(resolver: Resolver): List<KSAnnotated> {
         // Getting all classes and interfaces annotated with @RSubClient
