@@ -144,14 +144,16 @@ open class RSubClientAbstract(
     protected suspend inline fun <reified T : Any> processSuspend(
         interfaceName: String,
         methodName: String,
+        argumentsTypes: List<KType>? = null,
         arguments: List<Any>? = null,
-    ): T = processSuspend(interfaceName, methodName, typeOf<T>(), arguments)
+    ): T = processSuspend(interfaceName, methodName, typeOf<T>(), argumentsTypes, arguments)
 
     @Suppress("TooGenericExceptionCaught")
     protected suspend fun <T : Any> processSuspend(
         interfaceName: String,
         methodName: String,
         type: KType,
+        argumentsTypes: List<KType>? = null,
         arguments: List<Any?>?,
     ): T {
         return withConnection { connection ->
@@ -161,7 +163,7 @@ open class RSubClientAbstract(
                     val responseDeferred = async { connection.incoming.filter { it.id == id }.first() }
                     // yield для гарантии старта async ДО подписки
                     yield()
-                    connection.subscribe(id, interfaceName, methodName, arguments)
+                    connection.subscribe(id, interfaceName, methodName, argumentsTypes, arguments)
                     val response = responseDeferred.await()
                     parseServerMessage<T>(response, type)
                 }
@@ -179,14 +181,16 @@ open class RSubClientAbstract(
     protected inline fun <reified T : Any> processFlow(
         interfaceName: String,
         methodName: String,
+        argumentsTypes: List<KType>? = null,
         arguments: List<Any?>? = null,
-    ): Flow<T> = processFlow(interfaceName, methodName, typeOf<T>(), arguments)
+    ): Flow<T> = processFlow(interfaceName, methodName, typeOf<T>(), argumentsTypes, arguments)
 
     @Suppress("TooGenericExceptionCaught")
     protected fun <T : Any> processFlow(
         interfaceName: String,
         methodName: String,
         type: KType,
+        argumentsTypes: List<KType>? = null,
         arguments: List<Any?>?,
     ): Flow<T> = channelFlow {
         // Check reconnect policy
@@ -212,7 +216,7 @@ open class RSubClientAbstract(
                     }
                     // yield для гарантии старта launch ДО подписки
                     yield()
-                    connection.subscribe(id, interfaceName, methodName, arguments)
+                    connection.subscribe(id, interfaceName, methodName, argumentsTypes, arguments)
                 }
             } catch (e: Exception) {
                 when (e) {
@@ -310,9 +314,12 @@ open class RSubClientAbstract(
         id: Int,
         name: String,
         methodName: String,
+        argumentsTypes: List<KType>?,
         arguments: List<Any?>?,
     ) {
-        val serializedArguments = arguments?.map { json.encodeToJsonElement(it) }
+        val serializedArguments = arguments
+            ?.zip(argumentsTypes!!)
+            ?.map { (value, type) -> json.encodeToJsonElement(json.serializersModule.serializer(type), value) }
         send(RSubClientMessage.Subscribe(id, name, methodName, serializedArguments))
     }
 

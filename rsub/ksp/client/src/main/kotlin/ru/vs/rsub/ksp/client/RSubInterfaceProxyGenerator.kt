@@ -5,6 +5,7 @@ import com.google.devtools.ksp.symbol.KSClassDeclaration
 import com.google.devtools.ksp.symbol.KSFunctionDeclaration
 import com.google.devtools.ksp.symbol.KSPropertyDeclaration
 import com.google.devtools.ksp.symbol.Modifier
+import com.squareup.kotlinpoet.CodeBlock
 import com.squareup.kotlinpoet.FunSpec
 import com.squareup.kotlinpoet.KModifier
 import com.squareup.kotlinpoet.MemberName
@@ -15,6 +16,7 @@ import com.squareup.kotlinpoet.asClassName
 import com.squareup.kotlinpoet.ksp.toClassName
 import com.squareup.kotlinpoet.ksp.toTypeName
 import kotlinx.coroutines.flow.Flow
+import kotlin.reflect.KType
 
 class RSubInterfaceProxyGenerator(
     private val logger: KSPLogger
@@ -121,11 +123,12 @@ class RSubInterfaceProxyGenerator(
             .returns(function.returnType!!.toTypeName())
             .addArgumentsStatement(function)
             .addCode(
-                "return %M(%S, %S, %N)",
+                "return %M(%S, %S, %N, %N)",
                 processSuspend,
                 interfaceName,
                 function.simpleName.asString(),
-                ARGUMENTS_NAME
+                ARGUMENTS_TYPES_NAME,
+                ARGUMENTS_NAME,
             )
             .build()
     )
@@ -140,27 +143,43 @@ class RSubInterfaceProxyGenerator(
             .returns(function.returnType!!.toTypeName())
             .addArgumentsStatement(function)
             .addCode(
-                "return %M(%S, %S, %N)",
+                "return %M(%S, %S, %N, %N)",
                 processFlow,
                 interfaceName,
                 function.simpleName.asString(),
-                ARGUMENTS_NAME
+                ARGUMENTS_TYPES_NAME,
+                ARGUMENTS_NAME,
             )
             .build()
     )
 
     private fun FunSpec.Builder.addArgumentsStatement(function: KSFunctionDeclaration): FunSpec.Builder {
-        return if (function.parameters.isNotEmpty()) {
+        if (function.parameters.isNotEmpty()) {
+            val paramsTypes = function.parameters.map { it.type.toTypeName() }
             val params = function.parameters.joinToString { it.name!!.asString() }
+            addCode(
+                CodeBlock.builder()
+                    .addStatement("val $ARGUMENTS_TYPES_NAME = listOf<%T>(", KType::class.asClassName())
+                    .apply {
+                        paramsTypes.forEach { addStatement("%M<%T>(),", typeOfMember, it) }
+                    }
+                    .addStatement(")")
+                    .build()
+            )
             addStatement("val $ARGUMENTS_NAME = listOf<Any>($params)")
         } else {
+            addStatement("val $ARGUMENTS_TYPES_NAME: List<%T>? = null", KType::class.asClassName())
             addStatement("val $ARGUMENTS_NAME: List<Any>? = null")
         }
+
+        return this
     }
 
     companion object {
         private val processSuspend = MemberName("", "processSuspend")
         private val processFlow = MemberName("", "processFlow")
+        private val typeOfMember = MemberName("kotlin.reflect", "typeOf")
         private const val ARGUMENTS_NAME = "arguments"
+        private const val ARGUMENTS_TYPES_NAME = "argumentsTypes"
     }
 }
