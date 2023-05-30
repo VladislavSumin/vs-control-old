@@ -34,9 +34,9 @@ class RSSubInterfaceProxyGenerator(
         val superInterface = superProperty.type.resolve().declaration as KSClassDeclaration
 
         // Adds property that's implements given superInterface
-        addProperty(generateProxyHolder(superProperty, superInterface))
+        generateProxyHolder(superProperty, superInterface)
 
-        addType(generateProxyClass(superInterface))
+        generateProxyClass(superInterface)
     }
 
     /**
@@ -46,18 +46,18 @@ class RSSubInterfaceProxyGenerator(
      *  public override val entities: EntitiesRsub = EntitiesRsubImpl()
      * ```
      */
-    private fun generateProxyHolder(
+    private fun TypeSpec.Builder.generateProxyHolder(
         superProperty: KSPropertyDeclaration,
         superInterface: KSClassDeclaration
-    ): PropertySpec {
-        return PropertySpec.builder(
+    ) = addProperty(
+        PropertySpec.builder(
             superProperty.simpleName.asString(),
             superInterface.toClassName(),
             KModifier.OVERRIDE
         )
             .initializer("${superInterface.simpleName.asString()}Impl()")
             .build()
-    }
+    )
 
     /**
      * Generate proxy implementation for given [superInterface]
@@ -68,24 +68,24 @@ class RSSubInterfaceProxyGenerator(
      *   }
      * ```
      */
-    private fun generateProxyClass(superInterface: KSClassDeclaration): TypeSpec {
-        return TypeSpec.classBuilder("${superInterface.simpleName.asString()}Impl")
+    private fun TypeSpec.Builder.generateProxyClass(superInterface: KSClassDeclaration) = addType(
+        TypeSpec.classBuilder("${superInterface.simpleName.asString()}Impl")
             .addModifiers(KModifier.PRIVATE, KModifier.INNER)
             .addSuperinterface(superInterface.toClassName())
-            .addFunctions(generateProxyFunctions(superInterface))
+            .generateProxyFunctions(superInterface)
             .build()
-    }
+    )
 
     /**
      * Generates function implementation for function at given [baseInterface]
      * @see generateProxyFunction
      */
-    private fun generateProxyFunctions(baseInterface: KSClassDeclaration): Iterable<FunSpec> {
+    private fun TypeSpec.Builder.generateProxyFunctions(baseInterface: KSClassDeclaration): TypeSpec.Builder {
         val interfaceName = baseInterface.simpleName.asString()
-        return baseInterface.getAllFunctions()
+        baseInterface.getAllFunctions()
             .filter { it.isAbstract }
-            .map { generateProxyFunction(interfaceName, it) }
-            .asIterable()
+            .forEach { generateProxyFunction(interfaceName, it) }
+        return this
     }
 
     /**
@@ -93,25 +93,29 @@ class RSSubInterfaceProxyGenerator(
      * @see generateSuspendProxyFunction
      * @see generateProxyFunction
      */
-    private fun generateProxyFunction(interfaceName: String, function: KSFunctionDeclaration): FunSpec {
-        return when {
-            function.modifiers.contains(Modifier.SUSPEND) -> {
-                generateSuspendProxyFunction(interfaceName, function)
-            }
+    private fun TypeSpec.Builder.generateProxyFunction(
+        interfaceName: String,
+        function: KSFunctionDeclaration
+    ): TypeSpec.Builder = when {
+        function.modifiers.contains(Modifier.SUSPEND) -> {
+            generateSuspendProxyFunction(interfaceName, function)
+        }
 
-            function.returnType!!.resolve().toClassName() == Flow::class.asClassName() -> {
-                generateFlowProxyFunction(interfaceName, function)
-            }
+        function.returnType!!.resolve().toClassName() == Flow::class.asClassName() -> {
+            generateFlowProxyFunction(interfaceName, function)
+        }
 
-            else -> {
-                logger.error("Cannot generate wrapper for this function", function)
-                error("Cannot generate wrapper for this function")
-            }
+        else -> {
+            logger.error("Cannot generate wrapper for this function", function)
+            error("Cannot generate wrapper for this function")
         }
     }
 
-    private fun generateSuspendProxyFunction(interfaceName: String, function: KSFunctionDeclaration): FunSpec {
-        return FunSpec.builder(function.simpleName.asString())
+    private fun TypeSpec.Builder.generateSuspendProxyFunction(
+        interfaceName: String,
+        function: KSFunctionDeclaration
+    ): TypeSpec.Builder = addFunction(
+        FunSpec.builder(function.simpleName.asString())
             .addModifiers(KModifier.OVERRIDE, KModifier.SUSPEND)
             .addParameters(function.parameters.map { ParameterSpec(it.name!!.asString(), it.type.toTypeName()) })
             .returns(function.returnType!!.toTypeName())
@@ -124,10 +128,13 @@ class RSSubInterfaceProxyGenerator(
                 ARGUMENTS_NAME
             )
             .build()
-    }
+    )
 
-    private fun generateFlowProxyFunction(interfaceName: String, function: KSFunctionDeclaration): FunSpec {
-        return FunSpec.builder(function.simpleName.asString())
+    private fun TypeSpec.Builder.generateFlowProxyFunction(
+        interfaceName: String,
+        function: KSFunctionDeclaration
+    ) = addFunction(
+        FunSpec.builder(function.simpleName.asString())
             .addModifiers(KModifier.OVERRIDE)
             .addParameters(function.parameters.map { ParameterSpec(it.name!!.asString(), it.type.toTypeName()) })
             .returns(function.returnType!!.toTypeName())
@@ -140,10 +147,10 @@ class RSSubInterfaceProxyGenerator(
                 ARGUMENTS_NAME
             )
             .build()
-    }
+    )
 
     private fun FunSpec.Builder.addArgumentsStatement(function: KSFunctionDeclaration): FunSpec.Builder {
-        return if (function.parameters.size > 0) {
+        return if (function.parameters.isNotEmpty()) {
             val params = function.parameters.joinToString { it.name!!.asString() }
             addStatement("val $ARGUMENTS_NAME = listOf<Any>($params)")
         } else {
