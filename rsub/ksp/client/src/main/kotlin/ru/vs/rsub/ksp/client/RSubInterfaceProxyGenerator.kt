@@ -154,24 +154,18 @@ class RSubInterfaceProxyGenerator(
     )
 
     private fun FunSpec.Builder.addArgumentsStatement(function: KSFunctionDeclaration): FunSpec.Builder {
-        if (function.parameters.isNotEmpty()) {
-            val paramsTypes = function.parameters.map { it.type.toTypeName() }
-            val params = function.parameters.joinToString { it.name!!.asString() }
-            addCode(
-                CodeBlock.builder()
-                    .addStatement("val $ARGUMENTS_TYPES_NAME = listOf<%T>(", KType::class.asClassName())
-                    .apply {
-                        paramsTypes.forEach { addStatement("%M<%T>(),", typeOfMember, it) }
-                    }
-                    .addStatement(")")
-                    .build()
-            )
-            addStatement("val $ARGUMENTS_NAME = listOf<Any>($params)")
-        } else {
-            addStatement("val $ARGUMENTS_TYPES_NAME: List<%T>? = null", KType::class.asClassName())
-            addStatement("val $ARGUMENTS_NAME: List<Any>? = null")
-        }
-
+        val paramsTypes = function.parameters.map { it.type.toTypeName() }
+        val params = function.parameters.joinToString { it.name!!.asString() }
+        addCode(
+            CodeBlock.builder()
+                .addStatement("val $ARGUMENTS_TYPES_NAME = listOf<%T>(", KType::class.asClassName())
+                .apply {
+                    paramsTypes.forEach { addStatement("%M<%T>(),", typeOfMember, it) }
+                }
+                .addStatement(")")
+                .build()
+        )
+        addStatement("val $ARGUMENTS_NAME = listOf<Any>($params)")
         return this
     }
 

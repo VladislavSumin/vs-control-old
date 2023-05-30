@@ -70,16 +70,12 @@ class RSubSubscriptionWrapperGenerator(
                 wrapperFunction,
             )
             .apply {
-                if (method.parameters.isEmpty()) {
-                    addStatement("null")
-                } else {
-                    addStatement("listOf(")
-                    method.parameters.forEach {
-                        val className = it.type.resolve().toClassName()
-                        addStatement("%M<%T>(),", typeOfMember, className)
-                    }
-                    addStatement(")")
+                addStatement("listOf(")
+                method.parameters.forEach {
+                    val className = it.type.resolve().toClassName()
+                    addStatement("%M<%T>(),", typeOfMember, className)
                 }
+                addStatement(")")
             }
             .beginControlFlow(")")
             .addStatement(
@@ -91,7 +87,7 @@ class RSubSubscriptionWrapperGenerator(
                 method.parameters
                     .map { it.type.resolve().toClassName() }
                     .forEachIndexed { index, className ->
-                        addStatement("arguments!![%L] as %T,", index.toString(), className)
+                        addStatement("arguments[%L] as %T,", index.toString(), className)
                     }
             }
             .addStatement(")")

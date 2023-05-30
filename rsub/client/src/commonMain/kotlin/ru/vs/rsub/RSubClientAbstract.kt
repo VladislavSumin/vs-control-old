@@ -144,8 +144,8 @@ open class RSubClientAbstract(
     protected suspend inline fun <reified T : Any> processSuspend(
         interfaceName: String,
         methodName: String,
-        argumentsTypes: List<KType>? = null,
-        arguments: List<Any>? = null,
+        argumentsTypes: List<KType>,
+        arguments: List<Any>,
     ): T = processSuspend(interfaceName, methodName, typeOf<T>(), argumentsTypes, arguments)
 
     @Suppress("TooGenericExceptionCaught")
@@ -153,8 +153,8 @@ open class RSubClientAbstract(
         interfaceName: String,
         methodName: String,
         type: KType,
-        argumentsTypes: List<KType>? = null,
-        arguments: List<Any?>?,
+        argumentsTypes: List<KType>,
+        arguments: List<Any?>,
     ): T {
         return withConnection { connection ->
             val id = nextId.getAndIncrement()
@@ -181,8 +181,8 @@ open class RSubClientAbstract(
     protected inline fun <reified T : Any> processFlow(
         interfaceName: String,
         methodName: String,
-        argumentsTypes: List<KType>? = null,
-        arguments: List<Any?>? = null,
+        argumentsTypes: List<KType>,
+        arguments: List<Any?>,
     ): Flow<T> = processFlow(interfaceName, methodName, typeOf<T>(), argumentsTypes, arguments)
 
     @Suppress("TooGenericExceptionCaught")
@@ -190,8 +190,8 @@ open class RSubClientAbstract(
         interfaceName: String,
         methodName: String,
         type: KType,
-        argumentsTypes: List<KType>? = null,
-        arguments: List<Any?>?,
+        argumentsTypes: List<KType>,
+        arguments: List<Any?>,
     ): Flow<T> = channelFlow {
         // Check reconnect policy
         val throwException = true
@@ -314,12 +314,12 @@ open class RSubClientAbstract(
         id: Int,
         name: String,
         methodName: String,
-        argumentsTypes: List<KType>?,
-        arguments: List<Any?>?,
+        argumentsTypes: List<KType>,
+        arguments: List<Any?>,
     ) {
         val serializedArguments = arguments
-            ?.zip(argumentsTypes!!)
-            ?.map { (value, type) -> json.encodeToJsonElement(json.serializersModule.serializer(type), value) }
+            .zip(argumentsTypes)
+            .map { (value, type) -> json.encodeToJsonElement(json.serializersModule.serializer(type), value) }
         send(RSubClientMessage.Subscribe(id, name, methodName, serializedArguments))
     }
 

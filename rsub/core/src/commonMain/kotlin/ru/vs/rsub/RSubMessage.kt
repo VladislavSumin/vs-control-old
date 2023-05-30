@@ -28,7 +28,7 @@ sealed interface RSubMessage {
             override val id: Int,
             val interfaceName: String,
             val functionName: String,
-            val arguments: List<JsonElement?>?,
+            val arguments: List<JsonElement?>,
         ) : RSubClientMessage
 
         /**
