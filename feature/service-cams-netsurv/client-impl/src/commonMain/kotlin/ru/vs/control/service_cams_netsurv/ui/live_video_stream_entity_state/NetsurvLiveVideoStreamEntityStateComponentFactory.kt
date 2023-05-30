@@ -8,7 +8,9 @@ import ru.vs.control.entities.ui.entities.entity_state.EntityStateComponentFacto
 import ru.vs.control.service_cams_netsurv.entity_states.NetsurvLiveVideoStreamEntityState
 import kotlin.reflect.KClass
 
-internal class NetsurvLiveVideoStreamEntityStateComponentFactory :
+internal class NetsurvLiveVideoStreamEntityStateComponentFactory(
+    private val entityStateViewModelFactory: NetsurvLiveVideoStreamEntityStateViewModelFactory,
+) :
     EntityStateComponentFactory<NetsurvLiveVideoStreamEntityState> {
     override val entityStateType: KClass<NetsurvLiveVideoStreamEntityState> = NetsurvLiveVideoStreamEntityState::class
 
@@ -16,6 +18,6 @@ internal class NetsurvLiveVideoStreamEntityStateComponentFactory :
         state: StateFlow<Entity<NetsurvLiveVideoStreamEntityState>>,
         context: ComponentContext
     ): EntityStateComponent<NetsurvLiveVideoStreamEntityState> {
-        return NetsurvLiveVideoStreamEntityStateComponent(state, context)
+        return NetsurvLiveVideoStreamEntityStateComponent(entityStateViewModelFactory, state, context)
     }
 }

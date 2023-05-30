@@ -7,6 +7,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.sizeIn
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -15,7 +17,8 @@ import androidx.compose.ui.unit.dp
 private const val ASPECT_RATIO_16_9 = 16 / 9f
 
 @Composable
-internal fun NetsurvLiveVideoStreamEntityStateContent() {
+internal fun NetsurvLiveVideoStreamEntityStateContent(component: NetsurvLiveVideoStreamEntityStateComponent) {
+    val testData by component.viewModel.liveVideoStream.collectAsState("")
     Box(
         Modifier
             .fillMaxWidth()
@@ -24,7 +27,7 @@ internal fun NetsurvLiveVideoStreamEntityStateContent() {
             .background(Color.Gray)
     ) {
         Text(
-            "Not supported for current platform",
+            "Not supported for current platform, test data = $testData",
             Modifier.align(Alignment.Center)
         )
     }

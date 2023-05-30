@@ -13,6 +13,7 @@ kotlin {
                 api(projects.feature.serviceCamsNetsurv.clientApi)
                 api(projects.feature.serviceCamsNetsurv.sharedImpl)
 
+                implementation(projects.feature.serversConnection.clientApi)
                 implementation(projects.feature.entities.clientApi)
             }
         }
