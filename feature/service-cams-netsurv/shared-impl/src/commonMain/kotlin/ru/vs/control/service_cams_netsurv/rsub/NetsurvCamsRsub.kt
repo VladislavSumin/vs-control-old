@@ -5,5 +5,5 @@ import ru.vs.rsub.RSubInterface
 
 @RSubInterface
 interface NetsurvCamsRsub {
-    fun observeVideoLiveStream(cameraId: String): Flow<String>
+    fun observeVideoLiveStream(cameraId: String): Flow<ByteArray>
 }

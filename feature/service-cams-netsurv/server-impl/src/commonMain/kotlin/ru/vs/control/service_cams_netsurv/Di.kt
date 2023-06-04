@@ -21,7 +21,7 @@ fun Modules.featureServiceCamsNetsurv() = DI.Module("feature-service-cams-netsur
     importOnce(Modules.featureServiceCamsNetsurvShared())
 
     // rSub
-    bindSingleton<NetsurvCamsRsub> { NetsurvCamsRsubImpl() }
+    bindSingleton<NetsurvCamsRsub> { NetsurvCamsRsubImpl(i()) }
 
     // Network
     bindSingleton<NetsurvCameraConnectionFactory> { NetsurvCameraConnectionFactoryImpl(i(), i()) }

@@ -21,7 +21,9 @@ internal class VideoStreamNetsurvCameraConnection(
                 // Monitor start
                 write(CommandRepository.monitorStart(sessionId))
 
-                emit(read().data)
+                while (true) {
+                    emit(read().data)
+                }
             }
         }
     }
