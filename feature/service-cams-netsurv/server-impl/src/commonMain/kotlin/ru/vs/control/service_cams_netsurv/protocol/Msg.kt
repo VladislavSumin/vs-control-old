@@ -83,6 +83,7 @@ internal data class Msg(
         return result
     }
 
+    @Suppress("MagicNumber")
     override fun toString(): String {
         val sb = StringBuilder()
         sb.append("Version: 0x").append(version.toString(16)).append('\n')
@@ -98,6 +99,7 @@ internal data class Msg(
         return sb.toString()
     }
 
+    @Suppress("MagicNumber")
     fun getFullInfo(): String {
         val sb = StringBuilder()
         sb.append("Head Flag: 0x").append(headFlag.toString(16)).append('\n')
