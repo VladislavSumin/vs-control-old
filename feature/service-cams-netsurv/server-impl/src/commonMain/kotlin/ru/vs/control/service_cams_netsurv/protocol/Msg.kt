@@ -83,37 +83,38 @@ internal data class Msg(
         return result
     }
 
-    //    override fun toString(): String {
-//        val sb = StringBuilder()
-//        sb.append("Version: 0x").append("%02X".format(version)).append('\n')
-//        sb.append("Session ID: 0x").append("%08X".format(sessionId)).append('\n')
-//        sb.append("Sequence number: 0x").append("%08X".format(sequenceNumber)).append('\n')
-//        sb.append("Current packet: 0x").append("%02X".format(currentPacket)).append('\n')
-//        sb.append("Total packet: 0x").append("%02X".format(totalPacket)).append('\n')
-//        sb.append("Message ID: ").append(messageId).append('\n')
-//        sb.append("Data Length: 0x").append("%08X".format(dataLength)).append('\n')
-//        sb.append("Data: ")
-//        if (data[0] == '{'.code.toByte()) sb.append(getDataAsString())
-//        else sb.append("<binary data>")
-//        return sb.toString()
-//    }
-//
-//    fun getFullInfo(): String {
-//        val sb = StringBuilder()
-//        sb.append("Head Flag: 0x").append("%02X".format(headFlag)).append('\n')
-//        sb.append("Version: 0x").append("%02X".format(version)).append('\n')
-//        sb.append("Reserved01: 0x").append("%02X".format(reserved01)).append('\n')
-//        sb.append("Reserved02: 0x").append("%02X".format(reserved02)).append('\n')
-//        sb.append("Session ID: 0x").append("%08X".format(sessionId)).append('\n')
-//        sb.append("Sequence number: 0x").append("%08X".format(sequenceNumber)).append('\n')
-//        sb.append("Current packet: 0x").append("%02X".format(currentPacket)).append('\n')
-//        sb.append("Total packet: 0x").append("%02X".format(totalPacket)).append('\n')
-//        sb.append("Message ID: ").append(messageId).append('\n')
-//        sb.append("Data Length: 0x").append("%08X".format(dataLength)).append('\n')
-//        sb.append("Data: ")
-//        if (data[0] == '{'.toByte()) sb.append(getDataAsString())//TODO change
-//        else sb.append("<binary data>")
-//        return sb.toString()
-//    }
+    override fun toString(): String {
+        val sb = StringBuilder()
+        sb.append("Version: 0x").append(version.toString(16)).append('\n')
+        sb.append("Session ID: 0x").append(sessionId.toString(16)).append('\n')
+        sb.append("Sequence number: 0x").append(sequenceNumber.toString(16)).append('\n')
+        sb.append("Current packet: 0x").append(currentPacket.toString(16)).append('\n')
+        sb.append("Total packet: 0x").append(totalPacket.toString(16)).append('\n')
+        sb.append("Message ID: ").append(messageId).append('\n')
+        sb.append("Data Length: 0x").append(dataLength.toString(16)).append('\n')
+        sb.append("Data: ")
+        if (data[0] == '{'.code.toByte()) sb.append(getDataAsString())
+        else sb.append("<binary data>")
+        return sb.toString()
+    }
+
+    fun getFullInfo(): String {
+        val sb = StringBuilder()
+        sb.append("Head Flag: 0x").append(headFlag.toString(16)).append('\n')
+        sb.append("Version: 0x").append(version.toString(16)).append('\n')
+        sb.append("Reserved01: 0x").append(reserved01.toString(16)).append('\n')
+        sb.append("Reserved02: 0x").append(reserved02.toString(16)).append('\n')
+        sb.append("Session ID: 0x").append(sessionId.toString(16)).append('\n')
+        sb.append("Sequence number: 0x").append(sequenceNumber.toString(16)).append('\n')
+        sb.append("Current packet: 0x").append(currentPacket.toString(16)).append('\n')
+        sb.append("Total packet: 0x").append(totalPacket.toString(16)).append('\n')
+        sb.append("Message ID: ").append(messageId).append('\n')
+        sb.append("Data Length: 0x").append(dataLength.toString(16)).append('\n')
+        sb.append("Data: ")
+        if (data[0] == '{'.code.toByte()) sb.append(getDataAsString())
+        else sb.append("<binary data>")
+        return sb.toString()
+    }
+
     companion object
 }

@@ -11,6 +11,10 @@ internal class VideoStreamNetsurvCameraConnection(
     hostname: String,
     port: Int
 ) : BaseNetsurvCameraConnection(selectorManager, hostname, port) {
+    /**
+     * Connects to camera, authorize, request live video stream and emits it to output flow
+     * On network or other error don't try to reconnect and throw error to output flow
+     */
     fun observeVideoStream(): Flow<ByteArray> {
         return flow {
             runWithAuthenticatedConnection { sessionId, read, write ->
