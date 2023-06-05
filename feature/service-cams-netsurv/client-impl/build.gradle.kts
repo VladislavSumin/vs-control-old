@@ -15,6 +15,7 @@ kotlin {
 
                 implementation(projects.feature.serversConnection.clientApi)
                 implementation(projects.feature.entities.clientApi)
+                implementation(coreLibs.vs.core.uikit.videoPlayer)
             }
         }
     }

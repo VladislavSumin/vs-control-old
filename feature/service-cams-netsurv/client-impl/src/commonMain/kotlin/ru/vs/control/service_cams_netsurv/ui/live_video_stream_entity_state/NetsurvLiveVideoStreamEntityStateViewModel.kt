@@ -7,13 +7,16 @@ import ru.vs.control.entities.domain.Entity
 import ru.vs.control.servers_connection.domain.ServersConnectionInteractor
 import ru.vs.control.service_cams_netsurv.entity_states.NetsurvLiveVideoStreamEntityState
 import ru.vs.core.decompose.viewmodel.ViewModel
+import ru.vs.core.uikit.video_player.Playable
 
 internal class NetsurvLiveVideoStreamEntityStateViewModel(
     private val serversConnectionInteractor: ServersConnectionInteractor,
     val state: StateFlow<Entity<NetsurvLiveVideoStreamEntityState>>
 ) : ViewModel() {
-    val liveVideoStream = flow { emit(serversConnectionInteractor.getConnection(state.value.server).netsurvCams) }
-        .flatMapLatest { it.observeVideoLiveStream(state.value.primaryState.cameraId) }
+    val liveVideoStream = Playable.FlowOfByteArrays(
+        flow { emit(serversConnectionInteractor.getConnection(state.value.server).netsurvCams) }
+            .flatMapLatest { it.observeVideoLiveStream(state.value.primaryState.cameraId) }
+    )
 }
 
 internal class NetsurvLiveVideoStreamEntityStateViewModelFactory(
