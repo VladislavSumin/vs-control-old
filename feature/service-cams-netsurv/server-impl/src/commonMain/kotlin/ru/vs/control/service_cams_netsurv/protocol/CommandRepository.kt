@@ -9,6 +9,7 @@ import kotlinx.serialization.json.Json
 private const val HEXADECIMAL = 16
 
 // TODO rewrite this
+// Искал медь а нашел золото: https://github.com/NeiroNx/python-dvr/blob/master/asyncio_dvrip.py#L525
 internal object CommandRepository {
 
     private val json = Json { encodeDefaults = true }
