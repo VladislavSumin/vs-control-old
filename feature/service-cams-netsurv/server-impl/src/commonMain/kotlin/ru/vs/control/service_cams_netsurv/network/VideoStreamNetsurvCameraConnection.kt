@@ -26,7 +26,9 @@ internal class VideoStreamNetsurvCameraConnection(
                 write(CommandRepository.monitorStart(sessionId))
 
                 while (true) {
-                    emit(read().data)
+                    val msg = read()
+                    check(msg.messageId == CommandCode.MONITOR_DATA)
+                    emit(msg.data)
                 }
             }
         }
