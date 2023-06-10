@@ -22,4 +22,8 @@ internal class DoubleIdImpl(
         result = 31 * result + secondPart.hashCode()
         return result
     }
+
+    override fun toString(): String {
+        return "DoubleId($rawId)"
+    }
 }

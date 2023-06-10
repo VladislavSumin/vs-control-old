@@ -8,6 +8,7 @@ import ru.vs.control.entities.domain.Entity
 import ru.vs.control.entities.domain.EntityId
 import ru.vs.control.entities.domain.base_entity_states.BooleanEntityState
 import ru.vs.control.id.Id
+import ru.vs.control.service_cams_netsurv.entity_states.NetsurvCompositeEntityState
 import ru.vs.control.service_cams_netsurv.entity_states.NetsurvLiveVideoStreamEntityState
 import ru.vs.control.services.domain.BaseService
 import ru.vs.control.services.domain.Service
@@ -33,18 +34,24 @@ internal class NetsurvCamsServiceImpl(
     }
 
     private inner class CameraProcessor(private val netsurvCameraInteractor: NetsurvCameraInteractor) {
+        val connectionStatusId = generateEntityId("connection_status")
+        val motionStatusId = generateEntityId("motion_status")
+        val liveVideoStreamId = generateEntityId("live_video_stream")
+        val compositeId = generateEntityId("composite")
+
         suspend fun run() {
             coroutineScope {
                 launch { runConnectionState() }
                 launch { runMotionState() }
                 launch { runLiveVideoStreamState() }
+                launch { runCompositeCameraState() }
             }
         }
 
         private suspend fun runConnectionState() {
             entitiesInteractor.holdEntity(
                 Entity(
-                    id = generateEntityId("connection_status"),
+                    id = connectionStatusId,
                     primaryState = BooleanEntityState(false)
                 )
             ) { update ->
@@ -59,7 +66,7 @@ internal class NetsurvCamsServiceImpl(
         private suspend fun runMotionState() {
             entitiesInteractor.holdEntity(
                 Entity(
-                    id = generateEntityId("motion_status"),
+                    id = motionStatusId,
                     primaryState = BooleanEntityState(false)
                 )
             ) { update ->
@@ -74,8 +81,21 @@ internal class NetsurvCamsServiceImpl(
         private suspend fun runLiveVideoStreamState() {
             entitiesInteractor.holdConstantEntity(
                 Entity(
-                    id = generateEntityId("live_video_stream"),
+                    id = liveVideoStreamId,
                     primaryState = NetsurvLiveVideoStreamEntityState(netsurvCameraInteractor.camera.baseId)
+                )
+            )
+        }
+
+        private suspend fun runCompositeCameraState() {
+            entitiesInteractor.holdConstantEntity(
+                Entity(
+                    id = compositeId,
+                    primaryState = NetsurvCompositeEntityState(
+                        connectionId = connectionStatusId,
+                        motionId = motionStatusId,
+                        liveVideoStreamId = liveVideoStreamId,
+                    )
                 )
             )
         }

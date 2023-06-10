@@ -20,4 +20,8 @@ internal class CompositeIdImpl(override val parts: List<Id.SimpleId>) : Id.Compo
     override fun hashCode(): Int {
         return parts.hashCode()
     }
+
+    override fun toString(): String {
+        return "CompositeId($rawId)"
+    }
 }
