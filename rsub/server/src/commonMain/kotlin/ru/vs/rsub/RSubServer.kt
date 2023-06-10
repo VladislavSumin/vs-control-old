@@ -101,7 +101,7 @@ class RSubServer(
                     activeSubscriptions.remove(request.id)
 
                     if (e is CancellationException) throw e
-                    logger.trace(e) {
+                    logger.warn(e) {
                         "Error on subscription id=${request.id} to ${request.interfaceName}::${request.functionName}"
                     }
                     return@launch
