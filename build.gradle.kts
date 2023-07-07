@@ -3,6 +3,7 @@ import io.gitlab.arturbosch.detekt.Detekt
 plugins {
     id("ru.vs.convention.check-updates")
     id("ru.vs.convention.analyze.check-module-graph")
+    id("ru.vs.convention.test.merge-test-reports")
     id("ru.vs.plugins.create-feature-hierarchy")
 }
 
@@ -54,6 +55,7 @@ tasks.register("ci") {
         val allTests = tasks.findByName("allTest")
         if (allTests != null) dependsOn(allTests)
     }
+    dependsOn("generateMergedTestReport")
 
     // Checks
     dependsOn(":dependencyUpdates")
