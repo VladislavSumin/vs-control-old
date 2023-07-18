@@ -19,6 +19,7 @@ kotlin {
             dependencies {
                 implementation(coreLibs.vs.core.di)
                 implementation(coreLibs.vs.core.logging)
+                implementation(coreLibs.vs.core.network)
                 implementation(coreLibs.vs.core.utils)
             }
         }

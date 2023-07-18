@@ -1,6 +1,5 @@
 package ru.vs.control.service_cams_netsurv.network
 
-import io.ktor.network.selector.SelectorManager
 import kotlinx.coroutines.CoroutineName
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
@@ -13,15 +12,16 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.plus
 import ru.vs.control.service_cams_netsurv.protocol.CommandCode
 import ru.vs.control.service_cams_netsurv.protocol.CommandRepository
+import ru.vs.core.network.service.NetworkService
 
 internal class TelemetryNetsurvCameraConnection(
-    selectorManager: SelectorManager,
+    networkService: NetworkService,
     scope: CoroutineScope,
     hostname: String,
     port: Int,
     private val reconnectInterval: Long = 5_000L,
     private val cancelAlarmTimeout: Long = 5_000L,
-) : BaseNetsurvCameraConnection(selectorManager, hostname, port, reconnectInterval) {
+) : BaseNetsurvCameraConnection(networkService, hostname, port, reconnectInterval) {
 
     private val sharedConnection = runWithAutoReconnect { sessionId, read, write ->
         write(CommandRepository.alarmStart(sessionId))

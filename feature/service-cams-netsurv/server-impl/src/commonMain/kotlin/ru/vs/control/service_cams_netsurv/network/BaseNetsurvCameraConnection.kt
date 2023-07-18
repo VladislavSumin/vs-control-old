@@ -27,6 +27,7 @@ import kotlinx.coroutines.withTimeout
 import ru.vs.control.service_cams_netsurv.protocol.CommandCode
 import ru.vs.control.service_cams_netsurv.protocol.CommandRepository
 import ru.vs.control.service_cams_netsurv.protocol.Msg
+import ru.vs.core.network.service.NetworkService
 
 private const val AUTH_RESPONSE_TIMEOUT = 20_000L
 private const val PING_RESPONSE_TIMEOUT = 20_000L
@@ -36,7 +37,7 @@ private const val PROCESS_RECEIVED_MESSAGE_TIMEOUT = 5_000L
 
 @Suppress("UnnecessaryAbstractClass")
 internal abstract class BaseNetsurvCameraConnection(
-    private val selectorManager: SelectorManager,
+    private val networkService: NetworkService,
     protected val hostname: String,
     protected val port: Int,
     private val reconnectInterval: Long = 5_000L,
@@ -198,9 +199,7 @@ internal abstract class BaseNetsurvCameraConnection(
     ) {
         logger.trace { "Connecting to $hostname:$port" }
         try {
-            aSocket(selectorManager)
-                .tcp()
-                .connect(hostname, port)
+            networkService.openTcpSocket(hostname, port)
                 .use { socket ->
                     val readChannel: ByteReadChannel = socket.openReadChannel()
                     val writeChannel: ByteWriteChannel = socket.openWriteChannel()
