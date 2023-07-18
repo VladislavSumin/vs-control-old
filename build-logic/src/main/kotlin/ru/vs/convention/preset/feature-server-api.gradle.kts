@@ -10,7 +10,6 @@ import org.gradle.accessors.dm.LibrariesForCoreLibs
 plugins {
     id("ru.vs.convention.kmp.jvm")
     id("ru.vs.convention.kmp.linux")
-    id("ru.vs.convention.kmp.macos")
 }
 
 val coreLibs = rootProject.the<LibrariesForCoreLibs>()
