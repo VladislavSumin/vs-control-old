@@ -9,6 +9,7 @@ import org.gradle.accessors.dm.LibrariesForCoreLibs
 
 plugins {
     id("ru.vs.convention.preset.feature-client-api")
+    id("ru.vs.convention.factory-generator")
     id("org.jetbrains.compose")
 }
 
