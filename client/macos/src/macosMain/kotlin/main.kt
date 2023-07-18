@@ -8,7 +8,6 @@ import platform.AppKit.NSApplication
 import ru.vs.control.clientCommon
 import ru.vs.control.ui.root.RootComponent
 import ru.vs.control.ui.root.RootContent
-import ru.vs.core.decompose.DiComponentContext
 import ru.vs.core.di.Modules
 
 fun main() {

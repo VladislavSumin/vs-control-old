@@ -1,10 +1,11 @@
 package ru.vs.control.ui.root
 
-import ru.vs.core.decompose.DiComponentContext
-import ru.vs.core.root_navigation.ui.RootNavigationComponent
+import com.arkivanov.decompose.ComponentContext
+import ru.vs.control.root_navigation.ui.RootNavigationComponentFactory
 
 class RootComponent(
-    diComponentContext: DiComponentContext
-) : DiComponentContext by diComponentContext {
-    internal val navigationComponent = RootNavigationComponent(this)
+    rootNavigationComponentFactory: RootNavigationComponentFactory,
+    diComponentContext: ComponentContext
+) : ComponentContext by diComponentContext {
+    internal val navigationComponent = rootNavigationComponentFactory.create(this)
 }

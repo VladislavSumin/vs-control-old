@@ -11,7 +11,6 @@ import org.kodein.di.DI
 import org.w3c.dom.Document
 import ru.vs.control.ui.root.RootComponent
 import ru.vs.control.ui.root.RootContent
-import ru.vs.core.decompose.DiComponentContext
 import ru.vs.core.di.Modules
 
 fun main() {
