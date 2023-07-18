@@ -1,8 +1,6 @@
 package ru.vs.control.service_cams_netsurv.network
 
 import io.github.oshai.KotlinLogging
-import io.ktor.network.selector.SelectorManager
-import io.ktor.network.sockets.aSocket
 import io.ktor.network.sockets.openReadChannel
 import io.ktor.network.sockets.openWriteChannel
 import io.ktor.utils.io.ByteReadChannel

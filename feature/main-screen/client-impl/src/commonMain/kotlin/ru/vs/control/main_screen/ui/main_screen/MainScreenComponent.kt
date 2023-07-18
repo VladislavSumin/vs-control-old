@@ -11,22 +11,19 @@ import com.arkivanov.decompose.value.Value
 import com.arkivanov.decompose.value.operator.map
 import com.arkivanov.essenty.parcelable.Parcelable
 import com.arkivanov.essenty.parcelable.Parcelize
-import org.kodein.di.instance
 import ru.vs.control.entities.ui.entities.EntitiesComponentFactory
 import ru.vs.control.root_navigation.ui.RootNavigationConfig
 import ru.vs.control.servers.ui.servers.ServersComponentFactory
 import ru.vs.control.services.ui.services.ServicesComponentFactory
 import ru.vs.core.decompose.ComposeComponent
-import ru.vs.core.decompose.DiComponentContext
 
 internal class MainScreenComponent(
-    context: DiComponentContext,
+    private val entitiesComponentFactory: EntitiesComponentFactory,
+    private val serversComponentFactory: ServersComponentFactory,
+    private val servicesComponentFactory: ServicesComponentFactory,
+    context: ComponentContext,
     private val rootNavigation: StackNavigation<RootNavigationConfig>
-) : ComposeComponent, DiComponentContext by context {
-    private val entitiesComponentFactory: EntitiesComponentFactory by instance()
-    private val serversComponentFactory: ServersComponentFactory by instance()
-    private val servicesComponentFactory: ServicesComponentFactory by instance()
-
+) : ComposeComponent, ComponentContext by context {
     private val navigation = StackNavigation<Config>()
 
     private val internalStack: Value<ChildStack<Config, ComposeComponent>> =
@@ -49,19 +46,18 @@ internal class MainScreenComponent(
     }
 
     private fun child(config: Config, componentContext: ComponentContext): ComposeComponent {
-        val diComponentContext = DiComponentContext(componentContext, di)
         return when (config) {
-            is Config.Entities -> entitiesComponent(diComponentContext)
-            is Config.Services -> servicesComponent(diComponentContext)
-            is Config.Servers -> serversComponent(diComponentContext)
+            is Config.Entities -> entitiesComponent(componentContext)
+            is Config.Services -> servicesComponent(componentContext)
+            is Config.Servers -> serversComponent(componentContext)
         }
     }
 
-    private fun entitiesComponent(componentContext: DiComponentContext): ComposeComponent {
+    private fun entitiesComponent(componentContext: ComponentContext): ComposeComponent {
         return entitiesComponentFactory.create(componentContext)
     }
 
-    private fun servicesComponent(componentContext: DiComponentContext): ComposeComponent {
+    private fun servicesComponent(componentContext: ComponentContext): ComposeComponent {
         return servicesComponentFactory.create(componentContext)
     }
 

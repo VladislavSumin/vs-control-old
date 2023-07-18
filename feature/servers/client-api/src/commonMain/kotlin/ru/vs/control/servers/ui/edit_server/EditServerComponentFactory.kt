@@ -1,11 +1,11 @@
 package ru.vs.control.servers.ui.edit_server
 
+import com.arkivanov.decompose.ComponentContext
 import ru.vs.core.decompose.ComposeComponent
-import ru.vs.core.decompose.DiComponentContext
 
 interface EditServerComponentFactory {
     fun create(
-        context: DiComponentContext,
+        context: ComponentContext,
         serverId: Long?,
         closeScreen: () -> Unit,
     ): ComposeComponent

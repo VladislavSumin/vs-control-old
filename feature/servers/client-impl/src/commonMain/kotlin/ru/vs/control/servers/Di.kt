@@ -33,7 +33,7 @@ fun Modules.featureServers() = DI.Module("feature-servers") {
     bindSingleton { EditServerStoreFactory(i(), i()) }
 
     // Component factories
-    bindSingleton<EditServerComponentFactory> { EditServerComponentFactoryImpl() }
+    bindSingleton<EditServerComponentFactory> { EditServerComponentFactoryImpl(i()) }
     bindSingleton<ServersComponentFactory> { ServersComponentFactoryImpl(i(), i()) }
     bindSingleton { ServerCardComponentFactory(i()) }
 }
