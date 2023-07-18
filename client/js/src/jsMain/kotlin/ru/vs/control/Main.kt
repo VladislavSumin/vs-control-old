@@ -8,8 +8,10 @@ import com.arkivanov.essenty.lifecycle.stop
 import kotlinx.browser.document
 import org.jetbrains.skiko.wasm.onWasmReady
 import org.kodein.di.DI
+import org.kodein.di.direct
+import org.kodein.di.instance
 import org.w3c.dom.Document
-import ru.vs.control.ui.root.RootComponent
+import ru.vs.control.ui.root.RootComponentFactory
 import ru.vs.control.ui.root.RootContent
 import ru.vs.core.di.Modules
 
@@ -19,8 +21,8 @@ fun main() {
     }
     val lifecycle = LifecycleRegistry()
     val defaultContext = DefaultComponentContext(lifecycle)
-    val defaultDiContext = DiComponentContext(defaultContext, di)
-    val rootComponent = RootComponent(defaultDiContext)
+    val rootComponentFactory = di.direct.instance<RootComponentFactory>()
+    val rootComponent = rootComponentFactory.create(defaultContext)
 
     lifecycle.attachToDocument()
 

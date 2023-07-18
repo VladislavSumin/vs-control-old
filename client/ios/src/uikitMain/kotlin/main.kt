@@ -8,6 +8,8 @@ import kotlinx.cinterop.cstr
 import kotlinx.cinterop.memScoped
 import kotlinx.cinterop.toCValues
 import org.kodein.di.DI
+import org.kodein.di.direct
+import org.kodein.di.instance
 import platform.Foundation.NSStringFromClass
 import platform.UIKit.UIApplication
 import platform.UIKit.UIApplicationDelegateProtocol
@@ -18,9 +20,8 @@ import platform.UIKit.UIResponderMeta
 import platform.UIKit.UIScreen
 import platform.UIKit.UIWindow
 import ru.vs.control.clientCommon
-import ru.vs.control.ui.root.RootComponent
+import ru.vs.control.ui.root.RootComponentFactory
 import ru.vs.control.ui.root.RootContent
-import ru.vs.core.decompose.DiComponentContext
 import ru.vs.core.di.Modules
 
 fun main() {
@@ -53,8 +54,8 @@ class SkikoAppDelegate : UIResponder, UIApplicationDelegateProtocol {
         // TODO пока на шару делаю, но тут точно нужен нормальный lifecycle
         val lifecycle = LifecycleRegistry()
         val defaultContext = DefaultComponentContext(lifecycle)
-        val defaultDiContext = DiComponentContext(defaultContext, di)
-        val rootComponent = RootComponent(defaultDiContext)
+        val rootComponentFactory = di.direct.instance<RootComponentFactory>()
+        val rootComponent = rootComponentFactory.create(defaultContext)
 
         lifecycle.create()
 
