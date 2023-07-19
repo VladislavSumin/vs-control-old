@@ -1,5 +1,11 @@
 /.gradle/
-/.idea/
+
+# Idea settings
+/.idea/*.xml
+/.idea/modules/
+/.idea/artifacts
+/.idea/.gitignore
+
 
 /target/
 /**/build/
