@@ -10,12 +10,14 @@ import ru.vs.core.decompose.ComposeComponent
 import ru.vs.core.decompose.asValue
 import ru.vs.core.decompose.createCoroutineScope
 import ru.vs.core.decompose.router.list.childListWithState
+import ru.vs.core.factory_generator.GenerateFactory
 
+@GenerateFactory(EntitiesComponentFactory::class)
 internal class EntitiesComponent(
     private val entityStateComponentFactoryRegistry: EntityStateComponentFactoryRegistry,
     entitiesViewModelFactory: EntitiesViewModelFactory,
-    context: ComponentContext
-) : ComposeComponent, ComponentContext by context {
+    componentContext: ComponentContext,
+) : ComposeComponent, ComponentContext by componentContext {
     private val scope = lifecycle.createCoroutineScope()
     private val viewModel: EntitiesViewModel = instanceKeeper.getOrCreate { entitiesViewModelFactory.create() }
 
