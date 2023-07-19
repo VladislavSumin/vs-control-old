@@ -6,6 +6,7 @@ import org.kodein.di.bindSingleton
 import ru.vs.control.about_server.featureAboutServer
 import ru.vs.control.entities.featureEntities
 import ru.vs.control.main_screen.featureMainScreen
+import ru.vs.control.root_navigation.featureRootNavigation
 import ru.vs.control.servers.featureServers
 import ru.vs.control.servers.service.ServerQueriesProvider
 import ru.vs.control.servers_connection.featureServersConnection
@@ -20,7 +21,6 @@ import ru.vs.core.di.i
 import ru.vs.core.key_value_storage.coreKeyValueStorage
 import ru.vs.core.ktor_client.coreKtorClient
 import ru.vs.core.mvi.coreMvi
-import ru.vs.control.root_navigation.featureRootNavigation
 import ru.vs.core.serialization.json.coreSerializationJson
 
 fun Modules.clientCommon() = DI.Module("client-common") {

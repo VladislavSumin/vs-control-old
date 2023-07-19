@@ -11,5 +11,5 @@ import ru.vs.core.factory_generator.GenerateFactory
 @GenerateFactory
 class ServersViewModel(serversInteractor: ServersInteractor) : ViewModel() {
     val state: StateFlow<List<Server>> = serversInteractor.observeServers()
-            .stateIn(viewModelScope, SharingStarted.Eagerly, emptyList())
+        .stateIn(viewModelScope, SharingStarted.Eagerly, emptyList())
 }
