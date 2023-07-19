@@ -3,6 +3,7 @@ package ru.vs.control.servers.ui.servers
 import androidx.compose.runtime.Composable
 import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.decompose.value.operator.map
+import com.arkivanov.essenty.instancekeeper.getOrCreate
 import com.arkivanov.mvikotlin.core.instancekeeper.getStore
 import com.arkivanov.mvikotlin.extensions.coroutines.stateFlow
 import ru.vs.control.servers.domain.ServerId
@@ -15,24 +16,24 @@ import ru.vs.core.factory_generator.GenerateFactory
 
 @GenerateFactory(ServersComponentFactory::class)
 internal class ServersComponent(
-    private val serverCardComponentFactory: ServerCardComponentFactory,
-    private val serverStoreFactory: ServerStoreFactory,
-    private val openAddServerScreen: () -> Unit,
-    private val openEditServerScreen: (ServerId) -> Unit,
-    context: ComponentContext,
+        private val serverCardComponentFactory: ServerCardComponentFactory,
+        private val serversViewModelFactory: ServersViewModelFactory,
+        private val openAddServerScreen: () -> Unit,
+        private val openEditServerScreen: (ServerId) -> Unit,
+        context: ComponentContext,
 ) : ComposeComponent, ComponentContext by context {
     private val scope = lifecycle.createCoroutineScope()
-    private val store: ServersStore = instanceKeeper.getStore { serverStoreFactory.create() }
+    private val viewModel: ServersViewModel = instanceKeeper.getOrCreate { serversViewModelFactory.create() }
 
     val serversList = childList(
-        state = store.stateFlow.asValue(scope).map { it.servers },
-        childFactory = { server, context ->
-            serverCardComponentFactory.create(
-                server,
-                openEditServerScreen,
-                context,
-            )
-        }
+            state = viewModel.state.asValue(scope),
+            childFactory = { server, context ->
+                serverCardComponentFactory.create(
+                        server,
+                        openEditServerScreen,
+                        context,
+                )
+            }
     )
 
     fun onClickAddServer() = openAddServerScreen()
