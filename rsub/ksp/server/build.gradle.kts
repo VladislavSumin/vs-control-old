@@ -1,5 +1,5 @@
 plugins {
-    kotlin("jvm")
+    id("ru.vs.convention.ksp-code-generator")
 }
 
 dependencies {
@@ -9,7 +9,4 @@ dependencies {
     implementation(coreLibs.vs.core.utils)
     implementation(coreLibs.kotlin.serialization.core)
     implementation(coreLibs.kotlin.serialization.json)
-    implementation(coreLibs.ksp)
-    implementation(coreLibs.kotlinpoet.core)
-    implementation(coreLibs.kotlinpoet.ksp)
 }
