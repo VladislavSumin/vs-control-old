@@ -7,7 +7,9 @@ import com.arkivanov.mvikotlin.extensions.coroutines.stateFlow
 import ru.vs.control.servers.domain.Server
 import ru.vs.control.servers.domain.ServerId
 import ru.vs.core.decompose.ComposeComponent
+import ru.vs.core.factory_generator.GenerateFactory
 
+@GenerateFactory(ServerCardComponentFactory::class)
 internal class ServerCardComponent(
     private val serverCardStoreFactory: ServerCardStoreFactory,
     private val server: Server,
@@ -24,4 +26,12 @@ internal class ServerCardComponent(
 
     @Composable
     override fun Render() = ServerCardContent(this)
+}
+
+internal interface ServerCardComponentFactory {
+    fun create(
+        server: Server,
+        openEditServerScreen: (ServerId) -> Unit,
+        context: ComponentContext,
+    ): ServerCardComponent
 }

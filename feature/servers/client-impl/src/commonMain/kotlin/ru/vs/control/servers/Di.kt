@@ -12,10 +12,12 @@ import ru.vs.control.servers.ui.edit_server.EditServerComponentFactory
 import ru.vs.control.servers.ui.edit_server.EditServerComponentFactoryImpl
 import ru.vs.control.servers.ui.edit_server.EditServerStoreFactory
 import ru.vs.control.servers.ui.server_card.ServerCardComponentFactory
+import ru.vs.control.servers.ui.server_card.ServerCardComponentFactoryImpl
 import ru.vs.control.servers.ui.server_card.ServerCardStoreFactory
-import ru.vs.control.servers.ui.servers.*
+import ru.vs.control.servers.ui.servers.ServersComponentFactory
 import ru.vs.control.servers.ui.servers.ServersComponentFactoryImpl
 import ru.vs.control.servers.ui.servers.ServersViewModelFactory
+import ru.vs.control.servers.ui.servers.ServersViewModelFactoryImpl
 import ru.vs.core.di.Modules
 import ru.vs.core.di.i
 
@@ -37,5 +39,5 @@ fun Modules.featureServers() = DI.Module("feature-servers") {
     // Component factories
     bindSingleton<EditServerComponentFactory> { EditServerComponentFactoryImpl(i()) }
     bindSingleton<ServersComponentFactory> { ServersComponentFactoryImpl(i(), i()) }
-    bindSingleton { ServerCardComponentFactory(i()) }
+    bindSingleton<ServerCardComponentFactory> { ServerCardComponentFactoryImpl(i()) }
 }
