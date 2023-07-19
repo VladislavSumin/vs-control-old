@@ -8,7 +8,9 @@ import com.arkivanov.mvikotlin.extensions.coroutines.stateFlow
 import kotlinx.coroutines.launch
 import ru.vs.core.decompose.ComposeComponent
 import ru.vs.core.decompose.createCoroutineScope
+import ru.vs.core.factory_generator.GenerateFactory
 
+@GenerateFactory(EditServerComponentFactory::class)
 internal class EditServerComponent(
     editServerStoreFactory: EditServerStoreFactory,
     context: ComponentContext,

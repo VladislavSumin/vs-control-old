@@ -11,7 +11,9 @@ import ru.vs.core.decompose.ComposeComponent
 import ru.vs.core.decompose.asValue
 import ru.vs.core.decompose.createCoroutineScope
 import ru.vs.core.decompose.router.list.childList
+import ru.vs.core.factory_generator.GenerateFactory
 
+@GenerateFactory(ServersComponentFactory::class)
 internal class ServersComponent(
     private val serverCardComponentFactory: ServerCardComponentFactory,
     private val serverStoreFactory: ServerStoreFactory,

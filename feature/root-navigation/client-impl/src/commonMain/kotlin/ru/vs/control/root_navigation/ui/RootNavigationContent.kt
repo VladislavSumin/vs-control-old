@@ -1,4 +1,4 @@
-package ru.vs.core.root_navigation.ui
+package ru.vs.control.root_navigation.ui
 
 import androidx.compose.runtime.Composable
 import com.arkivanov.decompose.extensions.compose.jetbrains.stack.Children

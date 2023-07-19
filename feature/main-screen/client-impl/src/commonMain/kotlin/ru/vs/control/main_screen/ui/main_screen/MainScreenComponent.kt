@@ -16,7 +16,9 @@ import ru.vs.control.root_navigation.ui.RootNavigationConfig
 import ru.vs.control.servers.ui.servers.ServersComponentFactory
 import ru.vs.control.services.ui.services.ServicesComponentFactory
 import ru.vs.core.decompose.ComposeComponent
+import ru.vs.core.factory_generator.GenerateFactory
 
+@GenerateFactory(MainScreenComponentFactory::class)
 internal class MainScreenComponent(
     private val entitiesComponentFactory: EntitiesComponentFactory,
     private val serversComponentFactory: ServersComponentFactory,

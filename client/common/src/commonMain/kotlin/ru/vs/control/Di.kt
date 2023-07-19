@@ -20,7 +20,7 @@ import ru.vs.core.di.i
 import ru.vs.core.key_value_storage.coreKeyValueStorage
 import ru.vs.core.ktor_client.coreKtorClient
 import ru.vs.core.mvi.coreMvi
-import ru.vs.core.root_navigation.featureRootNavigation
+import ru.vs.control.root_navigation.featureRootNavigation
 import ru.vs.core.serialization.json.coreSerializationJson
 
 fun Modules.clientCommon() = DI.Module("client-common") {

@@ -1,4 +1,4 @@
-package ru.vs.core.root_navigation.ui
+package ru.vs.control.root_navigation.ui
 
 import androidx.compose.runtime.Composable
 import com.arkivanov.decompose.ComponentContext
@@ -8,10 +8,11 @@ import com.arkivanov.decompose.router.stack.childStack
 import com.arkivanov.decompose.router.stack.pop
 import com.arkivanov.decompose.value.Value
 import ru.vs.control.main_screen.ui.main_screen.MainScreenComponentFactory
-import ru.vs.control.root_navigation.ui.RootNavigationConfig
 import ru.vs.control.servers.ui.edit_server.EditServerComponentFactory
 import ru.vs.core.decompose.ComposeComponent
+import ru.vs.core.factory_generator.GenerateFactory
 
+@GenerateFactory(RootNavigationComponentFactory::class)
 internal class RootNavigationComponent(
     private val mainScreenComponentFactory: MainScreenComponentFactory,
     private val editServerComponentFactory: EditServerComponentFactory,
