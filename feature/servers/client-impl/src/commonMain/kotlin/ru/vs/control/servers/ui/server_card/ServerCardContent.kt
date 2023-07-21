@@ -41,7 +41,7 @@ internal fun ServerCardContent(component: ServerCardComponent) {
 }
 
 @Composable
-private fun Server(server: ServerCardStore.State, component: ServerCardComponent, modifier: Modifier = Modifier) {
+private fun Server(server: ServerCardViewState, component: ServerCardComponent, modifier: Modifier = Modifier) {
     Card(
         modifier.clickable { component.onClickSelectServer() }
     ) {
@@ -57,7 +57,7 @@ private fun Server(server: ServerCardStore.State, component: ServerCardComponent
 
 @Composable
 private fun ServerHeader(
-    server: ServerCardStore.State,
+    server: ServerCardViewState,
     component: ServerCardComponent
 ) {
     Row {
@@ -136,7 +136,7 @@ private fun ServerDropDownMenu(
 }
 
 @Composable
-private fun ServerConnectionStatus(server: ServerCardStore.State) {
+private fun ServerConnectionStatus(server: ServerCardViewState) {
     Row {
         Text(
             stringResource(MR.strings.servers_content_connection_status),
@@ -175,7 +175,7 @@ private fun ServerConnectionStatus(server: ServerCardStore.State) {
 }
 
 @Composable
-private fun ServerServerInfo(server: ServerCardStore.State) {
+private fun ServerServerInfo(server: ServerCardViewState) {
     val version = (server.connectionStatus as? AboutServerInteractor.ConnectionStatusWithServerInfo.Connected)
         ?.serverInfo?.version
     Text(
