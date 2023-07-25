@@ -5,13 +5,7 @@ import io.ktor.network.sockets.openReadChannel
 import io.ktor.network.sockets.openWriteChannel
 import io.ktor.utils.io.ByteReadChannel
 import io.ktor.utils.io.ByteWriteChannel
-import io.ktor.utils.io.core.readBytes
 import io.ktor.utils.io.core.use
-import io.ktor.utils.io.readIntLittleEndian
-import io.ktor.utils.io.readShortLittleEndian
-import io.ktor.utils.io.writeFully
-import io.ktor.utils.io.writeIntLittleEndian
-import io.ktor.utils.io.writeShortLittleEndian
 import kotlinx.coroutines.TimeoutCancellationException
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.channels.ProducerScope

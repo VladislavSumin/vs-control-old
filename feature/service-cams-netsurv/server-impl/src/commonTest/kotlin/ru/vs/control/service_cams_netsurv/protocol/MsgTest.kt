@@ -1,7 +1,6 @@
 package ru.vs.control.service_cams_netsurv.protocol
 
 import io.ktor.utils.io.ByteChannel
-import io.ktor.utils.io.close
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import kotlin.test.Test

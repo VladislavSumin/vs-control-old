@@ -9,7 +9,6 @@ import io.ktor.utils.io.writeFully
 import io.ktor.utils.io.writeIntLittleEndian
 import io.ktor.utils.io.writeShortLittleEndian
 
-
 /**
  * Read [Msg] from [readChannel]
  */

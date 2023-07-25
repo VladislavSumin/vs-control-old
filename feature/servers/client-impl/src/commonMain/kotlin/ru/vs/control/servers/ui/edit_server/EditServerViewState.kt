@@ -1,6 +1,5 @@
 package ru.vs.control.servers.ui.edit_server
 
-
 /**
  * @param name human-readable server name
  * @param host server host
