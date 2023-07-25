@@ -30,7 +30,10 @@ private const val FIRST_PING_SEND_INTERVAL = 2_000L
 private const val PROCESS_RECEIVED_MESSAGE_TIMEOUT = 5_000L
 
 /**
- * Base connection with netsurv camera
+ * Base connection with netsurv camera.
+ * This connection parse [Msg] and work with low level protocol part + handle two additional function:
+ * 1. Authentication
+ * 2. Send ping packages, handle responses and close connection by timeout (ping is requiring as protocol part)
  *
  * @param networkService network service instance
  * @param hostname camera hostname
@@ -107,6 +110,8 @@ internal abstract class BaseNetsurvCameraConnection(
                 }
                 logger.trace { "Authenticated in $hostname:$port, sessionId=$sessionId" }
 
+                // Create write channel && writeMessagesTask for purpose of synchronization when we send msg
+                // from different places
                 val writeMessagesChannel = Channel<Msg>(capacity = Channel.RENDEZVOUS)
                 val writeMessagesTask = launch {
                     for (msg in writeMessagesChannel) {
@@ -114,9 +119,11 @@ internal abstract class BaseNetsurvCameraConnection(
                     }
                 }
 
+                // Create receive channel, to this channel we send received messages (if its type is not a ping)
                 val receiveMessagesChannel = Channel<Msg>(capacity = Channel.RENDEZVOUS)
                 val readMessagesTask = launch {
                     while (true) {
+                        // Read message with timeout
                         val msg = try {
                             withTimeout(PING_RESPONSE_TIMEOUT) { read() }
                         } catch (e: TimeoutCancellationException) {
@@ -148,6 +155,8 @@ internal abstract class BaseNetsurvCameraConnection(
                     }
                 }
 
+                // netsurv protocols requiring periodical ping requests from client side, if we don't send ping
+                // camera close connection after some time
                 val pingTask = launch {
                     delay(FIRST_PING_SEND_INTERVAL)
                     while (true) {
@@ -163,6 +172,9 @@ internal abstract class BaseNetsurvCameraConnection(
                     { msg -> writeMessagesChannel.send(msg) }
                 )
 
+                // If block finished gracefully we need to close all launched task, if we don't do this we stuck
+                // when trying leave from contention coroutine scope. When block throws exception all this task
+                // cancelling automatically.
                 pingTask.cancel()
                 writeMessagesTask.cancel()
                 readMessagesTask.cancel()
@@ -190,6 +202,7 @@ internal abstract class BaseNetsurvCameraConnection(
     }
 
     /**
+     * TODO move this into core network module
      * Connect and hold connection opened while [block] is executing
      * @param block - lambda with [ByteReadChannel] and [ByteWriteChannel] to communicate over socket
      */
