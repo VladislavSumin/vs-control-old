@@ -18,7 +18,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import dev.icerock.moko.resources.compose.stringResource
 import ru.vs.control.servers.client_impl.MR
-import ru.vs.control.servers.ui.edit_server.EditServerStore.Intent
+import ru.vs.control.servers.ui.edit_server.EditServerViewModel.Intent
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -51,8 +51,8 @@ internal fun EditServerContent(component: EditServerComponent) {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun EditServerTopBar(state: EditServerStore.State, component: EditServerComponent) {
-    val titleResource = if (state.isEdit) MR.strings.edit_server_edit_server
+private fun EditServerTopBar(state: EditServerViewState, component: EditServerComponent) {
+    val titleResource = if (state.isEditMode) MR.strings.edit_server_edit_server
     else MR.strings.edit_server_add_server
     TopAppBar(
         title = { Text(stringResource(titleResource)) },

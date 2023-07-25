@@ -20,14 +20,12 @@ import ru.vs.core.di.Modules
 import ru.vs.core.di.i
 import ru.vs.core.key_value_storage.coreKeyValueStorage
 import ru.vs.core.ktor_client.coreKtorClient
-import ru.vs.core.mvi.coreMvi
 import ru.vs.core.serialization.json.coreSerializationJson
 
 fun Modules.clientCommon() = DI.Module("client-common") {
     importOnce(Modules.coreDatabase())
     importOnce(Modules.coreKeyValueStorage())
     importOnce(Modules.coreKtorClient())
-    importOnce(Modules.coreMvi())
     importOnce(Modules.coreSerializationJson())
 
     importOnce(Modules.featureAboutServer())
