@@ -5,8 +5,8 @@ import kotlinx.serialization.Serializable
 /**
  * Represents universal id
  *
- * [Id] format: first_part/second_part
- * id is sequence of parts divided by /
+ * [Id] format: first_part/firs_part_too#second_part
+ * id is sequence of parts divided by #
  * each part is snake_case string
  *
  * [Id] may have any count of part, but we have special forms for most popular cases:

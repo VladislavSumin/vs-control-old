@@ -3,21 +3,25 @@ package ru.vs.control.id
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
+import kotlin.test.assertIs
 
 class IdTest {
     @Test
     fun createWithCorrectSimpleId() {
-        Id(TEST_RAW_ID_SIMPLE)
+        val id = Id(TEST_RAW_ID_SIMPLE)
+        assertIs<Id.SimpleId>(id)
     }
 
     @Test
     fun createWithCorrectPartsId() {
-        Id(TEST_RAW_ID_WITH_PARTS)
+        val id = Id(TEST_RAW_ID_WITH_PARTS)
+        assertIs<Id.SimpleId>(id)
     }
 
     @Test
     fun createWithCorrectComplexId() {
-        Id(TEST_RAW_ID_COMPLEX)
+        val id = Id(TEST_RAW_ID_COMPLEX)
+        assertIs<Id.SimpleId>(id)
     }
 
     @Test
@@ -69,9 +73,20 @@ class IdTest {
         assertEquals(id1, id2)
     }
 
+    @Test
+    fun testDoubleId() {
+        val id1 = Id(TEST_RAW_ID_SIMPLE)
+        val id2 = Id(TEST_RAW_ID_WITH_PARTS)
+        val doubleId = Id(TEST_RAW_ID_DOUBLE)
+        assertIs<Id.DoubleId>(doubleId)
+        assertEquals(id1, doubleId.firstPart)
+        assertEquals(id2, doubleId.secondPart)
+    }
+
     companion object {
         private const val TEST_RAW_ID_SIMPLE = "test_id"
         private const val TEST_RAW_ID_WITH_PARTS = "test/id/with/same/path123"
         private const val TEST_RAW_ID_COMPLEX = "test/id/with_same_path"
+        private const val TEST_RAW_ID_DOUBLE = "$TEST_RAW_ID_SIMPLE#$TEST_RAW_ID_WITH_PARTS"
     }
 }

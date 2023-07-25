@@ -2,7 +2,7 @@ package ru.vs.control.id
 
 internal class SimpleIdImpl(override val rawId: String) : Id.SimpleId {
     init {
-        check(ID_PART_VERIFICATION_REGEXP.matches(rawId)) { "Incorrect simpleId format, rawId=$rawId" }
+        check(ID_VERIFICATION_REGEXP.matches(rawId)) { "Incorrect simpleId format, rawId=$rawId" }
     }
 
     override fun toString(): String {
@@ -23,6 +23,8 @@ internal class SimpleIdImpl(override val rawId: String) : Id.SimpleId {
     }
 
     companion object {
-        private val ID_PART_VERIFICATION_REGEXP = "([a-z0-9]+(_[a-z0-9]+)*)".toRegex()
+        private const val ID_PART_VERIFICATION_REGEXP = "([a-z0-9]+(_[a-z0-9]+)*)"
+        private val ID_VERIFICATION_REGEXP =
+            "^$ID_PART_VERIFICATION_REGEXP(/$ID_PART_VERIFICATION_REGEXP.)*\$".toRegex()
     }
 }
