@@ -2,7 +2,7 @@ package ru.vs.control.id
 
 internal object IdFactory {
     fun createId(rawId: String): Id {
-        val ids = rawId.split("#").map { SimpleIdImpl(it) }
+        val ids = rawId.split("/").map { SimpleIdImpl(it) }
         return createId(ids)
     }
 
