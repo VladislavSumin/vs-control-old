@@ -25,6 +25,8 @@ import kotlinx.coroutines.withTimeout
 import ru.vs.control.service_cams_netsurv.protocol.CommandCode
 import ru.vs.control.service_cams_netsurv.protocol.CommandRepository
 import ru.vs.control.service_cams_netsurv.protocol.Msg
+import ru.vs.control.service_cams_netsurv.protocol.decodeFromChannel
+import ru.vs.control.service_cams_netsurv.protocol.encodeToChannel
 import ru.vs.core.network.service.NetworkService
 
 private const val AUTH_RESPONSE_TIMEOUT = 20_000L
@@ -33,6 +35,14 @@ private const val PING_SEND_INTERVAL = 10_000L
 private const val FIRST_PING_SEND_INTERVAL = 2_000L
 private const val PROCESS_RECEIVED_MESSAGE_TIMEOUT = 5_000L
 
+/**
+ * Base connection with netsurv camera
+ *
+ * @param networkService network service instance
+ * @param hostname camera hostname
+ * @param port camera port
+ * @param reconnectInterval time between connection retries
+ */
 @Suppress("UnnecessaryAbstractClass")
 internal abstract class BaseNetsurvCameraConnection(
     private val networkService: NetworkService,
@@ -235,56 +245,4 @@ internal abstract class BaseNetsurvCameraConnection(
     }
 
     class TimeoutException(message: String, cause: Throwable) : RuntimeException(message, cause)
-}
-
-/**
- * Read [Msg] from [readChannel]
- */
-private suspend fun Msg.Companion.decodeFromChannel(readChannel: ByteReadChannel): Msg {
-    readChannel.apply {
-        val headFlag = readByte()
-        val version = readByte()
-        val reserved01 = readByte()
-        val reserved02 = readByte()
-        val sessionId = readIntLittleEndian()
-        val sequenceNumber = readIntLittleEndian()
-        val totalPacket = readByte()
-        val currentPacket = readByte()
-        val messageId = CommandCode.fromCode(readShortLittleEndian().toInt())
-        val dataLength = readIntLittleEndian()
-        val data = readPacket(dataLength).readBytes()
-
-        return Msg(
-            headFlag,
-            version,
-            reserved01,
-            reserved02,
-            sessionId,
-            sequenceNumber,
-            totalPacket,
-            currentPacket,
-            messageId,
-            dataLength,
-            data
-        )
-    }
-}
-
-/**
- * Write [Msg] to [writeChannel]
- */
-private suspend fun Msg.encodeToChannel(writeChannel: ByteWriteChannel) {
-    writeChannel.apply {
-        writeByte(headFlag)
-        writeByte(version)
-        writeByte(reserved01)
-        writeByte(reserved02)
-        writeIntLittleEndian(sessionId)
-        writeIntLittleEndian(sequenceNumber)
-        writeByte(totalPacket)
-        writeByte(currentPacket)
-        writeShortLittleEndian(messageId.code.toShort())
-        writeIntLittleEndian(dataLength)
-        writeFully(data)
-    }
 }
