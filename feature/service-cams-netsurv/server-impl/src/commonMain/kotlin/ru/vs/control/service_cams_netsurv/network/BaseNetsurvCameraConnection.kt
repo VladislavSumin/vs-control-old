@@ -1,11 +1,6 @@
 package ru.vs.control.service_cams_netsurv.network
 
 import io.github.oshai.KotlinLogging
-import io.ktor.network.sockets.openReadChannel
-import io.ktor.network.sockets.openWriteChannel
-import io.ktor.utils.io.ByteReadChannel
-import io.ktor.utils.io.ByteWriteChannel
-import io.ktor.utils.io.core.use
 import kotlinx.coroutines.TimeoutCancellationException
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.channels.ProducerScope
@@ -22,6 +17,7 @@ import ru.vs.control.service_cams_netsurv.protocol.Msg
 import ru.vs.control.service_cams_netsurv.protocol.decodeFromChannel
 import ru.vs.control.service_cams_netsurv.protocol.encodeToChannel
 import ru.vs.core.network.service.NetworkService
+import ru.vs.core.network.service.openTcpSocket
 
 private const val AUTH_RESPONSE_TIMEOUT = 20_000L
 private const val PING_RESPONSE_TIMEOUT = 20_000L
@@ -184,8 +180,7 @@ internal abstract class BaseNetsurvCameraConnection(
 
     /**
      * Connect and hold connection opened while [block] is executing
-     * Additionally wrapping [runWithRawConnection] and cast raw byte channels communication
-     * to [Msg] based communication
+     * Mapping raw byte channel into [Msg] input/output
      */
     private suspend inline fun runWithConnection(
         block: (
@@ -193,38 +188,11 @@ internal abstract class BaseNetsurvCameraConnection(
             write: suspend (msg: Msg) -> Unit
         ) -> Unit
     ) {
-        runWithRawConnection { readChannel, writeChannel ->
+        networkService.openTcpSocket(hostname, port) { readChannel, writeChannel ->
             block(
                 { Msg.decodeFromChannel(readChannel) },
                 { msg -> msg.encodeToChannel(writeChannel); writeChannel.flush() }
             )
-        }
-    }
-
-    /**
-     * TODO move this into core network module
-     * Connect and hold connection opened while [block] is executing
-     * @param block - lambda with [ByteReadChannel] and [ByteWriteChannel] to communicate over socket
-     */
-    private suspend inline fun runWithRawConnection(
-        block: (
-            readChannel: ByteReadChannel,
-            writeChannel: ByteWriteChannel
-        ) -> Unit
-    ) {
-        logger.trace { "Connecting to $hostname:$port" }
-        try {
-            networkService.openTcpSocket(hostname, port)
-                .use { socket ->
-                    val readChannel: ByteReadChannel = socket.openReadChannel()
-                    val writeChannel: ByteWriteChannel = socket.openWriteChannel()
-
-                    logger.trace { "Tcp connection with $hostname:$port established" }
-
-                    block(readChannel, writeChannel)
-                }
-        } finally {
-            logger.trace { "Tcp connection with $hostname:$port closed" }
         }
     }
 
