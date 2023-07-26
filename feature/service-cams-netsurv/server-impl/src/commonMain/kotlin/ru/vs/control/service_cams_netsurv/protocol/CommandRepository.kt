@@ -100,7 +100,7 @@ internal object CommandRepository {
         @SerialName("LoginType")
         val loginType: String = "DVRIP-Web",
         @SerialName("PassWord")
-        val password: String = "tlJwpbo6",
+        val password: String = PasswordUtils.hash(""),
         @SerialName("UserName")
         val username: String = "admin",
     )
