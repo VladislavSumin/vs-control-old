@@ -10,6 +10,7 @@ plugins {
 // Setup detekt for all projects
 allprojects {
     apply { plugin("ru.vs.convention.analyze.detekt") }
+    apply { plugin("ru.vs.convention.test.kover") }
 }
 
 // Add additional configuration to check build-logic
