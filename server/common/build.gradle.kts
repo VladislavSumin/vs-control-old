@@ -11,6 +11,7 @@ buildConfig {
     className("BuildConfig")
     packageName("ru.vs.control")
     buildConfigField("String", "version", "\"${project.configuration.version}\"")
+    buildConfigField("String", "sentryToken", "\"${project.configuration.sentry.serverToken}\"")
 }
 
 kotlin {
@@ -25,6 +26,8 @@ kotlin {
                 implementation(projects.feature.serviceCamsNetsurv.serverImpl)
                 implementation(projects.feature.serviceDebug.serverImpl)
                 implementation(projects.feature.services.serverImpl)
+
+                implementation(coreLibs.vs.core.analytic.sentry)
 
                 implementation(coreLibs.vs.core.ktor.network)
                 implementation(coreLibs.vs.core.ktor.server)

@@ -5,6 +5,7 @@ import kotlinx.coroutines.launch
 import org.kodein.di.direct
 import org.kodein.di.instance
 import ru.vs.control.domain.AboutServerInteractor
+import ru.vs.control.domain.SentryInteractor
 import ru.vs.control.service_cams_netsurv.domain.NetsurvCamsService
 import ru.vs.control.service_debug.domain.DebugService
 import ru.vs.control.services.domain.ServicesInteractor
@@ -17,6 +18,9 @@ fun commonMain() {
     val scope = ServerScope()
 
     val di = createDiGraph(scope)
+
+    val sentryInteractor: SentryInteractor by di.instance()
+    sentryInteractor.init()
 
     val aboutServerInteractor: AboutServerInteractor by di.instance()
     val webServer: WebServer by di.instance()
