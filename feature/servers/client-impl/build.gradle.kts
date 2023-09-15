@@ -16,9 +16,10 @@ android {
     namespace = "ru.vs.control.servers.client_impl"
 }
 
-multiplatformResources {
-    multiplatformResourcesPackage = "ru.vs.control.servers.client_impl"
-}
+// TODO подождать пока mokko-resources обновится
+//multiplatformResources {
+//    multiplatformResourcesPackage = "ru.vs.control.servers.client_impl"
+//}
 
 kotlin {
     sourceSets {

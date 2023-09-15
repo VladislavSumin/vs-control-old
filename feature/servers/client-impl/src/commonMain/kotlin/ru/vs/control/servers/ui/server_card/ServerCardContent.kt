@@ -28,9 +28,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import dev.icerock.moko.resources.compose.stringResource
 import ru.vs.control.about_server.domain.AboutServerInteractor
-import ru.vs.control.servers.client_impl.MR
 import ru.vs.core.uikit.dropdown_menu.DropdownMenu
 import ru.vs.core.uikit.dropdown_menu.DropdownMenuItem
 
@@ -124,11 +122,19 @@ private fun ServerDropDownMenu(
             onDismissRequest = { isExpanded = false },
         ) {
             DropdownMenuItem(
-                { Text(stringResource(MR.strings.servers_content_edit)) },
+                {
+                    // TODO подождать пока mokko-resources обновится
+                    // Text(stringResource(MR.strings.servers_content_edit))
+                    Text("Изменить")
+                },
                 { component.onClickEditServer(); isExpanded = false }
             )
             DropdownMenuItem(
-                { Text(stringResource(MR.strings.servers_content_delete)) },
+                {
+                    // TODO подождать пока mokko-resources обновится
+                    // Text(stringResource(MR.strings.servers_content_delete))
+                    Text("Удалить")
+                },
                 { component.onClickDeleteServer(); isExpanded = false }
             )
         }
@@ -139,7 +145,9 @@ private fun ServerDropDownMenu(
 private fun ServerConnectionStatus(server: ServerCardViewState) {
     Row {
         Text(
-            stringResource(MR.strings.servers_content_connection_status),
+            // TODO подождать пока mokko-resources обновится
+            //stringResource(MR.strings.servers_content_connection_status),
+            "Статус подключения:",
             style = MaterialTheme.typography.bodyMedium,
         )
         Spacer(Modifier.defaultMinSize(minWidth = 4.dp))
@@ -152,18 +160,23 @@ private fun ServerConnectionStatus(server: ServerCardViewState) {
             is AboutServerInteractor.ConnectionStatusWithServerInfo.Reconnecting -> Color.Red
         }
 
+        // TODO подождать пока mokko-resources обновится
         val statusText = when (server.connectionStatus) {
             is AboutServerInteractor.ConnectionStatusWithServerInfo.Connected ->
-                stringResource(MR.strings.servers_content_connection_status_connected)
+                //stringResource(MR.strings.servers_content_connection_status_connected)
+                "Подключено"
 
             AboutServerInteractor.ConnectionStatusWithServerInfo.Connecting ->
-                stringResource(MR.strings.servers_content_connection_status_connecting)
+                //stringResource(MR.strings.servers_content_connection_status_connecting)
+                "Подключение"
 
             is AboutServerInteractor.ConnectionStatusWithServerInfo.Reconnecting ->
-                stringResource(MR.strings.servers_content_connection_status_connection_error)
+                //stringResource(MR.strings.servers_content_connection_status_connection_error)
+                "Ошибка подключения"
 
             is AboutServerInteractor.ConnectionStatusWithServerInfo.FailedToGetServerInfo ->
-                stringResource(MR.strings.servers_content_connection_status_get_server_info_error)
+                //stringResource(MR.strings.servers_content_connection_status_get_server_info_error)
+                "Ошибка при получении информации о сервере"
         }
 
         Text(

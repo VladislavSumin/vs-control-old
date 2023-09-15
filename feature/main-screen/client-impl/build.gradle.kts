@@ -7,9 +7,10 @@ android {
     namespace = "ru.vs.control.main_screen.client_impl"
 }
 
-multiplatformResources {
-    multiplatformResourcesPackage = "ru.vs.control.main_screen.client_impl"
-}
+// TODO подождать пока mokko-resources обновится
+//multiplatformResources {
+//    multiplatformResourcesPackage = "ru.vs.control.main_screen.client_impl"
+//}
 
 kotlin {
     sourceSets {

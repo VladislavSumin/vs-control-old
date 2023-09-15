@@ -20,10 +20,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.arkivanov.decompose.extensions.compose.jetbrains.subscribeAsState
-import dev.icerock.moko.resources.StringResource
-import dev.icerock.moko.resources.compose.stringResource
 import kotlinx.coroutines.launch
-import ru.vs.control.main_screen.client_impl.MR
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -71,7 +68,7 @@ private fun Body(
     val selectedElement by component.selectedDrawerElement.subscribeAsState()
     DrawerElement.values().forEach { drawerElement ->
         NavigationDrawerItem(
-            label = { Text(stringResource(drawerElement.titleRes)) },
+            label = { Text(drawerElement.titleRes) },
             selected = drawerElement == selectedElement,
             onClick = {
                 component.onSelectDrawerElement(drawerElement)
@@ -82,9 +79,17 @@ private fun Body(
     }
 }
 
-private val DrawerElement.titleRes: StringResource
+// TODO подождать пока mokko-resources обновится
+//private val DrawerElement.titleRes: StringResource
+//    get() = when (this) {
+//        DrawerElement.Entities -> MR.strings.drawer_item_entities
+//        DrawerElement.Services -> MR.strings.drawer_item_services
+//        DrawerElement.Servers -> MR.strings.drawer_item_servers
+//    }
+
+private val DrawerElement.titleRes: String
     get() = when (this) {
-        DrawerElement.Entities -> MR.strings.drawer_item_entities
-        DrawerElement.Services -> MR.strings.drawer_item_services
-        DrawerElement.Servers -> MR.strings.drawer_item_servers
+        DrawerElement.Entities -> "Сущности"
+        DrawerElement.Services -> "Сервисы"
+        DrawerElement.Servers -> "Сервера"
     }

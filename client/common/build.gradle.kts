@@ -21,9 +21,10 @@ android {
     namespace = "ru.vs.control.common"
 }
 
-multiplatformResources {
-    multiplatformResourcesPackage = "ru.vs.control.common"
-}
+// TODO подождать пока mokko-resources обновится
+//multiplatformResources {
+//    multiplatformResourcesPackage = "ru.vs.control.common"
+//}
 
 kotlin {
 //    cocoapods {

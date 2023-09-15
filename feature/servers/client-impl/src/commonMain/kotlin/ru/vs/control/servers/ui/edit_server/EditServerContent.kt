@@ -16,8 +16,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import dev.icerock.moko.resources.compose.stringResource
-import ru.vs.control.servers.client_impl.MR
 import ru.vs.control.servers.ui.edit_server.EditServerViewModel.Intent
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -32,18 +30,24 @@ internal fun EditServerContent(component: EditServerComponent) {
                 value = state.name,
                 singleLine = true,
                 onValueChange = { component.accept(Intent.UpdateName(it)) },
-                label = { Text(stringResource(MR.strings.edit_server_server_name)) },
+                // TODO подождать пока mokko-resources обновится
+                // label = { Text(stringResource(MR.strings.edit_server_server_name)) },
+                label = { Text("Имя сервера") },
             )
 
             OutlinedTextField(
                 value = state.host,
                 singleLine = true,
                 onValueChange = { component.accept(Intent.UpdateHost(it)) },
-                label = { Text(stringResource(MR.strings.edit_server_server_hostname)) },
+                // TODO подождать пока mokko-resources обновится
+                // label = { Text(stringResource(MR.strings.edit_server_server_hostname)) },
+                label = { Text("Hostname сервера") },
             )
 
             Button(onClick = { component.accept(Intent.Save) }) {
-                Text(stringResource(MR.strings.edit_server_save))
+                // TODO подождать пока mokko-resources обновится
+                // Text(stringResource(MR.strings.edit_server_save))
+                Text("Сохранить")
             }
         }
     }
@@ -52,10 +56,13 @@ internal fun EditServerContent(component: EditServerComponent) {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun EditServerTopBar(state: EditServerViewState, component: EditServerComponent) {
-    val titleResource = if (state.isEditMode) MR.strings.edit_server_edit_server
-    else MR.strings.edit_server_add_server
+    // TODO подождать пока mokko-resources обновится
+    // val titleResource = if (state.isEditMode) MR.strings.edit_server_edit_server
+    // else MR.strings.edit_server_add_server
+    val titleResource = if (state.isEditMode) "Редактировать сервер"
+    else "Добавить сервер"
     TopAppBar(
-        title = { Text(stringResource(titleResource)) },
+        title = { Text(titleResource) },
         navigationIcon = {
             IconButton(onClick = { component.accept(Intent.Back) }) {
                 Icon(Icons.Default.ArrowBack, contentDescription = null)
