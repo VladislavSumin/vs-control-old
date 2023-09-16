@@ -41,7 +41,7 @@ tasks.register("ci") {
     dependsOn(":client:android:assembleDebug")
     // dependsOn(":client:android:assembleRelease")
     dependsOn(":client:jvm:buildFatJarMain")
-    dependsOn(":client:js:jsBrowserDistribution")
+    // dependsOn(":client:js:jsBrowserDistribution")
     // TODO internal ktor error see https://youtrack.jetbrains.com/issue/KTOR-5728
     // dependsOn(":client:macos:macosArm64Binaries")
     // dependsOn(":client:macos:macosX64Binaries")
