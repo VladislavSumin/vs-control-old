@@ -44,6 +44,19 @@ dependencyResolutionManagement {
     }
 }
 
+plugins {
+    id("com.gradle.enterprise") version("3.15.1")
+}
+
+gradleEnterprise {
+    buildScan {
+        termsOfServiceUrl = "https://gradle.com/terms-of-service"
+        termsOfServiceAgree = "yes"
+        publishAlways()
+    }
+}
+
+
 val isUseCoreSources = extra["ru.vs.control.use_core_sources"].toString().toBoolean()
 if (isUseCoreSources) {
     includeBuild("../vs-core-kt")
