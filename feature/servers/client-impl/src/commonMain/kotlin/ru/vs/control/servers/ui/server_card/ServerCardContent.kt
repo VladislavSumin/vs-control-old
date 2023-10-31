@@ -1,6 +1,8 @@
 package ru.vs.control.servers.ui.server_card
 
+import androidx.compose.desktop.ui.tooling.preview.Preview
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -195,4 +197,18 @@ private fun ServerServerInfo(server: ServerCardViewState) {
         "Server version: $version",
         style = MaterialTheme.typography.bodyMedium,
     )
+}
+
+@Preview
+@Composable
+private fun ServerCardPreview() {
+    MaterialTheme {
+        Column(
+            verticalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            ServerCardComponentPreview.PreviewType.entries.forEachIndexed { index, previewType ->
+                ServerCardContent(ServerCardComponentPreview(previewType, index))
+            }
+        }
+    }
 }
