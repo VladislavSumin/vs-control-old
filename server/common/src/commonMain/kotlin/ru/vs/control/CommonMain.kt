@@ -1,6 +1,6 @@
 package ru.vs.control
 
-import io.github.oshai.KotlinLogging
+import io.github.oshai.kotlinlogging.KotlinLogging
 import kotlinx.coroutines.launch
 import org.kodein.di.direct
 import org.kodein.di.instance

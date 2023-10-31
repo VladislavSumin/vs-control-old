@@ -1,7 +1,7 @@
 package ru.vs.rsub
 
-import io.github.oshai.KLogger
-import io.github.oshai.KotlinLogging
+import io.github.oshai.kotlinlogging.KLogger
+import io.github.oshai.kotlinlogging.KotlinLogging
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.CoroutineStart
