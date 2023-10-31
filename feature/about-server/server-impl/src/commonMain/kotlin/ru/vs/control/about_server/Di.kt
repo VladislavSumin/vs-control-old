@@ -7,5 +7,5 @@ import ru.vs.control.about_server.rsub.AboutServerRSubImpl
 import ru.vs.core.di.Modules
 
 fun Modules.featureAboutServer() = DI.Module("feature-about-server") {
-    bindSingleton <AboutServerRSub> { AboutServerRSubImpl() }
+    bindSingleton<AboutServerRSub> { AboutServerRSubImpl() }
 }

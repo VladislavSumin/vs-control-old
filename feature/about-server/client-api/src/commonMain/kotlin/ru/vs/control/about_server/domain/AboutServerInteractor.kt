@@ -22,7 +22,7 @@ interface AboutServerInteractor {
      * Represent current connection state
      */
     sealed interface ConnectionStatusWithServerInfo {
-        object Connecting : ConnectionStatusWithServerInfo
+        data object Connecting : ConnectionStatusWithServerInfo
         data class Connected(val serverInfo: ServerInfo) : ConnectionStatusWithServerInfo
         data class FailedToGetServerInfo(val error: Throwable) : ConnectionStatusWithServerInfo
         data class Reconnecting(val connectionError: Exception) : ConnectionStatusWithServerInfo

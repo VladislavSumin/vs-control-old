@@ -1,58 +1,77 @@
 package ru.vs.control.servers.ui.server_card
 
-import kotlinx.coroutines.flow.SharingStarted
+import androidx.compose.runtime.Stable
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.stateIn
-import kotlinx.coroutines.launch
 import ru.vs.control.about_server.domain.AboutServerInteractor
 import ru.vs.control.servers.domain.Server
 import ru.vs.control.servers.domain.ServersInteractor
 import ru.vs.core.decompose.viewmodel.ViewModel
 import ru.vs.core.factory_generator.GenerateFactory
 
+@Stable
+internal interface ServerCardViewModel {
+    val state: StateFlow<ServerCardViewState>
+    fun deleteCurrentServer()
+    fun selectCurrentServer()
+}
+
 @GenerateFactory(ServerCardViewModelFactory::class)
-internal class ServerCardViewModel(
+internal class ServerCardViewModelImpl(
     private val serversInteractor: ServersInteractor,
-    aboutServerInteractor: AboutServerInteractor,
+    private val aboutServerInteractor: AboutServerInteractor,
     private val server: Server
-) : ViewModel() {
-    val state = combine(
-        serversInteractor.observeSelectedServerId()
-            .map { it == server.id }
-            .distinctUntilChanged(),
-        aboutServerInteractor.observeConnectionStatusWithServerInfo(server),
-    ) { isCurrentServerSelected, connectionStatus ->
-        ServerCardViewState(
+) : ViewModel(), ServerCardViewModel {
+    override val state = combine(
+        observeIsCurrentServerSelected(),
+        observeConnectionStatusWithServerInfo(),
+        ::createState
+    ).stateIn(createInitialState())
+
+    override fun deleteCurrentServer() = launch {
+        serversInteractor.deleteServer(server.id)
+    }
+
+    override fun selectCurrentServer() = launch {
+        serversInteractor.setSelectedServer(server.id)
+    }
+
+    private fun createState(
+        isCurrentServerSelected: Boolean,
+        connectionStatus: AboutServerInteractor.ConnectionStatusWithServerInfo,
+    ): ServerCardViewState {
+        return ServerCardViewState(
             server = server,
             connectionStatus = connectionStatus,
             isSelected = isCurrentServerSelected,
         )
     }
-        .stateIn(
-            viewModelScope,
-            SharingStarted.Eagerly,
-            ServerCardViewState(
-                server = server,
-                connectionStatus = AboutServerInteractor.ConnectionStatusWithServerInfo.Connecting,
-                isSelected = false,
-            )
-        )
 
-    fun deleteCurrentServer() {
-        viewModelScope.launch {
-            serversInteractor.deleteServer(server.id)
-        }
+    private fun observeConnectionStatusWithServerInfo(): Flow<AboutServerInteractor.ConnectionStatusWithServerInfo> {
+        return aboutServerInteractor.observeConnectionStatusWithServerInfo(server)
     }
 
-    fun selectCurrentServer() {
-        viewModelScope.launch {
-            serversInteractor.setSelectedServer(server.id)
-        }
+    /**
+     * Возвращает [Flow] является ли текущий сервер [server] сервером по умолчанию
+     */
+    private fun observeIsCurrentServerSelected(): Flow<Boolean> {
+        return serversInteractor.observeSelectedServerId()
+            .map { it == server.id }
+            .distinctUntilChanged()
+    }
+
+    private fun createInitialState(): ServerCardViewState {
+        return ServerCardViewState(
+            server = server,
+            connectionStatus = AboutServerInteractor.ConnectionStatusWithServerInfo.Connecting,
+            isSelected = false,
+        )
     }
 }
 
 internal interface ServerCardViewModelFactory {
-    fun create(server: Server): ServerCardViewModel
+    fun create(server: Server): ServerCardViewModelImpl
 }
