@@ -5,7 +5,7 @@ import kotlinx.serialization.serializer
 import kotlin.reflect.KClass
 
 /**
- * Used to pass external serializer for custom [EntityState]
+ * Used to pass external serializer for custom [EntityState].
  *
  * Bind our custom entities serializer into root kodein module:
  * ```
@@ -14,8 +14,8 @@ import kotlin.reflect.KClass
  * }
  *```
  *
- * @param kClass - custom entity state class
- * @param kSerializer - serializer for [kClass] entity
+ * @param kClass - custom entity state class.
+ * @param kSerializer - serializer for [kClass] entity state.
  */
 data class ExternalEntityStateSerializer<T : EntityState>(val kClass: KClass<T>, val kSerializer: KSerializer<T>) {
     companion object {

@@ -16,7 +16,7 @@ internal interface EntityStateSerializerModuleFactory {
 }
 
 internal class EntityStateSerializerModuleFactoryImpl(
-    private val externalEntitiesSerializers: Set<ExternalEntityStateSerializer<EntityState>>,
+    private val externalEntityStateSerializers: Set<ExternalEntityStateSerializer<EntityState>>,
 ) : EntityStateSerializerModuleFactory {
     override fun create(): SerializersModule {
         return SerializersModule {
@@ -38,7 +38,7 @@ internal class EntityStateSerializerModuleFactoryImpl(
      * Register external [EntityState] types provides from other modules, see [ExternalEntityStateSerializer].
      */
     private fun PolymorphicModuleBuilder<EntityState>.registerExternalTypes() {
-        externalEntitiesSerializers.forEach {
+        externalEntityStateSerializers.forEach {
             subclass(it.kClass, it.kSerializer)
         }
     }
