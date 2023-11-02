@@ -3,8 +3,10 @@ package ru.vs.control.entities.dto
 import kotlinx.serialization.modules.PolymorphicModuleBuilder
 import kotlinx.serialization.modules.SerializersModule
 import kotlinx.serialization.modules.polymorphic
+import kotlinx.serialization.modules.subclass
 import ru.vs.control.entities.domain.EntityProperty
 import ru.vs.control.entities.domain.ExternalEntityPropertySerializer
+import ru.vs.control.entities.domain.base_entity_properties.DefaultNameEntityProperty
 
 /**
  * Factory to create [SerializersModule] for polymorphic [EntityProperty] serialization.
@@ -29,7 +31,7 @@ internal class EntityPropertySerializerModuleFactoryImpl(
      * Register base set of [EntityProperty].
      */
     private fun PolymorphicModuleBuilder<EntityProperty>.registerBaseTypes() {
-        // subclass(BooleanEntityState::class)
+        subclass(DefaultNameEntityProperty::class)
     }
 
     /**
