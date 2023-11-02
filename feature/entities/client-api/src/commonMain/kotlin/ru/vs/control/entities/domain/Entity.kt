@@ -13,7 +13,8 @@ import ru.vs.control.servers.domain.Server
 data class Entity<T : EntityState>(
     val server: Server,
     override val id: EntityId,
-    override val primaryState: T
+    override val primaryState: T,
+    override val properties: EntityProperties,
 ) : BaseEntity<T>
 
 typealias Entities<T> = Map<EntityId, Entity<T>>
