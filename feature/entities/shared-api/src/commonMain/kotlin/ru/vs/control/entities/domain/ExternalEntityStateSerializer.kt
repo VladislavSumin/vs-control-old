@@ -9,18 +9,18 @@ import kotlin.reflect.KClass
  *
  * Bind our custom entities serializer into root kodein module:
  * ```
- * inBindSet<ExternalEntitySerializer<out EntityState>> {
- *     add { singleton { ExternalEntitySerializer<ExampleEntityState>() } }
+ * inBindSet<ExternalEntityStateSerializer<out EntityState>> {
+ *     add { singleton { ExternalEntityStateSerializer<ExampleEntityState>() } }
  * }
  *```
  *
  * @param kClass - custom entity state class
  * @param kSerializer - serializer for [kClass] entity
  */
-data class ExternalEntitySerializer<T : EntityState>(val kClass: KClass<T>, val kSerializer: KSerializer<T>) {
+data class ExternalEntityStateSerializer<T : EntityState>(val kClass: KClass<T>, val kSerializer: KSerializer<T>) {
     companion object {
-        inline operator fun <reified T : EntityState> invoke(): ExternalEntitySerializer<T> {
-            return ExternalEntitySerializer(T::class, serializer())
+        inline operator fun <reified T : EntityState> invoke(): ExternalEntityStateSerializer<T> {
+            return ExternalEntityStateSerializer(T::class, serializer())
         }
     }
 }
