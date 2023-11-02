@@ -11,9 +11,18 @@ class EntityProperties private constructor(
     val raw: Collection<EntityProperty> get() = internalMap.values
 
     /**
-     * Allow any type of collections, but remember that property in collection must be unique by type.
+     * Remember that property in collection must be unique by type.
      */
     constructor(properties: Collection<EntityProperty>) : this(
+        internalMap = properties
+            .associateBy { it::class }
+            .also { check(it.size == properties.size) { "properties must be unique by type" } }
+    )
+
+    /**
+     * Remember that property in collection must be unique by type.
+     */
+    constructor(vararg properties: EntityProperty) : this(
         internalMap = properties
             .associateBy { it::class }
             .also { check(it.size == properties.size) { "properties must be unique by type" } }

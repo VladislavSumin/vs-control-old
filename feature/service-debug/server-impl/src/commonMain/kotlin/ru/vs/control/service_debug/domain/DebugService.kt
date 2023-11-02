@@ -4,6 +4,8 @@ import kotlinx.coroutines.delay
 import ru.vs.control.entities.domain.EntitiesInteractor
 import ru.vs.control.entities.domain.Entity
 import ru.vs.control.entities.domain.EntityId
+import ru.vs.control.entities.domain.EntityProperties
+import ru.vs.control.entities.domain.base_entity_properties.DefaultNameEntityProperty
 import ru.vs.control.entities.domain.base_entity_states.BooleanEntityState
 import ru.vs.control.id.Id
 import ru.vs.control.services.domain.BaseService
@@ -21,7 +23,10 @@ internal class DebugServiceImpl(
         entitiesInteractor.holdEntity(
             Entity(
                 EntityId(DEBUG_SERVICE_ID, Id.SimpleId("flip_flop")),
-                BooleanEntityState(false)
+                BooleanEntityState(false),
+                EntityProperties(
+                    DefaultNameEntityProperty("[debug] Flip-Flop")
+                ),
             )
         ) { update ->
             while (true) {

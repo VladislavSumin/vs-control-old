@@ -10,12 +10,15 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import ru.vs.control.entities.domain.base_entity_properties.DefaultNameEntityProperty
 
 @Composable
 internal fun BooleanEntityStateContent(component: BooleanEntityStateComponent) {
     val entity by component.entityState.collectAsState()
     Card(Modifier.fillMaxWidth()) {
         Column(modifier = Modifier.padding(horizontal = 16.dp, vertical = 12.dp)) {
+            val name = entity.properties[DefaultNameEntityProperty::class]?.name
+            if (name != null) Text(name)
             Text(entity.id.rawId)
             Text("Boolean=${entity.primaryState.value}")
         }
