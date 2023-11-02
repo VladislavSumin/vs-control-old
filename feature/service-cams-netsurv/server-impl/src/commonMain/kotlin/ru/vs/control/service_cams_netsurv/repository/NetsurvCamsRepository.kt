@@ -10,17 +10,17 @@ internal interface NetsurvCamsRepository {
 }
 
 internal class NetsurvCamsRepositoryImpl : NetsurvCamsRepository {
-    private val cams = listOf(
+    private val cams = listOf<NetsurvCamera>(
 //        NetsurvCamera(
 //            baseId = "lift",
 //            hostname = "10.10.2.2",
 //            port = 34567,
 //        ),
-        NetsurvCamera(
-            baseId = "dacha1",
-            hostname = "10.10.5.2",
-            port = 34567,
-        ),
+//        NetsurvCamera(
+//            baseId = "dacha1",
+//            hostname = "10.10.5.2",
+//            port = 34567,
+//        ),
 //        NetsurvCamera(
 //            baseId = "dacha2",
 //            hostname = "10.10.5.3",
