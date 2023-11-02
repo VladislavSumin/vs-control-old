@@ -3,9 +3,9 @@ package ru.vs.control.entities.domain
 import kotlinx.serialization.Serializable
 
 /**
- * Primary entity state, see [Entity.primaryState]
- * Abstract because interface not support [Serializable] annotation
+ * Primary entity state, see [BaseEntity.primaryState].
+ *
+ * Implementation of this interface must be [Serializable] and registered with special way,
+ * see [ExternalEntitySerializer]
  */
-@Suppress("UnnecessaryAbstractClass")
-@Serializable
-abstract class EntityState
+interface EntityState

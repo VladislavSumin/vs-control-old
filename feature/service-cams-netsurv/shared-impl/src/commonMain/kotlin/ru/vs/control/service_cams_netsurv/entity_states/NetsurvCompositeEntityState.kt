@@ -15,4 +15,4 @@ data class NetsurvCompositeEntityState(
     val connectionId: EntityId,
     val motionId: EntityId,
     val liveVideoStreamId: EntityId
-) : EntityState()
+) : EntityState

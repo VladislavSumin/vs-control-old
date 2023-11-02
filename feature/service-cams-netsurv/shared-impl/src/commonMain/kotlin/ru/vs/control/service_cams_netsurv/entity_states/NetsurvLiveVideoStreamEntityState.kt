@@ -8,4 +8,4 @@ import ru.vs.control.entities.domain.EntityState
  * Used to show live camera stream.
  */
 @Serializable
-data class NetsurvLiveVideoStreamEntityState(val cameraId: String) : EntityState()
+data class NetsurvLiveVideoStreamEntityState(val cameraId: String) : EntityState
