@@ -1,6 +1,7 @@
 package ru.vs.control.servers.ui.server_card
 
 import androidx.compose.desktop.ui.tooling.preview.Preview
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -11,8 +12,8 @@ import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material3.Card
 import androidx.compose.material3.Divider
@@ -28,9 +29,11 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import ru.vs.control.about_server.domain.AboutServerInteractor
+import ru.vs.core.uikit.auto_size_text.AutoSizeText
 import ru.vs.core.uikit.dropdown_menu.DropdownMenu
 import ru.vs.core.uikit.dropdown_menu.DropdownMenuItem
 
@@ -61,13 +64,18 @@ private fun ServerHeader(
     component: ServerCardComponent
 ) {
     Row {
-        Icon(
-            Icons.Default.AccountCircle,
-            contentDescription = null,
-            modifier = Modifier
+        Box(
+            Modifier
                 .size(40.dp)
+                .clip(CircleShape)
                 .align(Alignment.CenterVertically)
-        )
+                .background(MaterialTheme.colorScheme.primaryContainer)
+        ) {
+            AutoSizeText(
+                server.server.name.firstOrNull().toString(),
+                Modifier.align(Alignment.Center)
+            )
+        }
         Spacer(Modifier.size(width = 12.dp, height = 0.dp))
         Column(
             modifier = Modifier
