@@ -1,41 +1,30 @@
 package ru.vs.control.servers.ui.server_header
 
 import androidx.compose.desktop.ui.tooling.preview.Preview
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import ru.vs.control.servers_connection.domain.ServerConnectionInteractor
-import ru.vs.core.uikit.auto_size_text.AutoSizeText
+import ru.vs.core.uikit.letter_avatar.LetterAvatar
 
 @Composable
 internal fun ServerHeaderContent(component: ServerHeaderComponent, modifier: Modifier = Modifier) {
     val state = component.state.collectAsState().value ?: return
 
     Column(modifier) {
-        Box(
+        LetterAvatar(
+            state.server.name.firstOrNull().toString(),
             Modifier
-                .size(56.dp)
-                .clip(CircleShape)
                 .align(Alignment.CenterHorizontally)
-                .background(MaterialTheme.colorScheme.primaryContainer)
-        ) {
-            AutoSizeText(
-                state.server.name.firstOrNull().toString(),
-                Modifier.align(Alignment.Center)
-            )
-        }
-
+                .size(56.dp)
+        )
         Text(
             state.server.name,
             Modifier.align(Alignment.CenterHorizontally),
