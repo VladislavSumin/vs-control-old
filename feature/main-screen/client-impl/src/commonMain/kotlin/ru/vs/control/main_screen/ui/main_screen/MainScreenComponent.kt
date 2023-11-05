@@ -13,7 +13,7 @@ import com.arkivanov.decompose.value.Value
 import com.arkivanov.decompose.value.operator.map
 import com.arkivanov.essenty.parcelable.Parcelable
 import com.arkivanov.essenty.parcelable.Parcelize
-import ru.vs.control.entities.ui.entities.EntitiesComponentFactory
+import ru.vs.control.entities.ui.entities_screen.EntitiesScreenComponentFactory
 import ru.vs.control.root_navigation.ui.RootNavigationConfig
 import ru.vs.control.servers.ui.server_header.ServerHeaderComponentFactory
 import ru.vs.control.servers.ui.servers.ServersComponentFactory
@@ -23,7 +23,7 @@ import ru.vs.core.factory_generator.GenerateFactory
 
 @GenerateFactory(MainScreenComponentFactory::class)
 internal class MainScreenComponent(
-    private val entitiesComponentFactory: EntitiesComponentFactory,
+    private val entitiesScreenComponentFactory: EntitiesScreenComponentFactory,
     private val serversComponentFactory: ServersComponentFactory,
     private val servicesComponentFactory: ServicesComponentFactory,
     serverHeaderComponentFactory: ServerHeaderComponentFactory,
@@ -64,7 +64,7 @@ internal class MainScreenComponent(
     }
 
     private fun entitiesComponent(componentContext: ComponentContext): ComposeComponent {
-        return entitiesComponentFactory.create(componentContext)
+        return entitiesScreenComponentFactory.create(componentContext)
     }
 
     private fun servicesComponent(componentContext: ComponentContext): ComposeComponent {

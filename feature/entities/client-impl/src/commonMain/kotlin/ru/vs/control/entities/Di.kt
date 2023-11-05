@@ -15,6 +15,8 @@ import ru.vs.control.entities.ui.entities.boolean_entity_state.BooleanEntityStat
 import ru.vs.control.entities.ui.entities.entity_state.EntityStateComponentFactory
 import ru.vs.control.entities.ui.entities.entity_state.EntityStateComponentFactoryRegistry
 import ru.vs.control.entities.ui.entities.entity_state.EntityStateComponentFactoryRegistryImpl
+import ru.vs.control.entities.ui.entities_screen.EntitiesScreenComponentFactory
+import ru.vs.control.entities.ui.entities_screen.EntitiesScreenComponentFactoryImpl
 import ru.vs.core.di.Modules
 import ru.vs.core.di.i
 
@@ -34,6 +36,7 @@ fun Modules.featureEntities() = DI.Module("feature-entities") {
 
     // Component factories
     bindSingleton<EntitiesComponentFactory> { EntitiesComponentFactoryImpl(i(), i()) }
+    bindSingleton<EntitiesScreenComponentFactory> { EntitiesScreenComponentFactoryImpl(i()) }
 
     // Other
     bindSingleton<EntityStateComponentFactoryRegistry> { EntityStateComponentFactoryRegistryImpl(i()) }
