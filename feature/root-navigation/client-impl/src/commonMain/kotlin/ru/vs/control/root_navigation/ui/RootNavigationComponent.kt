@@ -53,6 +53,10 @@ internal class RootNavigationComponent(
         )
     }
 
+    fun navigateBack() {
+        navigation.pop()
+    }
+
     @Composable
     override fun Render(modifier: Modifier) = RootNavigationContent(this)
 }

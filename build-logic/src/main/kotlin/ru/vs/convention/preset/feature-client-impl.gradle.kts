@@ -25,6 +25,7 @@ kotlin {
                 implementation(coreLibs.vs.core.keyValueStorage)
                 implementation(coreLibs.vs.core.ktor.client)
                 implementation(coreLibs.vs.core.logging)
+                implementation(coreLibs.vs.core.navigation)
                 implementation(coreLibs.vs.core.serialization.json)
                 implementation(coreLibs.vs.core.uikit.autoSizeText)
                 implementation(coreLibs.vs.core.uikit.dropdownMenu)
