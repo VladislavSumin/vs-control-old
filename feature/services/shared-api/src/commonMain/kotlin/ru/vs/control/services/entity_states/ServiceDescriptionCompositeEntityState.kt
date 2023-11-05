@@ -12,4 +12,4 @@ interface ServiceDescriptionCompositeEntityState : CompositeEntityState
  * State for service description without dynamic content
  */
 @Serializable
-data object EmptyServiceDescriptionCompositeEntityState : ServiceDescriptionCompositeEntityState
+data object SimpleServiceDescriptionCompositeEntityState : ServiceDescriptionCompositeEntityState

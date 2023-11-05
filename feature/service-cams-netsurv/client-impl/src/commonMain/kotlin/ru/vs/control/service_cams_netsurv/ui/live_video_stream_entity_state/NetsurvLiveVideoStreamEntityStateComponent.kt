@@ -26,8 +26,7 @@ internal class NetsurvLiveVideoStreamEntityStateComponent(
 
 internal class NetsurvLiveVideoStreamEntityStateComponentFactory(
     private val entityStateViewModelFactory: NetsurvLiveVideoStreamEntityStateViewModelFactory,
-) :
-    EntityStateComponentFactory<NetsurvLiveVideoStreamEntityState> {
+) : EntityStateComponentFactory<NetsurvLiveVideoStreamEntityState> {
     override val entityStateType: KClass<NetsurvLiveVideoStreamEntityState> = NetsurvLiveVideoStreamEntityState::class
 
     override fun create(

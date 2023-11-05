@@ -11,9 +11,9 @@ import ru.vs.control.entities.domain.EntityProperties
 import ru.vs.control.entities.domain.base_entity_properties.DefaultNameEntityProperty
 import ru.vs.control.entities.domain.base_entity_states.BooleanEntityState
 import ru.vs.control.id.Id
-import ru.vs.control.services.entity_states.EmptyServiceDescriptionCompositeEntityState
 import ru.vs.control.services.domain.BaseService
 import ru.vs.control.services.domain.Service
+import ru.vs.control.services.entity_states.SimpleServiceDescriptionCompositeEntityState
 
 /**
  * Debug service adds some basic debug entities
@@ -61,7 +61,7 @@ internal class DebugServiceImpl(
         entitiesInteractor.holdConstantEntity(
             Entity(
                 EntityId(DEBUG_SERVICE_ID, Id.SimpleId("service_description")),
-                EmptyServiceDescriptionCompositeEntityState,
+                SimpleServiceDescriptionCompositeEntityState,
                 EntityProperties(
                     DefaultNameEntityProperty("Debug Service")
                 ),
