@@ -6,13 +6,15 @@ import ru.vs.control.id.Id
 
 /**
  * Service is "plugin" for server.
+ *
+ * Services can have one or more instances. Current interface represent instance of service
  */
 interface Service {
     /**
      * Service id, must be unique.
      * Use this id as first part of entity composite id
      */
-    val id: Id
+    val id: Id.SimpleId
 
     /**
      * Run all service tasks here, when caller coroutine scope will cancel - stop any service operations

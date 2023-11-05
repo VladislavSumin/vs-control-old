@@ -8,5 +8,7 @@ import ru.vs.core.di.Modules
 import ru.vs.core.di.i
 
 fun Modules.featureServices() = DI.Module("feature-services") {
+    importOnce(Modules.featureServiceShared())
+
     bindSingleton<ServicesInteractor> { ServicesInteractorImpl(i()) }
 }

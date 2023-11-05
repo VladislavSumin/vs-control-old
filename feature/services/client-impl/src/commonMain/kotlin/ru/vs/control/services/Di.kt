@@ -7,5 +7,7 @@ import ru.vs.control.services.ui.services.ServicesComponentFactoryImpl
 import ru.vs.core.di.Modules
 
 fun Modules.featureServices() = DI.Module("feature-services") {
+    importOnce(Modules.featureServiceShared())
+
     bindSingleton<ServicesComponentFactory> { ServicesComponentFactoryImpl() }
 }
