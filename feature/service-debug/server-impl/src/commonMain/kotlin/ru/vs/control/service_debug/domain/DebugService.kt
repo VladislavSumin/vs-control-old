@@ -11,6 +11,9 @@ import ru.vs.control.id.Id
 import ru.vs.control.services.domain.BaseService
 import ru.vs.control.services.domain.Service
 
+/**
+ * Debug service adds some basic debug entities
+ */
 interface DebugService : Service
 
 private val DEBUG_SERVICE_ID = Id.SimpleId("debug")

@@ -6,7 +6,15 @@ import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import ru.vs.control.id.Id
 
+/**
+ * Interact with group of services
+ */
 interface ServicesInteractor {
+
+    /**
+     * Register new service instance
+     * @param service instance of service
+     */
     suspend fun registerService(service: Service)
 }
 

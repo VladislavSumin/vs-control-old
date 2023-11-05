@@ -4,6 +4,9 @@ import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.coroutineScope
 import ru.vs.control.id.Id
 
+/**
+ * Service is "plugin" for server.
+ */
 interface Service {
     /**
      * Service id, must be unique.

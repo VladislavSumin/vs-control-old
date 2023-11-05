@@ -1,8 +1,8 @@
 package ru.vs.control.service_cams_netsurv.entity_states
 
 import kotlinx.serialization.Serializable
+import ru.vs.control.entities.domain.CompositeEntityState
 import ru.vs.control.entities.domain.EntityId
-import ru.vs.control.entities.domain.EntityState
 
 /**
  * Declare composite card with render all info about netsurv camera as one card
@@ -15,4 +15,4 @@ data class NetsurvCompositeEntityState(
     val connectionId: EntityId,
     val motionId: EntityId,
     val liveVideoStreamId: EntityId
-) : EntityState
+) : CompositeEntityState
