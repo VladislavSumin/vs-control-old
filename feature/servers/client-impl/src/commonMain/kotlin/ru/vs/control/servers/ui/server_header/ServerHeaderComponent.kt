@@ -64,5 +64,4 @@ internal class ServerHeaderComponentPreview(previewType: PreviewType, id: Int) :
         Connected,
         Reconnecting,
     }
-
 }

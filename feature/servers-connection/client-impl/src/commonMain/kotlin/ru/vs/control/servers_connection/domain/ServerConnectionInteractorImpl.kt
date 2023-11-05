@@ -38,6 +38,8 @@ private fun RSubConnectionStatus.toConnectionStatus(): ServerConnectionInteracto
     return when (this) {
         RSubConnectionStatus.Connected -> ServerConnectionInteractor.ConnectionStatus.Connected
         RSubConnectionStatus.Connecting -> ServerConnectionInteractor.ConnectionStatus.Connecting
-        is RSubConnectionStatus.Reconnecting -> ServerConnectionInteractor.ConnectionStatus.Reconnecting(connectionError)
+        is RSubConnectionStatus.Reconnecting -> ServerConnectionInteractor.ConnectionStatus.Reconnecting(
+            connectionError
+        )
     }
 }

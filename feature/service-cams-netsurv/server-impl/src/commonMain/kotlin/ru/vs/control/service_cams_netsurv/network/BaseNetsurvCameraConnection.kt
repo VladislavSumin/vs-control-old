@@ -94,7 +94,6 @@ internal abstract class BaseNetsurvCameraConnection(
     ) {
         runWithConnection { read, write ->
             coroutineScope {
-
                 // Authenticate
                 logger.trace { "Authenticating in $hostname:$port" }
                 val sessionId = withTimeout(AUTH_RESPONSE_TIMEOUT) {
@@ -191,7 +190,10 @@ internal abstract class BaseNetsurvCameraConnection(
         networkService.openTcpSocket(hostname, port) { readChannel, writeChannel ->
             block(
                 { Msg.decodeFromChannel(readChannel) },
-                { msg -> msg.encodeToChannel(writeChannel); writeChannel.flush() }
+                { msg ->
+                    msg.encodeToChannel(writeChannel)
+                    writeChannel.flush()
+                }
             )
         }
     }

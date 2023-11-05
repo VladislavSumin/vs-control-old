@@ -137,7 +137,10 @@ private fun ServerDropDownMenu(
                     // Text(stringResource(MR.strings.servers_content_edit))
                     Text("Изменить")
                 },
-                { component.onClickEditServer(); isExpanded = false }
+                {
+                    component.onClickEditServer()
+                    isExpanded = false
+                }
             )
             DropdownMenuItem(
                 {
@@ -145,7 +148,10 @@ private fun ServerDropDownMenu(
                     // Text(stringResource(MR.strings.servers_content_delete))
                     Text("Удалить")
                 },
-                { component.onClickDeleteServer(); isExpanded = false }
+                {
+                    component.onClickDeleteServer()
+                    isExpanded = false
+                }
             )
         }
     }
@@ -156,7 +162,7 @@ private fun ServerConnectionStatus(server: ServerCardViewState) {
     Row {
         Text(
             // TODO подождать пока mokko-resources обновится
-            //stringResource(MR.strings.servers_content_connection_status),
+            // stringResource(MR.strings.servers_content_connection_status),
             "Статус подключения:",
             style = MaterialTheme.typography.bodyMedium,
         )
@@ -173,19 +179,19 @@ private fun ServerConnectionStatus(server: ServerCardViewState) {
         // TODO подождать пока mokko-resources обновится
         val statusText = when (server.connectionStatus) {
             is AboutServerInteractor.ConnectionStatusWithServerInfo.Connected ->
-                //stringResource(MR.strings.servers_content_connection_status_connected)
+                // stringResource(MR.strings.servers_content_connection_status_connected)
                 "Подключено"
 
             AboutServerInteractor.ConnectionStatusWithServerInfo.Connecting ->
-                //stringResource(MR.strings.servers_content_connection_status_connecting)
+                // stringResource(MR.strings.servers_content_connection_status_connecting)
                 "Подключение"
 
             is AboutServerInteractor.ConnectionStatusWithServerInfo.Reconnecting ->
-                //stringResource(MR.strings.servers_content_connection_status_connection_error)
+                // stringResource(MR.strings.servers_content_connection_status_connection_error)
                 "Ошибка подключения"
 
             is AboutServerInteractor.ConnectionStatusWithServerInfo.FailedToGetServerInfo ->
-                //stringResource(MR.strings.servers_content_connection_status_get_server_info_error)
+                // stringResource(MR.strings.servers_content_connection_status_get_server_info_error)
                 "Ошибка при получении информации о сервере"
         }
 

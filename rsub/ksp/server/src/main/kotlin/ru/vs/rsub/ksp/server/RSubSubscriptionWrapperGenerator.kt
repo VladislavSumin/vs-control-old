@@ -60,7 +60,6 @@ class RSubSubscriptionWrapperGenerator(
     }
 
     private fun CodeBlock.Builder.generateInitializerTyped(wrapperFunction: MemberName, method: KSFunctionDeclaration) {
-
         val methodName = method.simpleName.asString()
         this
             .addStatement(

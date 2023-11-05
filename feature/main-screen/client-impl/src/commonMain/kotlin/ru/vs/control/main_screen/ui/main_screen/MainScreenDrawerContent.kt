@@ -10,7 +10,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.arkivanov.decompose.extensions.compose.jetbrains.subscribeAsState
@@ -49,7 +48,7 @@ private fun Body(
 }
 
 // TODO подождать пока mokko-resources обновится
-//private val DrawerElement.titleRes: StringResource
+// private val DrawerElement.titleRes: StringResource
 //    get() = when (this) {
 //        DrawerElement.Entities -> MR.strings.drawer_item_entities
 //        DrawerElement.Services -> MR.strings.drawer_item_services

@@ -17,9 +17,9 @@ android {
 }
 
 // TODO подождать пока mokko-resources обновится
-//multiplatformResources {
+// multiplatformResources {
 //    multiplatformResourcesPackage = "ru.vs.control.servers.client_impl"
-//}
+// }
 
 kotlin {
     sourceSets {

@@ -23,7 +23,6 @@ internal fun ServerHeaderContent(component: ServerHeaderComponent, modifier: Mod
     val state = component.state.collectAsState().value ?: return
 
     Column(modifier) {
-
         Box(
             Modifier
                 .size(56.dp)

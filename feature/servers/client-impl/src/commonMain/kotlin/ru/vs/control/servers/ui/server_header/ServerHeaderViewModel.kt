@@ -49,7 +49,6 @@ internal class ServerHeaderViewModelImpl(
     private fun observeSelectedServer(): Flow<Server?> {
         return serversInteractor.observeSelectedServer()
     }
-
 }
 
 internal interface ServerHeaderViewModelFactory {

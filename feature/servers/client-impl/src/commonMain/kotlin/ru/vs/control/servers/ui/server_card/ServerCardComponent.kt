@@ -30,7 +30,11 @@ internal class ServerCardComponentImpl(
     private val openEditServerScreen: (ServerId) -> Unit,
     context: ComponentContext,
 ) : ServerCardComponent, ComposeComponent, ComponentContext by context {
-    private val viewModel: ServerCardViewModel = instanceKeeper.getOrCreate { serverCardViewModelFactory.create(server) }
+    private val viewModel: ServerCardViewModel = instanceKeeper.getOrCreate {
+        serverCardViewModelFactory.create(
+            server
+        )
+    }
 
     override val state = viewModel.state
 
@@ -98,5 +102,4 @@ internal class ServerCardComponentPreview(previewType: PreviewType, id: Int) : S
         FailedToGetServerInfo,
         Reconnecting,
     }
-
 }

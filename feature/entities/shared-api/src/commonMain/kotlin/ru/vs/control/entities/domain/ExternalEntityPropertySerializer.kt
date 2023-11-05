@@ -17,7 +17,10 @@ import kotlin.reflect.KClass
  * @param kClass - custom entity property class.
  * @param kSerializer - serializer for [kClass] entity property.
  */
-data class ExternalEntityPropertySerializer<T : EntityProperty>(val kClass: KClass<T>, val kSerializer: KSerializer<T>) {
+data class ExternalEntityPropertySerializer<T : EntityProperty>(
+    val kClass: KClass<T>,
+    val kSerializer: KSerializer<T>
+) {
     companion object {
         inline operator fun <reified T : EntityProperty> invoke(): ExternalEntityPropertySerializer<T> {
             return ExternalEntityPropertySerializer(T::class, serializer())

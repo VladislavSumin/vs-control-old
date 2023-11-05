@@ -56,7 +56,6 @@ gradleEnterprise {
     }
 }
 
-
 val isUseCoreSources = extra["ru.vs.control.use_core_sources"].toString().toBoolean()
 if (isUseCoreSources) {
     includeBuild("../vs-core-kt")

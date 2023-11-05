@@ -22,7 +22,9 @@ internal class NetsurvLiveVideoStreamEntityStateViewModel(
 internal class NetsurvLiveVideoStreamEntityStateViewModelFactory(
     private val serversConnectionInteractor: ServersConnectionInteractor,
 ) {
-    fun create(state: StateFlow<Entity<NetsurvLiveVideoStreamEntityState>>): NetsurvLiveVideoStreamEntityStateViewModel {
+    fun create(
+        state: StateFlow<Entity<NetsurvLiveVideoStreamEntityState>>
+    ): NetsurvLiveVideoStreamEntityStateViewModel {
         return NetsurvLiveVideoStreamEntityStateViewModel(serversConnectionInteractor, state)
     }
 }

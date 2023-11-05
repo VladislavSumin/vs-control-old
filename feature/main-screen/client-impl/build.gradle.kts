@@ -8,9 +8,9 @@ android {
 }
 
 // TODO подождать пока mokko-resources обновится
-//multiplatformResources {
+// multiplatformResources {
 //    multiplatformResourcesPackage = "ru.vs.control.main_screen.client_impl"
-//}
+// }
 
 kotlin {
     sourceSets {
