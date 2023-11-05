@@ -2,6 +2,7 @@ package ru.vs.control.main_screen.ui.main_screen
 
 import androidx.compose.runtime.Composable
 import com.arkivanov.decompose.ComponentContext
+import com.arkivanov.decompose.childContext
 import com.arkivanov.decompose.router.stack.ChildStack
 import com.arkivanov.decompose.router.stack.StackNavigation
 import com.arkivanov.decompose.router.stack.childStack
@@ -13,6 +14,7 @@ import com.arkivanov.essenty.parcelable.Parcelable
 import com.arkivanov.essenty.parcelable.Parcelize
 import ru.vs.control.entities.ui.entities.EntitiesComponentFactory
 import ru.vs.control.root_navigation.ui.RootNavigationConfig
+import ru.vs.control.servers.ui.server_header.ServerHeaderComponentFactory
 import ru.vs.control.servers.ui.servers.ServersComponentFactory
 import ru.vs.control.services.ui.services.ServicesComponentFactory
 import ru.vs.core.decompose.ComposeComponent
@@ -23,6 +25,7 @@ internal class MainScreenComponent(
     private val entitiesComponentFactory: EntitiesComponentFactory,
     private val serversComponentFactory: ServersComponentFactory,
     private val servicesComponentFactory: ServicesComponentFactory,
+    serverHeaderComponentFactory: ServerHeaderComponentFactory,
     context: ComponentContext,
     private val rootNavigation: StackNavigation<RootNavigationConfig>
 ) : ComposeComponent, ComponentContext by context {
@@ -38,6 +41,10 @@ internal class MainScreenComponent(
 
     val stack: Value<ChildStack<*, ComposeComponent>> = internalStack
     val selectedDrawerElement = internalStack.map { it.active.configuration.drawerElement }
+
+    val serverHeaderComponent: ComposeComponent = serverHeaderComponentFactory.create(
+        context = childContext("server-header-component")
+    )
 
     fun onSelectDrawerElement(drawerElement: DrawerElement) {
         when (drawerElement) {

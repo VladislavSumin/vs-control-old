@@ -1,6 +1,5 @@
 package ru.vs.control.servers.ui.server_card
 
-import androidx.compose.runtime.Stable
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
@@ -12,7 +11,6 @@ import ru.vs.control.servers.domain.ServersInteractor
 import ru.vs.core.decompose.viewmodel.ViewModel
 import ru.vs.core.factory_generator.GenerateFactory
 
-@Stable
 internal interface ServerCardViewModel {
     val state: StateFlow<ServerCardViewState>
     fun deleteCurrentServer()

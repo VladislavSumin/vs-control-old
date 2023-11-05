@@ -85,7 +85,7 @@ internal class ServerCardComponentPreview(previewType: PreviewType, id: Int) : S
     )
 
     private fun createServer(id: Int) = Server(
-        id = 123,
+        id = id.toLong(),
         name = "Server name",
         host = "server.host.vs",
         port = 80,

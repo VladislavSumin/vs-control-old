@@ -16,6 +16,10 @@ import ru.vs.control.servers.ui.server_card.ServerCardComponentFactory
 import ru.vs.control.servers.ui.server_card.ServerCardComponentFactoryImpl
 import ru.vs.control.servers.ui.server_card.ServerCardViewModelFactory
 import ru.vs.control.servers.ui.server_card.ServerCardViewModelFactoryImpl
+import ru.vs.control.servers.ui.server_header.ServerHeaderComponentFactory
+import ru.vs.control.servers.ui.server_header.ServerHeaderComponentFactoryImpl
+import ru.vs.control.servers.ui.server_header.ServerHeaderViewModelFactory
+import ru.vs.control.servers.ui.server_header.ServerHeaderViewModelFactoryImpl
 import ru.vs.control.servers.ui.servers.ServersComponentFactory
 import ru.vs.control.servers.ui.servers.ServersComponentFactoryImpl
 import ru.vs.control.servers.ui.servers.ServersViewModelFactory
@@ -35,9 +39,11 @@ fun Modules.featureServers() = DI.Module("feature-servers") {
     bindSingleton<ServersViewModelFactory> { ServersViewModelFactoryImpl(i()) }
     bindSingleton<ServerCardViewModelFactory> { ServerCardViewModelFactoryImpl(i(), i()) }
     bindSingleton<EditServerViewModelFactory> { EditServerViewModelFactoryImpl(i()) }
+    bindSingleton<ServerHeaderViewModelFactory> { ServerHeaderViewModelFactoryImpl(i(), i()) }
 
     // Component factories
     bindSingleton<EditServerComponentFactory> { EditServerComponentFactoryImpl(i()) }
     bindSingleton<ServersComponentFactory> { ServersComponentFactoryImpl(i(), i()) }
     bindSingleton<ServerCardComponentFactory> { ServerCardComponentFactoryImpl(i()) }
+    bindSingleton<ServerHeaderComponentFactory> { ServerHeaderComponentFactoryImpl(i()) }
 }

@@ -1,7 +1,6 @@
 package ru.vs.control.main_screen.ui.main_screen
 
 import androidx.compose.material3.DrawerValue
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ModalDrawerSheet
 import androidx.compose.material3.ModalNavigationDrawer
 import androidx.compose.material3.PermanentDrawerSheet
@@ -11,7 +10,6 @@ import androidx.compose.runtime.Composable
 import ru.vs.core.uikit.local_configuration.Configuration
 import ru.vs.core.uikit.local_configuration.LocalConfiguration
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun MainScreenNavigationDrawer(component: MainScreenComponent, content: @Composable () -> Unit) {
     val drawerState = rememberDrawerState(DrawerValue.Closed)

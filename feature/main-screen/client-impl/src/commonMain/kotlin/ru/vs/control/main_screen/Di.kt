@@ -8,5 +8,5 @@ import ru.vs.core.di.Modules
 import ru.vs.core.di.i
 
 fun Modules.featureMainScreen() = DI.Module("feature-main-screen") {
-    bindSingleton<MainScreenComponentFactory> { MainScreenComponentFactoryImpl(i(), i(), i()) }
+    bindSingleton<MainScreenComponentFactory> { MainScreenComponentFactoryImpl(i(), i(), i(), i()) }
 }
