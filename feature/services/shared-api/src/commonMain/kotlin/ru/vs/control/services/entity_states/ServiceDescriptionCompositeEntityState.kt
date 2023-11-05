@@ -1,4 +1,4 @@
-package ru.vs.control.services
+package ru.vs.control.services.entity_states
 
 import kotlinx.serialization.Serializable
 import ru.vs.control.entities.domain.CompositeEntityState

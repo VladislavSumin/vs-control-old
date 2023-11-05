@@ -11,7 +11,7 @@ import ru.vs.control.entities.domain.EntityProperties
 import ru.vs.control.entities.domain.base_entity_properties.DefaultNameEntityProperty
 import ru.vs.control.entities.domain.base_entity_states.BooleanEntityState
 import ru.vs.control.id.Id
-import ru.vs.control.services.EmptyServiceDescriptionCompositeEntityState
+import ru.vs.control.services.entity_states.EmptyServiceDescriptionCompositeEntityState
 import ru.vs.control.services.domain.BaseService
 import ru.vs.control.services.domain.Service
 
