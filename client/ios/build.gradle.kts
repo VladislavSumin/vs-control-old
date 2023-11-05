@@ -1,4 +1,4 @@
-import org.jetbrains.compose.experimental.dsl.IOSDevices
+//import org.jetbrains.compose.experimental.dsl.IOSDevices
 
 plugins {
     id("ru.vs.convention.kmp.ios")
@@ -7,21 +7,22 @@ plugins {
 }
 
 compose.experimental {
-    uikit.application {
-        bundleIdPrefix = "ru.vs"
-        projectName = "Control"
-        deployConfigurations {
-            simulator("IPhone13") {
-
-                // Usage: ./gradlew iosDeployIPhone13Debug
-                device = IOSDevices.IPHONE_13_PRO
-            }
-            simulator("IPadUI") {
-                // Usage: ./gradlew iosDeployIPadUIDebug
-                device = IOSDevices.IPAD_MINI_6th_Gen
-            }
-        }
-    }
+    // TODO выяснить куда это все делось
+//    uikit.application {
+//        bundleIdPrefix = "ru.vs"
+//        projectName = "Control"
+////        deployConfigurations {
+////            simulator("IPhone13") {
+////
+////                // Usage: ./gradlew iosDeployIPhone13Debug
+////                device = IOSDevices.IPHONE_13_PRO
+////            }
+////            simulator("IPadUI") {
+////                // Usage: ./gradlew iosDeployIPadUIDebug
+////                device = IOSDevices.IPAD_MINI_6th_Gen
+////            }
+////        }
+//    }
 }
 
 kotlin {
