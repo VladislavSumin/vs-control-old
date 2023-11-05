@@ -1,6 +1,7 @@
 package ru.vs.control.root_navigation.ui
 
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.decompose.router.stack.ChildStack
 import com.arkivanov.decompose.router.stack.StackNavigation
@@ -53,5 +54,5 @@ internal class RootNavigationComponent(
     }
 
     @Composable
-    override fun Render() = RootNavigationContent(this)
+    override fun Render(modifier: Modifier) = RootNavigationContent(this)
 }

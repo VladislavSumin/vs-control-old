@@ -1,6 +1,7 @@
 package ru.vs.control.service_cams_netsurv.ui.live_video_stream_entity_state
 
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.essenty.instancekeeper.getOrCreate
 import kotlinx.coroutines.flow.StateFlow
@@ -20,7 +21,7 @@ internal class NetsurvLiveVideoStreamEntityStateComponent(
         instanceKeeper.getOrCreate { entityStateViewModelFactory.create(state) }
 
     @Composable
-    override fun Render() = NetsurvLiveVideoStreamEntityStateContent(this)
+    override fun Render(modifier: Modifier) = NetsurvLiveVideoStreamEntityStateContent(this)
 }
 
 internal class NetsurvLiveVideoStreamEntityStateComponentFactory(

@@ -1,6 +1,7 @@
 package ru.vs.control.servers.ui.edit_server
 
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.essenty.instancekeeper.getOrCreate
 import kotlinx.coroutines.launch
@@ -34,5 +35,5 @@ internal class EditServerComponent(
     fun accept(intent: EditServerViewModel.Intent) = viewModel.accept(intent)
 
     @Composable
-    override fun Render() = EditServerContent(this)
+    override fun Render(modifier: Modifier) = EditServerContent(this)
 }

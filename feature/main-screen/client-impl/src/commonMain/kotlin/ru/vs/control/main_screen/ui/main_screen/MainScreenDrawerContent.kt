@@ -1,6 +1,7 @@
 package ru.vs.control.main_screen.ui.main_screen
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Divider
 import androidx.compose.material3.DrawerState
@@ -21,7 +22,7 @@ internal fun MainScreenDrawerContent(
     drawerState: DrawerState,
 ) {
     Column(Modifier.padding(horizontal = 16.dp, vertical = 12.dp)) {
-        component.serverHeaderComponent.Render()
+        component.serverHeaderComponent.Render(Modifier.fillMaxWidth())
         Divider()
         Body(component, drawerState)
     }

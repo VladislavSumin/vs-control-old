@@ -1,6 +1,7 @@
 package ru.vs.control.entities.ui.entities.unknown_entity_state
 
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import com.arkivanov.decompose.ComponentContext
 import kotlinx.coroutines.flow.StateFlow
 import ru.vs.control.entities.domain.Entity
@@ -12,5 +13,5 @@ internal class UnknownEntityStateComponent(
     context: ComponentContext
 ) : BaseEntityStateComponent<EntityState>(state, context) {
     @Composable
-    override fun Render() = UnknownEntityStateContent(this)
+    override fun Render(modifier: Modifier) = UnknownEntityStateContent(this)
 }

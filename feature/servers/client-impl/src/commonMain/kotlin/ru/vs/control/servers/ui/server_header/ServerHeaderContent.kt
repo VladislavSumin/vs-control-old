@@ -19,10 +19,10 @@ import ru.vs.control.servers_connection.domain.ServerConnectionInteractor
 import ru.vs.core.uikit.auto_size_text.AutoSizeText
 
 @Composable
-internal fun ServerHeaderContent(component: ServerHeaderComponent) {
+internal fun ServerHeaderContent(component: ServerHeaderComponent, modifier: Modifier = Modifier) {
     val state = component.state.collectAsState().value ?: return
 
-    Column {
+    Column(modifier) {
 
         Box(
             Modifier
@@ -47,7 +47,7 @@ internal fun ServerHeaderContent(component: ServerHeaderComponent) {
             Modifier.align(Alignment.CenterHorizontally),
             style = MaterialTheme.typography.bodyMedium,
         )
-        val text = when(state.connectionStatus){
+        val text = when (state.connectionStatus) {
             ServerConnectionInteractor.ConnectionStatus.Connected -> "Connected"
             ServerConnectionInteractor.ConnectionStatus.Connecting -> "Connecting"
             is ServerConnectionInteractor.ConnectionStatus.Reconnecting -> "Err"

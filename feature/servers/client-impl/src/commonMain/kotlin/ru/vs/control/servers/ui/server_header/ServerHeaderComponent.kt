@@ -2,6 +2,7 @@ package ru.vs.control.servers.ui.server_header
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Stable
+import androidx.compose.ui.Modifier
 import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.essenty.instancekeeper.getOrCreate
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -26,7 +27,7 @@ internal class ServerHeaderComponentImpl(
     override val state = viewModel.state
 
     @Composable
-    override fun Render() = ServerHeaderContent(this)
+    override fun Render(modifier: Modifier) = ServerHeaderContent(this, modifier)
 }
 
 internal class ServerHeaderComponentPreview(previewType: PreviewType, id: Int) : ServerHeaderComponent {

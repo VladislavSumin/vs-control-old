@@ -1,6 +1,7 @@
 package ru.vs.control.main_screen.ui.main_screen
 
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.decompose.childContext
 import com.arkivanov.decompose.router.stack.ChildStack
@@ -79,7 +80,7 @@ internal class MainScreenComponent(
     }
 
     @Composable
-    override fun Render() = MainScreenContent(this)
+    override fun Render(modifier: Modifier) = MainScreenContent(this)
 
     private val Config.drawerElement: DrawerElement
         get() = when (this) {

@@ -1,6 +1,7 @@
 package ru.vs.control.servers.ui.servers
 
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.essenty.instancekeeper.getOrCreate
 import ru.vs.control.servers.domain.ServerId
@@ -36,5 +37,5 @@ internal class ServersComponent(
     fun onClickAddServer() = openAddServerScreen()
 
     @Composable
-    override fun Render() = ServersContent(this)
+    override fun Render(modifier: Modifier) = ServersContent(this)
 }
