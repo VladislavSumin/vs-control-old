@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -12,6 +13,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.arkivanov.decompose.extensions.compose.jetbrains.subscribeAsState
+import ru.vs.core.navigation.NavigationSupportTopAppBar
 
 @Composable
 internal fun ServersContent(component: ServersComponent) {
@@ -22,7 +24,8 @@ internal fun ServersContent(component: ServersComponent) {
 private fun Servers(component: ServersComponent) {
     val servers by component.serversList.subscribeAsState()
     Scaffold(
-        floatingActionButton = { AddServer(component) }
+        topBar = { TopBar() },
+        floatingActionButton = { AddServer(component) },
     ) { padding ->
         LazyColumn(
             Modifier.padding(padding),
@@ -31,6 +34,14 @@ private fun Servers(component: ServersComponent) {
             items(servers) { it.Render(Modifier) }
         }
     }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun TopBar() {
+    NavigationSupportTopAppBar(
+        title = { Text("Servers") },
+    )
 }
 
 @Composable
