@@ -6,12 +6,11 @@ import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.essenty.instancekeeper.getOrCreate
 import kotlinx.coroutines.flow.StateFlow
 import ru.vs.control.entities.domain.Entity
+import ru.vs.control.entities.factory_generator.GenerateEntityStateComponentFactory
 import ru.vs.control.entities.ui.entities.entity_state.BaseEntityStateComponent
-import ru.vs.control.entities.ui.entities.entity_state.EntityStateComponent
-import ru.vs.control.entities.ui.entities.entity_state.EntityStateComponentFactory
 import ru.vs.control.service_cams_netsurv.entity_states.NetsurvCompositeEntityState
-import kotlin.reflect.KClass
 
+@GenerateEntityStateComponentFactory
 internal class NetsurvCompositeEntityStateComponent(
     private val entityStateViewModelFactory: NetsurvCompositeEntityStateViewModelFactory,
     state: StateFlow<Entity<NetsurvCompositeEntityState>>,
@@ -22,17 +21,4 @@ internal class NetsurvCompositeEntityStateComponent(
 
     @Composable
     override fun Render(modifier: Modifier) = NetsurvLiveVideoStreamEntityStateContent(this)
-}
-
-internal class NetsurvCompositeEntityStateComponentFactory(
-    private val entityStateViewModelFactory: NetsurvCompositeEntityStateViewModelFactory,
-) : EntityStateComponentFactory<NetsurvCompositeEntityState> {
-    override val entityStateType: KClass<NetsurvCompositeEntityState> = NetsurvCompositeEntityState::class
-
-    override fun create(
-        state: StateFlow<Entity<NetsurvCompositeEntityState>>,
-        context: ComponentContext
-    ): EntityStateComponent<NetsurvCompositeEntityState> {
-        return NetsurvCompositeEntityStateComponent(entityStateViewModelFactory, state, context)
-    }
 }
