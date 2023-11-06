@@ -76,6 +76,8 @@ include(":rsub:playground")
 
 includeFeature("about-server")
 includeFeature("entities")
+include(":feature:entities:factory-generator-api")
+include(":feature:entities:factory-generator-ksp")
 includeClientFeature("main-screen")
 includeFeature("services")
 includeFeature("service-cams-netsurv")
