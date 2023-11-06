@@ -32,11 +32,12 @@ internal class FactoryGeneratorSymbolProcessor(
             .toList()
     }
 
+    @Suppress("TooGenericExceptionCaught")
     private fun processAnnotated(annotated: KSAnnotated): Boolean {
         return try {
             processGenerateFactoryAnnotation(annotated)
             true
-        } catch (e: IllegalArgumentException) {
+        } catch (_: IllegalArgumentException) {
             // We have cases when one generated factory using inside another generated factory,
             // for these cases we need to processing sources with more than once iteration
             false
@@ -55,7 +56,6 @@ internal class FactoryGeneratorSymbolProcessor(
 
         generateFactoryInterfaceAndImpl(instance)
     }
-
 
     /**
      * Generate factory for [instance].
@@ -176,8 +176,10 @@ internal class FactoryGeneratorSymbolProcessor(
     }
 
     companion object {
-        private val FACTORY_INTERFACE = ClassName("ru.vs.control.entities.ui.entities.entity_state", "EntityStateComponentFactory")
-        private val BASE_COMPONENT_CLASS = ClassName("ru.vs.control.entities.ui.entities.entity_state", "BaseEntityStateComponent")
+        private val FACTORY_INTERFACE =
+            ClassName("ru.vs.control.entities.ui.entities.entity_state", "EntityStateComponentFactory")
+        private val BASE_COMPONENT_CLASS =
+            ClassName("ru.vs.control.entities.ui.entities.entity_state", "BaseEntityStateComponent")
         private val COMPOSE_CONTEXT = ClassName("com.arkivanov.decompose", "ComponentContext")
         private val STATE_FLOW = ClassName("kotlinx.coroutines.flow", "StateFlow")
         private val ENTITY = ClassName("ru.vs.control.entities.domain", "Entity")
