@@ -11,7 +11,5 @@ internal class AddServiceComponent(
     context: ComponentContext,
 ) : ComposeComponent, ComponentContext by context {
     @Composable
-    override fun Render(modifier: Modifier) {
-
-    }
+    override fun Render(modifier: Modifier) = AddServiceContent()
 }
