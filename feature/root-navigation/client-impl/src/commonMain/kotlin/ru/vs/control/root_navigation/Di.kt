@@ -8,5 +8,5 @@ import ru.vs.core.di.Modules
 import ru.vs.core.di.i
 
 fun Modules.featureRootNavigation() = DI.Module("feature-root-navigation") {
-    bindSingleton<RootNavigationComponentFactory> { RootNavigationComponentFactoryImpl(i(), i()) }
+    bindSingleton<RootNavigationComponentFactory> { RootNavigationComponentFactoryImpl(i(), i(), i()) }
 }

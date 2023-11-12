@@ -10,12 +10,14 @@ import com.arkivanov.decompose.router.stack.pop
 import com.arkivanov.decompose.value.Value
 import ru.vs.control.main_screen.ui.main_screen.MainScreenComponentFactory
 import ru.vs.control.servers.ui.edit_server.EditServerComponentFactory
+import ru.vs.control.services.ui.add_service.AddServiceComponentFactory
 import ru.vs.core.decompose.ComposeComponent
 import ru.vs.core.factory_generator.GenerateFactory
 
 @GenerateFactory(RootNavigationComponentFactory::class)
 internal class RootNavigationComponent(
     private val mainScreenComponentFactory: MainScreenComponentFactory,
+    private val addServiceComponentFactory: AddServiceComponentFactory,
     private val editServerComponentFactory: EditServerComponentFactory,
     context: ComponentContext
 ) : ComposeComponent, ComponentContext by context {
@@ -34,20 +36,27 @@ internal class RootNavigationComponent(
     private fun child(config: RootNavigationConfig, componentContext: ComponentContext): ComposeComponent {
         return when (config) {
             is RootNavigationConfig.MainScreen -> mainScreenComponent(componentContext)
+            is RootNavigationConfig.AddServiceScreen -> addServiceComponent(componentContext)
             is RootNavigationConfig.EditServer -> editServerComponent(componentContext, config.serverId)
         }
     }
 
-    private fun mainScreenComponent(diComponentContext: ComponentContext): ComposeComponent {
+    private fun mainScreenComponent(componentContext: ComponentContext): ComposeComponent {
         return mainScreenComponentFactory.create(
-            diComponentContext,
+            componentContext,
             navigation,
         )
     }
 
-    private fun editServerComponent(diComponentContext: ComponentContext, serverId: Long?): ComposeComponent {
+    private fun addServiceComponent(componentContext: ComponentContext): ComposeComponent {
+        return addServiceComponentFactory.create(
+            componentContext,
+        )
+    }
+
+    private fun editServerComponent(componentContext: ComponentContext, serverId: Long?): ComposeComponent {
         return editServerComponentFactory.create(
-            diComponentContext,
+            componentContext,
             serverId,
             closeScreen = { navigation.pop() }
         )

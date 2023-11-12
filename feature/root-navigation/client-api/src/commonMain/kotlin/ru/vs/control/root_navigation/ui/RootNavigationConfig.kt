@@ -5,6 +5,7 @@ import com.arkivanov.essenty.parcelable.Parcelize
 
 @Parcelize
 sealed interface RootNavigationConfig : Parcelable {
-    object MainScreen : RootNavigationConfig
+    data object MainScreen : RootNavigationConfig
+    data object AddServiceScreen : RootNavigationConfig
     data class EditServer(val serverId: Long?) : RootNavigationConfig
 }

@@ -18,7 +18,7 @@ internal fun ServicesContent(component: ServicesComponent) {
     component // for suppress linter errors
     Scaffold(
         topBar = { TopBar() },
-        floatingActionButton = { AddServiceButton() }
+        floatingActionButton = { AddServiceButton(component) }
     ) {
         Box(Modifier.padding(it)) {
             Text("Services screen")
@@ -35,9 +35,9 @@ private fun TopBar() {
 }
 
 @Composable
-private fun AddServiceButton() {
+private fun AddServiceButton(component: ServicesComponent) {
     FloatingActionButton(
-        onClick = {}
+        onClick = component.onClickAddComponent
     ) {
         Icon(Icons.Default.Add, contentDescription = "Add new service")
     }

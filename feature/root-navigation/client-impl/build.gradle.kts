@@ -13,6 +13,7 @@ kotlin {
 
                 implementation(projects.feature.mainScreen.clientApi)
                 implementation(projects.feature.servers.clientApi)
+                implementation(projects.feature.services.clientApi)
             }
         }
     }

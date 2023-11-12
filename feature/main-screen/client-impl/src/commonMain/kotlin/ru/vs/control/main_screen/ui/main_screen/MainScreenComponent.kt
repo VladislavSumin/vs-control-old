@@ -68,7 +68,10 @@ internal class MainScreenComponent(
     }
 
     private fun servicesComponent(componentContext: ComponentContext): ComposeComponent {
-        return servicesComponentFactory.create(componentContext)
+        return servicesComponentFactory.create(
+            onClickAddComponent = { rootNavigation.push(RootNavigationConfig.AddServiceScreen) },
+            context = componentContext,
+        )
     }
 
     private fun serversComponent(context: ComponentContext): ComposeComponent {
