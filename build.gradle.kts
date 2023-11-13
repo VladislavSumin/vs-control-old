@@ -39,7 +39,7 @@ moduleGraphAssert {
 tasks.register("ci") {
     // Client
     dependsOn(":client:android:assembleDebug")
-    // dependsOn(":client:android:assembleRelease")
+    dependsOn(":client:android:assembleRelease")
     dependsOn(":client:jvm:buildFatJarMain")
     // dependsOn(":client:js:jsBrowserDistribution")
     // TODO internal ktor error see https://youtrack.jetbrains.com/issue/KTOR-5728
