@@ -1,5 +1,6 @@
 package ru.vs.control
 
+import kotlinx.coroutines.CoroutineScope
 import org.kodein.di.DI
 import org.kodein.di.bindProvider
 import org.kodein.di.bindSingleton
@@ -21,6 +22,7 @@ import ru.vs.core.di.i
 import ru.vs.core.key_value_storage.coreKeyValueStorage
 import ru.vs.core.ktor_client.coreKtorClient
 import ru.vs.core.serialization.json.coreSerializationJson
+import kotlin.coroutines.EmptyCoroutineContext
 
 fun Modules.clientCommon() = DI.Module("client-common") {
     importOnce(Modules.coreDatabase())
@@ -36,6 +38,8 @@ fun Modules.clientCommon() = DI.Module("client-common") {
     importOnce(Modules.featureServersConnection())
     importOnce(Modules.featureServiceCamsNetsurv())
     importOnce(Modules.featureServices())
+
+    bindSingleton { CoroutineScope(EmptyCoroutineContext) }
 
     bindSingleton { DatabaseService(i()) }
     bindProvider<ServerQueriesProvider> { i<DatabaseService>() }
