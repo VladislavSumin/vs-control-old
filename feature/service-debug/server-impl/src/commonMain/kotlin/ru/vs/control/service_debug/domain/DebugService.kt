@@ -5,7 +5,6 @@ import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import ru.vs.control.entities.domain.EntitiesInteractor
-import ru.vs.control.entities.domain.Entity
 import ru.vs.control.entities.domain.EntityId
 import ru.vs.control.entities.domain.EntityProperties
 import ru.vs.control.entities.domain.base_entity_properties.DefaultNameEntityProperty
@@ -36,18 +35,16 @@ internal class DebugServiceImpl(
      */
     private fun CoroutineScope.processFlipFlopEntity() = this.launch {
         entitiesInteractor.holdEntity(
-            Entity(
-                EntityId(DEBUG_SERVICE_ID, Id.SimpleId("flip_flop")),
-                BooleanEntityState(false),
-                EntityProperties(
-                    DefaultNameEntityProperty("[debug] Flip-Flop")
-                ),
-            )
+            id = EntityId(DEBUG_SERVICE_ID, Id.SimpleId("flip_flop")),
+            primaryState = BooleanEntityState(false),
+            properties = EntityProperties(
+                DefaultNameEntityProperty("[debug] Flip-Flop")
+            ),
         ) { update ->
             while (true) {
                 delay(FLIP_FLOP_INTERVAL)
                 update { entity ->
-                    entity.copy(primaryState = BooleanEntityState(!entity.primaryState.value))
+                    BooleanEntityState(!entity.primaryState.value)
                 }
             }
         }
@@ -59,13 +56,11 @@ internal class DebugServiceImpl(
      */
     private fun CoroutineScope.processServiceDescription() = this.launch {
         entitiesInteractor.holdConstantEntity(
-            Entity(
-                EntityId(DEBUG_SERVICE_ID, Id.SimpleId("service_description")),
-                SimpleServiceDescriptionCompositeEntityState,
-                EntityProperties(
-                    DefaultNameEntityProperty("Debug Service")
-                ),
-            )
+            id = EntityId(DEBUG_SERVICE_ID, Id.SimpleId("service_description")),
+            primaryState = SimpleServiceDescriptionCompositeEntityState,
+            properties = EntityProperties(
+                DefaultNameEntityProperty("Debug Service")
+            ),
         )
     }
 }

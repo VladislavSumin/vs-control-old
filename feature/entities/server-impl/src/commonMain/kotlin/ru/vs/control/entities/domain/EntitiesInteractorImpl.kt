@@ -7,19 +7,35 @@ import ru.vs.control.entities.repository.EntitiesRegistry
 internal class EntitiesInteractorImpl(
     private val entitiesRegistry: EntitiesRegistry,
 ) : EntitiesInteractor {
-    override fun observeEntities(): Flow<Map<EntityId, Entity<*>>> {
+    override fun observeEntities(): Flow<Entities<*>> {
         return entitiesRegistry.observeEntities()
     }
 
     override suspend fun <T : EntityState> holdEntity(
-        initialValue: Entity<T>,
-        block: suspend (update: suspend ((entity: Entity<T>) -> Entity<T>) -> Unit) -> Unit
+        id: EntityId,
+        primaryState: T,
+        properties: EntityProperties,
+        block: suspend (update: suspend ((entity: Entity<T>) -> T) -> Unit) -> Unit,
     ) {
-        entitiesRegistry.holdEntity(initialValue, block)
+        val entity = EntityImpl(
+            id = id,
+            primaryState = primaryState,
+            properties = properties,
+        )
+        entitiesRegistry.holdEntity(entity, block)
     }
 
-    override suspend fun <T : EntityState> holdConstantEntity(value: Entity<T>): Nothing {
-        entitiesRegistry.holdEntity(value) { delay(Long.MAX_VALUE) }
+    override suspend fun <T : EntityState> holdConstantEntity(
+        id: EntityId,
+        primaryState: T,
+        properties: EntityProperties
+    ): Nothing {
+        val entity = EntityImpl(
+            id = id,
+            primaryState = primaryState,
+            properties = properties,
+        )
+        entitiesRegistry.holdEntity(entity) { delay(Long.MAX_VALUE) }
         error("unreachable code")
     }
 }

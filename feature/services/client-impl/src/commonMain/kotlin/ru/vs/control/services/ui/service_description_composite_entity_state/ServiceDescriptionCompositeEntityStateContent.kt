@@ -9,5 +9,7 @@ internal fun ServiceDescriptionCompositeEntityStateContent(
     component: SimpleServiceDescriptionCompositeEntityStateComponent,
     modifier: Modifier,
 ) {
+    component
+    modifier
     Text("TODO")
 }

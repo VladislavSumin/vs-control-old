@@ -8,12 +8,14 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.withContext
+import ru.vs.control.entities.domain.Entities
 import ru.vs.control.entities.domain.Entity
 import ru.vs.control.entities.domain.EntityId
+import ru.vs.control.entities.domain.EntityImpl
 import ru.vs.control.entities.domain.EntityState
 
 internal interface EntitiesRegistry {
-    fun observeEntities(): Flow<Map<EntityId, Entity<*>>>
+    fun observeEntities(): Flow<Entities<*>>
 
     /**
      * Holds entity with given [Entity.id] while [block] is running. When exits from [block] remove entity from registry
@@ -26,10 +28,10 @@ internal interface EntitiesRegistry {
      * @param block - block running at caller coroutine context
      */
     suspend fun <T : EntityState> holdEntity(
-        initialValue: Entity<T>,
+        initialValue: EntityImpl<T>,
         block: suspend (
             update: suspend (
-                (entity: Entity<T>) -> Entity<T>
+                (entity: Entity<T>) -> T
             ) -> Unit
         ) -> Unit
     )
@@ -38,16 +40,16 @@ internal interface EntitiesRegistry {
 internal class EntitiesRegistryImpl : EntitiesRegistry {
     private val storage = EntitiesStorage()
 
-    override fun observeEntities(): Flow<Map<EntityId, Entity<*>>> {
+    override fun observeEntities(): Flow<Entities<*>> {
         return storage.entities
     }
 
     override suspend fun <T : EntityState> holdEntity(
-        initialValue: Entity<T>,
-        block: suspend (update: suspend ((entity: Entity<T>) -> Entity<T>) -> Unit) -> Unit
+        initialValue: EntityImpl<T>,
+        block: suspend (update: suspend ((entity: Entity<T>) -> T) -> Unit) -> Unit
     ) {
         val id = initialValue.id
-        var currentEntity: Entity<T> = initialValue
+        var currentEntity: EntityImpl<T> = initialValue
 
         storage.update { entities ->
             if (entities.containsKey(id)) error("Entity with ${initialValue.id} already exist")
@@ -57,11 +59,8 @@ internal class EntitiesRegistryImpl : EntitiesRegistry {
         try {
             block { updateFunction ->
 
-                val newValue = updateFunction(currentEntity)
-
-                check(newValue.id == id) {
-                    "Illegal entity update. Trying update old state with $id to new state with ${newValue.id}"
-                }
+                val newState = updateFunction(currentEntity)
+                val newValue = currentEntity.copy(primaryState = newState)
 
                 storage.update { it[id] = newValue }
                 currentEntity = newValue
