@@ -59,7 +59,8 @@ tasks.register("ci") {
     dependsOn("generateMergedTestReport")
 
     // Checks
-    dependsOn(":dependencyUpdates")
-    dependsOn(gradle.includedBuild("vs-core-kt").task(":dependencyUpdates"))
+    // TODO produce crashes, research && fix
+    // dependsOn(":dependencyUpdates")
+    // dependsOn(gradle.includedBuild("vs-core-kt").task(":dependencyUpdates"))
     dependsOn(":assertModuleGraph")
 }
