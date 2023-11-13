@@ -32,13 +32,12 @@ jobs:
 
       - name: Run gradle
         working-directory: ./vs-control
-        # current kotlin version contains bug, try run with --rerun-tasks to reproduce it locally
-        # --no-daemon
         run: >-
           ./gradlew
           -Pru.vs.core.ci=true
           -Pru.vs.core.ci.github=true
           :ci
+          --no-daemon
           --stacktrace
 
       - name: Upload android client debug
