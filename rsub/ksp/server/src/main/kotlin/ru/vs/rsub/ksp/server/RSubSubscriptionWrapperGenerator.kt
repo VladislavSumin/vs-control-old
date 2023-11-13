@@ -1,9 +1,11 @@
 package ru.vs.rsub.ksp.server
 
+import com.google.devtools.ksp.findActualType
 import com.google.devtools.ksp.processing.KSPLogger
 import com.google.devtools.ksp.symbol.KSClassDeclaration
 import com.google.devtools.ksp.symbol.KSFunctionDeclaration
 import com.google.devtools.ksp.symbol.KSType
+import com.google.devtools.ksp.symbol.KSTypeAlias
 import com.google.devtools.ksp.symbol.Modifier
 import com.squareup.kotlinpoet.CodeBlock
 import com.squareup.kotlinpoet.FunSpec
@@ -71,7 +73,10 @@ class RSubSubscriptionWrapperGenerator(
             .apply {
                 addStatement("listOf(")
                 method.parameters.forEach {
-                    val className = it.type.resolve().toClassName()
+                    val className = when (val type = it.type.resolve()) {
+                        is KSTypeAlias -> type.findActualType().toClassName()
+                        else -> type.toTypeName()
+                    }
                     addStatement("%M<%T>(),", typeOfMember, className)
                 }
                 addStatement(")")
@@ -84,7 +89,12 @@ class RSubSubscriptionWrapperGenerator(
             )
             .apply {
                 method.parameters
-                    .map { it.type.resolve().toClassName() }
+                    .map {
+                        when (val type = it.type.resolve()) {
+                            is KSTypeAlias -> type.findActualType().toClassName()
+                            else -> type.toTypeName()
+                        }
+                    }
                     .forEachIndexed { index, className ->
                         addStatement("arguments[%L] as %T,", index.toString(), className)
                     }
