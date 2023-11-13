@@ -71,4 +71,8 @@ internal class EntitiesInteractorImpl(
         )
         entitiesRegistry.holdEntity(entity, block)
     }
+
+    override suspend fun updateEntity(id: EntityId, newState: EntityState): Boolean {
+        TODO("Not yet implemented")
+    }
 }

@@ -67,4 +67,14 @@ interface EntitiesInteractor {
         primaryState: T,
         properties: EntityProperties = EntityProperties(),
     ): Nothing
+
+    /**
+     * Try to update state of mutable entity with [id].
+     *
+     * @param id entity id
+     * @param newState new state for mutable entity with [id]
+     *
+     * @return true if entity updated successfully, false otherwise
+     */
+    suspend fun updateEntity(id: EntityId, newState: EntityState): Boolean
 }
