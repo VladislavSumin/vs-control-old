@@ -8,6 +8,7 @@ internal fun EntityDto.toEntity(server: Server) = Entity(
     server = server,
     id = id,
     primaryState = primaryState,
+    isMutable = isMutable,
     properties = EntityProperties(properties),
 )
 

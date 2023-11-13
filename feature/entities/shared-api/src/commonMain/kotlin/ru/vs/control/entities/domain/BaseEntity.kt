@@ -18,6 +18,11 @@ interface BaseEntity<T : EntityState> {
     val primaryState: T
 
     /**
+     * Marks can client try to mutate primary state.*
+     */
+    val isMutable: Boolean
+
+    /**
      * Entity properties collection.
      */
     val properties: EntityProperties
