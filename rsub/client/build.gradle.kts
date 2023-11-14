@@ -4,6 +4,13 @@ plugins {
     id("kotlinx-atomicfu")
 }
 
+atomicfu {
+    // TODO remove when atomicfu updates
+    // atomicfu 0.22.0 crashes when compiling jvm
+    // with java 21.
+    transformJvm = false
+}
+
 android {
     namespace = "ru.vs.rsub.client"
 }
