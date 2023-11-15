@@ -27,7 +27,7 @@ compose.experimental {
 
 kotlin {
 
-    iosX64("uikitX64") {
+    iosX64(/*"uikitX64"*/) {
         binaries {
             executable {
                 entryPoint = "main"
@@ -40,7 +40,7 @@ kotlin {
         }
     }
 
-    iosArm64("uikitArm64") {
+    iosArm64(/*"uikitArm64"*/) {
         binaries {
             executable {
                 entryPoint = "main"
