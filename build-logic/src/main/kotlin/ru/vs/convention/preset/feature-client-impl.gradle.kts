@@ -30,7 +30,7 @@ kotlin {
                 implementation(coreLibs.vs.core.uikit.autoSizeText)
                 implementation(coreLibs.vs.core.uikit.dropdownMenu)
                 implementation(coreLibs.vs.core.uikit.letterAvatar)
-                implementation(coreLibs.vs.core.uikit.localConfiguration)
+                implementation(coreLibs.vs.core.uikit.utils)
                 implementation(coreLibs.vs.core.utils)
             }
         }

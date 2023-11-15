@@ -12,7 +12,6 @@ import org.kodein.di.instance
 import ru.vs.control.ui.root.RootComponentFactory
 import ru.vs.control.ui.root.RootContent
 import ru.vs.core.di.Modules
-import ru.vs.core.uikit.local_configuration.LocalComposeWindowHolder
 import javax.swing.SwingUtilities
 
 fun main(args: Array<String>) {
@@ -38,9 +37,7 @@ fun main(args: Array<String>) {
             state = windowState,
             title = "Control"
         ) {
-            LocalComposeWindowHolder(windowState) {
-                RootContent(rootComponent)
-            }
+            RootContent(rootComponent)
         }
     }
 }
