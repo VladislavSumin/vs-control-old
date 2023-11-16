@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Card
+import androidx.compose.material3.Checkbox
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -20,7 +21,15 @@ internal fun BooleanEntityStateContent(component: BooleanEntityStateComponent) {
             val name = entity.properties[DefaultNameEntityProperty::class]?.name
             if (name != null) Text(name)
             Text(entity.id.rawId)
-            Text("Boolean=${entity.primaryState.value}")
+
+            if (entity.isMutable) {
+                Checkbox(
+                    checked = entity.primaryState.value,
+                    onCheckedChange = null, // TODO add action
+                )
+            } else {
+                Text(entity.primaryState.value.toString())
+            }
         }
     }
 }

@@ -3,6 +3,7 @@ package ru.vs.control.service_debug.domain
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import ru.vs.control.entities.domain.EntitiesInteractor
 import ru.vs.control.entities.domain.EntityId
@@ -28,6 +29,7 @@ internal class DebugServiceImpl(
     override suspend fun run(): Unit = coroutineScope {
         processServiceDescription()
         processFlipFlopEntity()
+        processMutableEntity()
     }
 
     /**
@@ -45,6 +47,30 @@ internal class DebugServiceImpl(
                 delay(FLIP_FLOP_INTERVAL)
                 update { entity ->
                     BooleanEntityState(!entity.primaryState.value)
+                }
+            }
+        }
+    }
+
+    /**
+     * Process mutable boolean entity
+     */
+    private fun CoroutineScope.processMutableEntity() = this.launch {
+        val state = MutableStateFlow(false)
+        entitiesInteractor.holdMutableEntity(
+            id = EntityId(DEBUG_SERVICE_ID, Id.SimpleId("mutable_boolean")),
+            primaryState = BooleanEntityState(false),
+            properties = EntityProperties(
+                DefaultNameEntityProperty("[debug] Mutable boolean")
+            ),
+            onUserRequestUpdatePrimaryState = {
+                state.value = it.value
+                true
+            }
+        ) { update ->
+            state.collect {
+                update { _ ->
+                    BooleanEntityState(it)
                 }
             }
         }
