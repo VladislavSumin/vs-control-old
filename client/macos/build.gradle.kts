@@ -1,6 +1,6 @@
 plugins {
     id("ru.vs.convention.kmp.macos")
-    id("org.jetbrains.compose")
+    id("ru.vs.convention.compose")
     id("app.cash.sqldelight")
 }
 

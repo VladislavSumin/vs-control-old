@@ -2,7 +2,7 @@ import ru.vs.build_logic.utils.configureJsDistribution
 
 plugins {
     id("ru.vs.convention.kmp.js")
-    id("org.jetbrains.compose")
+    id("ru.vs.convention.compose")
 }
 
 compose.experimental {

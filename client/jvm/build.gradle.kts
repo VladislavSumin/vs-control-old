@@ -2,7 +2,7 @@ import ru.vs.build_logic.utils.fatJar
 
 plugins {
     id("ru.vs.convention.kmp.jvm")
-    id("org.jetbrains.compose")
+    id("ru.vs.convention.compose")
 }
 
 val clientMainClass: String = "ru.vs.control.MainKt"
